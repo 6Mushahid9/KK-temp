@@ -54,6 +54,7 @@ label {
     margin-bottom: 2px;
     /* More spacing for clarity */
     display: block;
+    text-align: left;
 }
 
 .h2 {
