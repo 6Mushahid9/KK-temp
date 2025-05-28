@@ -345,14 +345,14 @@ export function PatientDetails({handleChange, formData}) {
                 {/* row 8 */}
                 <div className="grid grid-cols-12 gap-4 mt-3">
                     <div className="form-group col-span-12 ">
-                        <label htmlFor="presentingCompliants">
-                            Presenting Compliants:
+                        <label htmlFor="presentingComplaints">
+                            Presenting Complaints:
                         </label>
                         <input
                             type="text"
-                            id="presentingCompliants"
-                            name="presentingCompliants"
-                            value={formData.presentingCompliants}
+                            id="presentingComplaints"
+                            name="presentingComplaints"
+                            value={formData.presentingComplaints}
                             onChange={handleChange}
                             style={{
                                 width: "100%",

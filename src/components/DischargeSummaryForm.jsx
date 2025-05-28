@@ -14,7 +14,6 @@ const DischargeSummaryForm = () => {
       patientName: "",
       age: "",
       sex: "",
-      knownCaseOf: "",
       pastMedicalHistory: "",
       uhidRegNo: "",
       department: "",
