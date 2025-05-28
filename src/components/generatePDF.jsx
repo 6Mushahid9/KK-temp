@@ -65,7 +65,7 @@ export function generatePDF(formData) {
     yPos += 5;
     doc.text(`Icterus: ${formData.icterus}`, 15, yPos);
     yPos += 5;
-    doc.text(`Blood Pressure: ${formData.bloodPressure}`, 15, yPos);
+    doc.text(`Blood Pressure: ${formData.bloodPressure} mmHg`, 15, yPos);
     yPos += 5;
     doc.text(`Pulse Rate: ${formData.pulseRate}`, 15, yPos);
     yPos += 5;

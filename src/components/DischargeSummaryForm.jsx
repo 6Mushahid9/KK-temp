@@ -4,10 +4,15 @@ import autoTable from 'jspdf-autotable';
 
 import { generatePDF } from './generatePDF';
 
-import { PatientDetails } from './FormSection/PatientDetails';
+// import { PatientDetails } from './FormSection/PatientDetails';
 import './dischargesummaryform.css'
 
 const DischargeSummaryForm = () => {
+
+    const minutesArray = Array.from({ length: 60 }, (_, i) =>
+  i.toString().padStart(2, '0')
+);
+
     const [formData, setFormData] = useState({
         // Patient Details
         patientName: '',
@@ -174,18 +179,291 @@ const DischargeSummaryForm = () => {
     return (
         <div className="discharge-summary-form" style={{ maxWidth: '80%', margin: '0 auto', padding: '20px' }}>
 
-            <h1 className='text-5xl' style={{ textAlign: 'center', marginBottom: '25px' }}>Discharge Summary Form</h1>
+            <h1 className='text-5xl ' style={{ textAlign: 'center', marginBottom: '25px' }}>Discharge Summary Form</h1>
 
             <form>
                 {/* Patient Details Section */}
 
-                <PatientDetails formData={formData}/>
+                {/* <PatientDetails formData={formData}/> */}
+
+                <div className="form-section" style={{ marginBottom: '30px', border: '1px solid #ddd', padding: '20px', borderRadius: '5px' }}>
+        <h2 className='h2' style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px', marginBottom: '20px' }}>Patient Details</h2>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '15px' }}>
+
+{/* row 1 */}
+<div className='grid grid-cols-12 gap-4'>
+    <div className="form-group col-span-6">
+                <label htmlFor="uhidRegNo">UHID/Reg. No.:</label>
+                <input
+                    type="text"
+                    id="uhidRegNo"
+                    name="uhidRegNo"
+                    value={formData.uhidRegNo}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+
+            <div className="form-group col-span-6">
+    <label htmlFor="department">Department:</label>
+    <select
+        id="department"
+        name="department"
+        value={formData.department}
+        onChange={handleChange}
+        style={{
+            width: '100%',
+            padding: '8px',
+            marginTop: '5px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            backgroundColor: '#fff',
+        }}
+    >
+        <option value="">Select Department</option>
+        <option value="General Medicine">General Medicine</option>
+        <option value="Pediatrics">Pediatrics</option>
+        <option value="Orthopedics">Orthopedics</option>
+        <option value="Cardiology">Cardiology</option>
+        <option value="Neurology">Neurology</option>
+        <option value="Oncology">Oncology</option>
+        <option value="Radiology">Radiology</option>
+        <option value="Emergency">Emergency</option>
+        <option value="ENT">ENT</option>
+        <option value="Dermatology">Dermatology</option>
+        <option value="Gastroenterology">Gastroenterology</option>
+        <option value="Gynecology">Gynecology</option>
+        <option value="Psychiatry">Psychiatry</option>
+        <option value="Urology">Urology</option>
+        <option value="Nephrology">Nephrology</option>
+    </select>
+</div>
+
+
+</div>
+
+{/* row 2 */}
+            <div className='grid grid-cols-12 gap-4'>
+            <div className="form-group col-span-6">
+                <label htmlFor="patientName">Patient Name:</label>
+                <input
+                    type="text"
+                    id="patientName"
+                    name="patientName"
+                    value={formData.patientName}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+
+            <div className="form-group col-span-3">
+                <label htmlFor="age">Age:</label>
+                <input
+                    type="number"
+                    id="age"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+
+            <div className="form-group col-span-3">
+                <label htmlFor="sex">Sex:</label>
+                <select
+                    id="sex"
+                    name="sex"
+                    value={formData.sex}
+                    onChange={handleChange}
+                    style={{
+                        width: '100%',
+                        padding: '8px',
+                        marginTop: '5px',
+                        borderRadius: '4px',
+                        border: '1px solid #ddd',
+                        backgroundColor: '#fff',
+                        color: '#333',
+                    }}
+                >
+                    <option value="" disabled>Select your sex</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="prefer_not_to_say">Prefer not to say</option>
+                </select>
+            </div>
+</div>
+
+{/* row 3 */}
+<div className='grid grid-cols-12 gap-4'>
+<div className="form-group col-span-6">
+                <label htmlFor="husbandName">Father's / Husband's Name:</label>
+                <input
+                    type="text"
+                    id="husbandName"
+                    name="husbandName"
+                    value={formData.husbandName}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+
+            <div className="form-group col-span-6">
+                <label htmlFor="consultantInCharge">Consultant's In Charge:</label>
+                <input
+                    type="text"
+                    id="consultantInCharge"
+                    name="consultantInCharge"
+                    value={formData.consultantInCharge}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+</div>
+
+{/* row 4 */}
+<div className='grid grid-cols-12 gap-4'>
+<div className="form-group col-span-12">
+                <label htmlFor="address">Address:</label>
+                <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+</div>
+
+{/* row 5 */}
+<div className='grid grid-cols-12 gap-4'>
+ <div className="form-group col-span-3">
+                <label htmlFor="dateTimeAdmission">Date of Admission:</label>
+                <input
+                    type="date"
+                    id="dateAdmission"
+                    name="dateAdmission"
+                    value={formData.dateAdmission}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+            <div className="form-group col-span-3">
+                <label htmlFor="timeAdmission">Time of Admission:</label>
+                <input
+                    type="time"
+                    id="timeAdmission"
+                    name="timeAdmission"
+                    value={formData.timeAdmission}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+
+            <div className="form-group col-span-3">
+                <label htmlFor="dateDischarge">Date of Discharge:</label>
+                <input
+                    type="date"
+                    id="dateDischarge"
+                    name="dateDischarge"
+                    value={formData.dateDischarge}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+            
+            <div className="form-group col-span-3">
+    <label htmlFor="timeDischarge">Time of Discharge:</label>
+    <div style={{ display: 'flex', gap: '8px', marginTop: '5px' }}>
+        <select
+            name="hour"
+            value={formData.hour}
+            onChange={handleChange}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+        >
+            {[...Array(12)].map((_, i) => {
+                const hour = i + 1;
+                return <option key={hour} value={hour}>{hour}</option>;
+            })}
+        </select>
+<select name="minute" value={formData.minute} onChange={handleChange}>
+  {minutesArray.map(min => (
+    <option key={min} value={min}>{min}</option>
+  ))}
+</select>
+
+        <select
+            name="ampm"
+            value={formData.ampm}
+            onChange={handleChange}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+        >
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+        </select>
+    </div>
+</div>
+
+</div>
+
+            <div className="form-group">
+                <label htmlFor="knownCaseOf">Known Case of:</label>
+                <input
+                    type="text"
+                    id="knownCaseOf"
+                    name="knownCaseOf"
+                    value={formData.knownCaseOf}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="pastMedicalHistory">Past Medical History:</label>
+                <input
+                    type="text"
+                    id="pastMedicalHistory"
+                    name="pastMedicalHistory"
+                    value={formData.pastMedicalHistory}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+
+            
+            
+
+            
+
+            
+
+            
+
+            <div className="form-group">
+                <label htmlFor="bedNo">Bed No.:</label>
+                <input
+                    type="text"
+                    id="bedNo"
+                    name="bedNo"
+                    value={formData.bedNo}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+            </div>
+
+           
+        </div>
+    </div>
+
+
+
                 {/* Clinical Findings Section */}
                 <div className="form-section" style={{ marginBottom: '30px', border: '1px solid #ddd', padding: '20px', borderRadius: '5px' }}>
                     <h2 style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px', marginBottom: '20px' }}>Clinical Findings (On Admission)</h2>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                        <div className="form-group">
+                        <div className="form-group border border-none rounded-md shadow-md mb-2 px-3 bg-blue-200">
                             <label htmlFor="generalCondition">General Condition (GC):</label>
                             <input
                                 type="text"
@@ -197,41 +475,97 @@ const DischargeSummaryForm = () => {
                             />
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="pallor">Pallor:</label>
-                            <input
-                                type="text"
-                                id="pallor"
-                                name="pallor"
-                                value={formData.pallor}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
+                        <div className="form-group border rounded-xl shadow-md mb-2">
+    <label htmlFor="pallor">Pallor:</label>
+    <div className='flex justify-evenly' style={{ marginTop: '5px' }}>
+        <label style={{ marginRight: '15px' }}>
+            <input
+                type="radio"
+                id="pallor-present"
+                name="pallor"
+                value="Present"
+                checked={formData.pallor === "Present"}
+                onChange={handleChange}
+                style={{ marginRight: '5px' }}
+            />
+            Present
+        </label>
+        <label>
+            <input
+                type="radio"
+                id="pallor-not-present"
+                name="pallor"
+                value="Not Present"
+                checked={formData.pallor === "Not Present"}
+                onChange={handleChange}
+                style={{ marginRight: '5px' }}
+            />
+            Not Present
+        </label>
+    </div>
+</div>
 
-                        <div className="form-group">
-                            <label htmlFor="icterus">Icterus:</label>
-                            <input
-                                type="text"
-                                id="icterus"
-                                name="icterus"
-                                value={formData.icterus}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
 
-                        <div className="form-group">
-                            <label htmlFor="bloodPressure">Blood Pressure:</label>
-                            <input
-                                type="text"
-                                id="bloodPressure"
-                                name="bloodPressure"
-                                value={formData.bloodPressure}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
+                        <div className="form-group border rounded-xl shadow-md mb-2">
+    <label htmlFor="icterus">Icterus:</label>
+    <div className='flex justify-evenly' style={{ marginTop: '5px' }}>
+        <label style={{ marginRight: '15px' }}>
+            <input
+                type="radio"
+                id="icterus-present"
+                name="icterus"
+                value="Present"
+                checked={formData.icterus === "Present"}
+                onChange={handleChange}
+                style={{ marginRight: '5px' }}
+            />
+            Present
+        </label>
+        <label>
+            <input
+                type="radio"
+                id="icterus-not-present"
+                name="icterus"
+                value="Not Present"
+                checked={formData.icterus === "Not Present"}
+                onChange={handleChange}
+                style={{ marginRight: '5px' }}
+            />
+            Not Present
+        </label>
+    </div>
+</div>
+
+
+                        <div className="form-group" style={{ position: 'relative' }}>
+    <label htmlFor="bloodPressure">Blood Pressure:</label>
+    <input
+        type="text"
+        id="bloodPressure"
+        name="bloodPressure"
+        value={formData.bloodPressure}
+        onChange={handleChange}
+        style={{
+            width: '100%',
+            padding: '8px 50px 8px 8px', // space for unit on the right
+            marginTop: '5px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            boxSizing: 'border-box'
+        }}
+    />
+    <span style={{
+        position: 'absolute',
+        right: '10px',
+        top: '53px',
+        transform: 'translateY(-50%)',
+        color: '#555',
+        pointerEvents: 'none' // allow clicks to go through
+    }}>
+        mmHg
+    </span>
+</div>
+
 
                         <div className="form-group">
                             <label htmlFor="pulseRate">Pulse Rate:</label>
