@@ -1,0 +1,77 @@
+.form-section {
+    background-color: #f8fafc;
+    /* Softer, more modern light gray-blue */
+    padding: 24px;
+    /* Slightly more padding for breathing room */
+    border-radius: 12px;
+    /* Smoother, larger radius for modern feel */
+    border: 3px solid #d32f2f;
+    /* Slightly brighter red for vibrancy */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    /* width: 75vw; */
+    /* Constrain width for better form readability */
+    margin: 20px auto;
+    /* Center the form with consistent margin */
+}
+
+input,
+textarea {
+    background-color: #ffffff;
+    /* Keep clean white fields */
+    color: #1f2a44;
+    /* Slightly softer dark tone for text */
+    border: 1px solid #e0e0e0;
+    /* Lighter, less harsh border */
+    padding: 12px;
+    /* More padding for comfort */
+    border-radius: 6px;
+    /* Softer, modern radius */
+    font-size: 1rem;
+    /* Consistent font size */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    /* Smooth transitions */
+    width: 100%;
+    /* Full width for responsiveness */
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect width */
+}
+
+input:focus,
+textarea:focus {
+    border-color: #005bb5;
+    /* Deeper, more vibrant blue for focus */
+    box-shadow: 0 0 8px rgba(0, 91, 181, 0.2);
+    /* Subtle glow effect */
+    outline: none;
+}
+
+label {
+    color: #005bb5;
+    /* Match label color to focus state for cohesion */
+    font-size: 0.95rem;
+    /* Slightly smaller for elegance */
+    font-weight: 600;
+    /* Keep bold for emphasis */
+    margin-bottom: 8px;
+    /* More spacing for clarity */
+    display: block;
+}
+
+.h2 {
+    background-color: #1e3a8a;
+    /* Richer navy blue for sophistication */
+    color: #ffffff;
+    /* Clean white text */
+    font-weight: 700;
+    /* Bolder for hierarchy */
+    padding: 12px 16px;
+    /* Balanced padding for better proportion */
+    border-radius: 6px;
+    /* Match form-section's modern aesthetic */
+    font-size: 1.5rem;
+    /* Slightly larger for prominence */
+    margin-bottom: 20px;
+    /* Space below header */
+    text-align: center;
+    /* Center for visual balance */ }

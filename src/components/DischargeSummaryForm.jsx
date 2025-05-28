@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+import { generatePDF } from './generatePDF';
+
+import { PatientDetails } from './FormSection/PatientDetails';
+import './dischargesummaryform.css'
 
 const DischargeSummaryForm = () => {
     const [formData, setFormData] = useState({
@@ -15,8 +21,10 @@ const DischargeSummaryForm = () => {
         address: '',
         consultantInCharge: '',
         bedNo: '',
-        dateTimeAdmission: '',
-        dateTimeDischarge: '',
+        dateAdmission: '',
+        timeAdmission: '',
+        dateDischarge: '',
+        timeDischarge: '',
 
         // Clinical Findings
         generalCondition: '',
@@ -161,465 +169,17 @@ const DischargeSummaryForm = () => {
         });
     };
 
-    const generatePDF = () => {
-        const doc = new jsPDF();
-        let yPos = 10;
-
-        // Title
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Discharge Summary', doc.internal.pageSize.getWidth() / 2, yPos, { align: 'center' });
-        yPos += 10;
-
-        // Patient Details
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Patient Details:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(`Name: ${formData.patientName}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Age: ${formData.age}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Sex: ${formData.sex}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Known Case of: ${formData.knownCaseOf}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Past Medical History: ${formData.pastMedicalHistory}`, 15, yPos);
-        yPos += 5;
-        doc.text(`UHID/Reg. No.: ${formData.uhidRegNo}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Department: ${formData.department}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Husband's Name: ${formData.husbandName}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Address: ${formData.address}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Consultant/s In Charge: ${formData.consultantInCharge}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Bed No.: ${formData.bedNo}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Date & Time of Admission: ${formData.dateTimeAdmission}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Date & Time of Discharge: ${formData.dateTimeDischarge}`, 15, yPos);
-        yPos += 10;
-
-        // Clinical Findings
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Clinical Findings (On Admission):', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(`General Condition (GC): ${formData.generalCondition}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Pallor: ${formData.pallor}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Icterus: ${formData.icterus}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Blood Pressure: ${formData.bloodPressure}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Pulse Rate: ${formData.pulseRate}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Respiratory Rate: ${formData.respiratoryRate}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Temperature: ${formData.temperature}`, 15, yPos);
-        yPos += 5;
-        doc.text(`SpO2: ${formData.spO2}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Chest: ${formData.chest}`, 15, yPos);
-        yPos += 10;
-
-        // Check if we need a new page
-        if (yPos > 250) {
-            doc.addPage();
-            yPos = 10;
-        }
-
-        // Systemic Examination
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Systemic Examination:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(`Central Nervous System (CNS): ${formData.cns}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Cardiovascular System (CVS): ${formData.cvs}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Respiratory System: ${formData.respiratorySystem}`, 15, yPos);
-        yPos += 5;
-        doc.text(`Per/Abdomen (P/A): ${formData.perAbdomen}`, 15, yPos);
-        yPos += 10;
-
-        // Key Blood Investigations
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Key Blood Investigations (Pathology):', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        formData.bloodInvestigations.forEach((investigation, index) => {
-            doc.text(`${investigation.date}:`, 15, yPos);
-            yPos += 5;
-
-            investigation.tests.forEach((test) => {
-                doc.text(`${test.name}: ${test.value} ${test.unit}`, 20, yPos);
-                yPos += 5;
-            });
-
-            if (index < formData.bloodInvestigations.length - 1) {
-                yPos += 2;
-            }
-
-            // Check if we need a new page
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 10;
-            }
-        });
-        yPos += 5;
-
-        // Radiological & Diagnostic Findings
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Radiological & Diagnostic Findings:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        formData.radiologicalFindings.forEach((finding) => {
-            doc.text(`${finding.date}`, 15, yPos);
-            yPos += 5;
-
-            // Split long descriptions into multiple lines
-            const descriptionLines = doc.splitTextToSize(finding.description, 180);
-            descriptionLines.forEach((line) => {
-                doc.text(line, 20, yPos);
-                yPos += 5;
-            });
-
-            // Check if we need a new page
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 10;
-            }
-        });
-        yPos += 5;
-
-        // Diagnosis
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Diagnosis:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        formData.diagnosis.forEach((item, index) => {
-            doc.text(`${index + 1}. ${item}`, 15, yPos);
-            yPos += 5;
-
-            // Check if we need a new page
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 10;
-            }
-        });
-        yPos += 5;
-
-        // Hospital Course & Treatment
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Hospital Course & Treatment Administered:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        const hospitalCourseLines = doc.splitTextToSize(formData.hospitalCourse, 180);
-        hospitalCourseLines.forEach((line) => {
-            doc.text(line, 15, yPos);
-            yPos += 5;
-
-            // Check if we need a new page
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 10;
-            }
-        });
-        yPos += 5;
-
-        // Challenges During Treatment
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Challenges During Treatment & Reasons for Prolonged Hospitalization:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        formData.treatmentChallenges.forEach((challenge, index) => {
-            doc.text(`${index + 1}. ${challenge}`, 15, yPos);
-            yPos += 5;
-
-            // Check if we need a new page
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 10;
-            }
-        });
-        yPos += 5;
-
-        // Condition at Discharge
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Condition at Discharge:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(formData.conditionAtDischarge, 15, yPos);
-        yPos += 10;
-
-        // Check if we need a new page
-        if (yPos > 250) {
-            doc.addPage();
-            yPos = 10;
-        }
-
-        // Discharge Medication
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Discharge Medication:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        formData.dischargeMedication.forEach((medication, index) => {
-            doc.text(`${index + 1}. ${medication.name} – ${medication.dosage} for ${medication.duration}`, 15, yPos);
-            yPos += 5;
-
-            // Check if we need a new page
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 10;
-            }
-        });
-        yPos += 5;
-
-        // Special Instructions
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Special Instruction/s:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(formData.specialInstructions, 15, yPos);
-        yPos += 10;
-
-        // Review Date
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Review Date:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(`Follow-up: ${formData.reviewDate}`, 15, yPos);
-        yPos += 10;
-
-        // Emergency Contact
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('In case any of these symptoms persist, please contact immediately on:', 10, yPos);
-        yPos += 6;
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(formData.emergencyContact, 15, yPos);
-        yPos += 5;
-
-        formData.emergencySymptoms.forEach((symptom, index) => {
-            doc.text(`${index + 1}. ${symptom}`, 15, yPos);
-            yPos += 5;
-        });
-
-        // Save the PDF
-        doc.save('discharge-summary.pdf');
-    };
+    
 
     return (
-        <div className="discharge-summary-form" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Discharge Summary Form</h1>
+        <div className="discharge-summary-form" style={{ maxWidth: '80%', margin: '0 auto', padding: '20px' }}>
+
+            <h1 className='text-5xl' style={{ textAlign: 'center', marginBottom: '25px' }}>Discharge Summary Form</h1>
 
             <form>
                 {/* Patient Details Section */}
-                <div className="form-section" style={{ marginBottom: '30px', border: '1px solid #ddd', padding: '20px', borderRadius: '5px' }}>
-                    <h2 style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px', marginBottom: '20px' }}>Patient Details</h2>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                        <div className="form-group">
-                            <label htmlFor="patientName">Patient Name:</label>
-                            <input
-                                type="text"
-                                id="patientName"
-                                name="patientName"
-                                value={formData.patientName}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="ageSex">Age:</label>
-                            <input
-                                type="text"
-                                id="age"
-                                name="age"
-                                value={formData.age}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="ageSex">Sex:</label>
-                            <input
-                                type="text"
-                                id="sex"
-                                name="sex"
-                                value={formData.sex}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="knownCaseOf">Known Case of:</label>
-                            <input
-                                type="text"
-                                id="knownCaseOf"
-                                name="knownCaseOf"
-                                value={formData.knownCaseOf}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="pastMedicalHistory">Past Medical History:</label>
-                            <input
-                                type="text"
-                                id="pastMedicalHistory"
-                                name="pastMedicalHistory"
-                                value={formData.pastMedicalHistory}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="uhidRegNo">UHID/Reg. No.:</label>
-                            <input
-                                type="text"
-                                id="uhidRegNo"
-                                name="uhidRegNo"
-                                value={formData.uhidRegNo}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="department">Department:</label>
-                            <input
-                                type="text"
-                                id="department"
-                                name="department"
-                                value={formData.department}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="husbandName">Husband's Name:</label>
-                            <input
-                                type="text"
-                                id="husbandName"
-                                name="husbandName"
-                                value={formData.husbandName}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="address">Address:</label>
-                            <input
-                                type="text"
-                                id="address"
-                                name="address"
-                                value={formData.address}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="consultantInCharge">Consultant/s In Charge:</label>
-                            <input
-                                type="text"
-                                id="consultantInCharge"
-                                name="consultantInCharge"
-                                value={formData.consultantInCharge}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="bedNo">Bed No.:</label>
-                            <input
-                                type="text"
-                                id="bedNo"
-                                name="bedNo"
-                                value={formData.bedNo}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="dateTimeAdmission">Date & Time of Admission:</label>
-                            <input
-                                type="text"
-                                id="dateTimeAdmission"
-                                name="dateTimeAdmission"
-                                value={formData.dateTimeAdmission}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="dateTimeDischarge">Date & Time of Discharge:</label>
-                            <input
-                                type="text"
-                                id="dateTimeDischarge"
-                                name="dateTimeDischarge"
-                                value={formData.dateTimeDischarge}
-                                onChange={handleChange}
-                                style={{ width: '100%', padding: '8px', marginTop: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
-                            />
-                        </div>
-                    </div>
-                </div>
-
+                <PatientDetails formData={formData}/>
                 {/* Clinical Findings Section */}
                 <div className="form-section" style={{ marginBottom: '30px', border: '1px solid #ddd', padding: '20px', borderRadius: '5px' }}>
                     <h2 style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px', marginBottom: '20px' }}>Clinical Findings (On Admission)</h2>
@@ -734,6 +294,7 @@ const DischargeSummaryForm = () => {
                         </div>
                     </div>
                 </div>
+
 
                 {/* Systemic Examination Section */}
                 <div className="form-section" style={{ marginBottom: '30px', border: '1px solid #ddd', padding: '20px', borderRadius: '5px' }}>
@@ -1222,7 +783,7 @@ const DischargeSummaryForm = () => {
                 <div style={{ textAlign: 'center', marginTop: '30px', marginBottom: '50px' }}>
                     <button
                         type="button"
-                        onClick={generatePDF}
+                        onClick={()=> generatePDF(formData)}
                         style={{
                             background: '#4CAF50',
                             color: 'white',
