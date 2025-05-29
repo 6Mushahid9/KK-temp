@@ -9,6 +9,8 @@ import "./dischargesummaryform.css";
 
 const DischargeSummaryForm = () => {
 
+  const [pdfDataUrl, setPdfDataUrl] = useState(null);
+
   const [formData, setFormData] = useState({
     // Patient Details
       patientName: "",
@@ -176,6 +178,11 @@ const DischargeSummaryForm = () => {
       ...formData,
       bloodInvestigations: updatedInvestigations,
     });
+  };
+
+  const handlePreview = () => {
+    const pdfUrl = generatePDF(formData, true); // Get Data URL for preview
+    setPdfDataUrl(pdfUrl);
   };
 
   return (
@@ -1488,7 +1495,7 @@ const DischargeSummaryForm = () => {
           </button>
         </div>
 
-        {/* Generate PDF Button */}
+        {/* Generate PDF and Preview Buttons */}
         <div
           style={{
             textAlign: "center",
@@ -1508,10 +1515,47 @@ const DischargeSummaryForm = () => {
               borderRadius: "4px",
               cursor: "pointer",
               boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+              marginRight: "10px",
             }}
           >
             Generate Discharge Summary PDF
           </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const pdfUrl = generatePDF(formData, true);
+              setPdfDataUrl(pdfUrl);
+            }}
+            style={{
+              background: "#2196F3",
+              color: "white",
+              border: "none",
+              padding: "12px 30px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              cursor: "pointer",
+              boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+            }}
+          >
+            Preview PDF
+          </button>
+
+          {pdfDataUrl && (
+            <div style={{ marginTop: "20px" }}>
+              <h3>PDF Preview</h3>
+              <iframe
+                src={pdfDataUrl}
+                style={{
+                  width: "100%", // Custom width (adjust as needed, e.g., "100%", "600px")
+                  height: "600px", // Custom height (adjust as needed, e.g., "400px", "80vh")
+                  border: "1px solid #ddd",
+                  maxWidth: "800px", // Optional: constrain max width
+                }}
+                title="PDF Preview"
+              />
+            </div>
+          )}
         </div>
       </form>
     </div>

@@ -1,28 +1,42 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export function generatePDF(formData) {
+export function generatePDF(formData, isPreview=false) {
     const doc = new jsPDF();
-    let yPos = 10;
+    let yPos = 60;
 
-    // Title
-    doc.setFontSize(16);
+
+
+    const title = 'Discharge Summary';
+    doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
-    doc.text('Discharge Summary', doc.internal.pageSize.getWidth() / 2, yPos, { align: 'center' });
-    yPos += 10;
+
+    yPos = yPos+24
+
+    // Centered X position
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const textWidth = doc.getTextWidth(title);
+    const x = (pageWidth - textWidth) / 2;
+    const y = 60;
+
+    doc.text(title, x, y);
+
+    // Underline
+    doc.setLineWidth(0.5); // thickness of underline
+    doc.line(x, y + 2, x + textWidth, y + 2); // draw a line under the text
 
 
     // Patient Details Table
-    doc.setFontSize(12);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text('Patient Details:', 10, yPos);
-    yPos += 4;
+    yPos += 7;
 
     autoTable(doc, {
         startY: yPos,
-        head: [['Field', 'Value']],
+        head: [['UHID/Reg. No.', formData.uhidRegNo]],
         body: [
-            ['UHID/Reg. No.', formData.uhidRegNo],
+            [],
             ['Department', formData.department],
             ['Patient Name', formData.patientName],
             ['Age', formData.age],
@@ -54,20 +68,30 @@ export function generatePDF(formData) {
             ],
             ['Treatment/Procedure', formData.procedure],
         ],
+        didParseCell: function (data) {
+            data.cell.styles.lineColor = [0, 0, 0]; // black
+            data.cell.styles.cellPadding = 2; 
+            if (data.row.index === 0 && data.section === 'body') { // Row 1 (second row)
+                data.cell.styles.cellPadding = 0.3; // Reduce vertical padding
+            }
+          },
         theme: 'grid',
         styles: { fontSize: 10 },
         headStyles: {
-            fillColor: [169, 169, 169],  // Background color (RGB)
+            fillColor: [0, 0, 0],  // Background color (RGB)
             textColor: 255,             // Text color (255 = white)
             fontStyle: 'bold'
         },
         columnStyles: {
-            0: { cellWidth: 60, fontStyle: 'bold' },
+            0: { cellWidth: 60, fontStyle: 'bold', textColor: 0},
             1: { cellWidth: 'auto', fontStyle: 'normal' },
-        }
+        },
     });
 
-    yPos = doc.lastAutoTable.finalY + 10; // continue from below the table
+    // After autoTable
+    // yPos = doc.lastAutoTable.finalY + 10;
+    doc.addPage();
+    yPos = 20; // Reset for new page content
 
     // Clinical Findings
     doc.setFont('helvetica', 'bold');
@@ -311,7 +335,14 @@ export function generatePDF(formData) {
         yPos += 5;
     });
 
-    // Save the PDF
-    doc.save('discharge-summary.pdf');
+    // // Save the PDF
+    // doc.save('discharge-summary.pdf');
+
+    // Return Data URL for preview or save the PDF
+    if (isPreview) {
+        return doc.output('datauristring');
+    } else {
+        doc.save('discharge-summary.pdf');
+    }
 };
 
