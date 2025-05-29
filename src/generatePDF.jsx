@@ -33,9 +33,25 @@ export function generatePDF(formData) {
             ['Bed No.', formData.bedNo],
             ['Date & Time of Admission', `${formData.dateAdmission}, ${formData.timeAdmission}`],
             ['Date & Time of Discharge', `${formData.dateDischarge}, ${formData.timeDischarge}`],
-            ['Discharge Diagnosis', formData.dischargeDiagnosis],
-            ['Presenting Complaints', formData.presentingComplaints],
-            ['Known Comorbidities/Past Medical History', formData.pastMedicalHistory],
+            [
+                'Discharge Diagnosis',
+                formData.dischargeDiagnosis
+                    .map((item, index) => `${index + 1}) ${item}`)
+                    .join('\n')
+                    .trim() || 'N/A', // Fallback to 'N/A' if array is empty
+              ],
+            ['Presenting Complaints', 
+                formData.presentingComplaints
+                    .map((item, index) => `${index + 1}) ${item}`)
+                    .join('\n')
+                    .trim() || 'N/A', // Fallback to 'N/A' if array is empty
+            ],
+            ['Known Comorbidities/Past Medical History', 
+                formData.pastMedicalHistory
+                    .map((item, index) => `${index + 1}) ${item}`)
+                    .join('\n')
+                    .trim() || 'N/A', // Fallback to 'N/A' if array is empty
+            ],
             ['Treatment/Procedure', formData.procedure],
         ],
         theme: 'grid',

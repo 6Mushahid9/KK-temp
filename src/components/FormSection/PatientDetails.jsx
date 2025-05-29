@@ -1,4 +1,4 @@
-export function PatientDetails({handleChange, formData}) {
+export function PatientDetails({ handleChange, formData, handleArrayChange, addArrayItem, removeArrayItem}) {
     return (
         <div
             className="form-section"
@@ -322,69 +322,238 @@ export function PatientDetails({handleChange, formData}) {
                 </div>
 
                 {/* row 7 */}
-                <div className="grid grid-cols-12 gap-4 mt-3">
-                    <div className="form-group col-span-12">
-                        <label htmlFor="dischargeDiagnosis">Discharge Diagnosis:</label>
-                        <input
-                            type="text"
-                            id="dischargeDiagnosis"
-                            name="dischargeDiagnosis"
-                            value={formData.dischargeDiagnosis}
-                            onChange={handleChange}
-                            style={{
-                                width: "100%",
-                                padding: "8px",
-                                marginTop: "5px",
-                                borderRadius: "4px",
-                                border: "1px solid #ddd",
-                            }}
-                        />
+                <h2
+                    style={{
+                        borderBottom: "1px solid #ddd",
+                        paddingBottom: "10px",
+                        marginBottom: "20px",
+                    }}
+                >
+                    Discharge Diagnosis
+                </h2>
+                {formData.dischargeDiagnosis.map((item, index) => (
+                    <div
+                        key={index}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginBottom: "10px",
+                            gap: "10px",
+                        }}
+                    >
+                        <div style={{ flex: 1 }}>
+                            <input
+                                type="text"
+                                value={item}
+                                onChange={(e) =>
+                                    handleArrayChange(
+                                        index,
+                                        "dischargeDiagnosis",
+                                        e.target.value,
+                                        "dischargeDiagnosis"
+                                    )
+                                }
+                                style={{
+                                    width: "100%",
+                                    padding: "8px",
+                                    borderRadius: "4px",
+                                    border: "1px solid #ddd",
+                                }}
+                                placeholder={`Discharge Diagnosis ${index + 1}`}
+                            />
+                        </div>
+
+                        {index > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => removeArrayItem("dischargeDiagnosis", index)}
+                                style={{
+                                    background: "#f44336",
+                                    color: "white",
+                                    border: "none",
+                                    padding: "5px 10px",
+                                    borderRadius: "4px",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                Remove
+                            </button>
+                        )}
                     </div>
-                </div>
+                ))}
+                <button
+                    type="button"
+                    onClick={() => addArrayItem("dischargeDiagnosis", "")}
+                    style={{
+                        background: "#2196F3",
+                        color: "white",
+                        border: "none",
+                        padding: "8px 15px",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        marginTop: "10px",
+                    }}
+                >
+                    Add Discharge Diagnosis
+                </button>
 
                 {/* row 8 */}
                 <div className="grid grid-cols-12 gap-4 mt-3">
-                    <div className="form-group col-span-12 ">
-                        <label htmlFor="presentingComplaints">
-                            Presenting Complaints:
-                        </label>
-                        <input
-                            type="text"
-                            id="presentingComplaints"
-                            name="presentingComplaints"
-                            value={formData.presentingComplaints}
-                            onChange={handleChange}
+                    <div className="form-group col-span-12">
+                        <h2
                             style={{
-                                width: "100%",
-                                padding: "8px",
-                                marginTop: "5px",
-                                borderRadius: "4px",
-                                border: "1px solid #ddd",
+                                borderBottom: "1px solid #ddd",
+                                paddingBottom: "10px",
+                                marginBottom: "20px",
                             }}
-                        />
+                        >
+                            Presenting Complaints
+                        </h2>
+                        {formData.presentingComplaints.map((item, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    marginBottom: "10px",
+                                    gap: "10px",
+                                }}
+                            >
+                                <div style={{ flex: 1 }}>
+                                    <input
+                                        type="text"
+                                        value={item}
+                                        onChange={(e) =>
+                                            handleArrayChange(
+                                                index,
+                                                "presentingComplaints",
+                                                e.target.value,
+                                                "presentingComplaints"
+                                            )
+                                        }
+                                        style={{
+                                            width: "100%",
+                                            padding: "8px",
+                                            borderRadius: "4px",
+                                            border: "1px solid #ddd",
+                                        }}
+                                        placeholder={`Presenting Complaint ${index + 1}`}
+                                    />
+                                </div>
+
+                                {index > 0 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => removeArrayItem("presentingComplaints", index)}
+                                        style={{
+                                            background: "#f44336",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "5px 10px",
+                                            borderRadius: "4px",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        Remove
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={() => addArrayItem("presentingComplaints", "")}
+                            style={{
+                                background: "#2196F3",
+                                color: "white",
+                                border: "none",
+                                padding: "8px 15px",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                                marginTop: "10px",
+                            }}
+                        >
+                            Add Presenting Complaint
+                        </button>
                     </div>
                 </div>
 
                 {/* row 9 */}
                 <div className="grid grid-cols-12 gap-4 mt-3">
                     <div className="form-group col-span-12">
-                        <label htmlFor="pastMedicalHistory">
-                            Known Comorbidities / Past Medical History:
-                        </label>
-                        <input
-                            type="text"
-                            id="pastMedicalHistory"
-                            name="pastMedicalHistory"
-                            value={formData.pastMedicalHistory}
-                            onChange={handleChange}
+                        <h2
                             style={{
-                                width: "100%",
-                                padding: "8px",
-                                marginTop: "5px",
-                                borderRadius: "4px",
-                                border: "1px solid #ddd",
+                                borderBottom: "1px solid #ddd",
+                                paddingBottom: "10px",
+                                marginBottom: "20px",
                             }}
-                        />
+                        >
+                            Known Comorbidities / Past Medical History
+                        </h2>
+                        {formData.pastMedicalHistory.map((item, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    marginBottom: "10px",
+                                    gap: "10px",
+                                }}
+                            >
+                                <div style={{ flex: 1 }}>
+                                    <input
+                                        type="text"
+                                        value={item}
+                                        onChange={(e) =>
+                                            handleArrayChange(
+                                                index,
+                                                "pastMedicalHistory",
+                                                e.target.value,
+                                                "pastMedicalHistory"
+                                            )
+                                        }
+                                        style={{
+                                            width: "100%",
+                                            padding: "8px",
+                                            borderRadius: "4px",
+                                            border: "1px solid #ddd",
+                                        }}
+                                        placeholder={`Past Medical History ${index + 1}`}
+                                    />
+                                </div>
+
+                                {index > 0 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => removeArrayItem("pastMedicalHistory", index)}
+                                        style={{
+                                            background: "#f44336",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "5px 10px",
+                                            borderRadius: "4px",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        Remove
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={() => addArrayItem("pastMedicalHistory", "")}
+                            style={{
+                                background: "#2196F3",
+                                color: "white",
+                                border: "none",
+                                padding: "8pxillon 15px",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                                marginTop: "10px",
+                            }}
+                        >
+                            Add Past Medical History
+                        </button>
                     </div>
                 </div>
             </div>

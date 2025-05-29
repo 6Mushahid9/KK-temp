@@ -14,7 +14,7 @@ const DischargeSummaryForm = () => {
       patientName: "",
       age: "",
       sex: "",
-      pastMedicalHistory: "",
+      pastMedicalHistory: [""],
       uhidRegNo: "",
       department: "",
       husbandName: "",
@@ -26,8 +26,8 @@ const DischargeSummaryForm = () => {
       dateDischarge: "",
       timeDischarge: "",
       procedure: "",
-      dischargeDiagnosis: "",
-      presentingComplaints: "",
+      dischargeDiagnosis: [""],
+      presentingComplaints: [""],
 
     // Clinical Findings
     generalCondition: "",
@@ -193,7 +193,7 @@ const DischargeSummaryForm = () => {
       <form>
         {/* Patient Details Section */}
 
-        <PatientDetails handleChange={handleChange} formData={formData}/>
+        <PatientDetails handleChange={handleChange} formData={formData} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem}/>
 
 
         {/* Clinical Findings Section */}
