@@ -1233,10 +1233,9 @@ const DischargeSummaryForm = () => {
                 style={{
                   width: "100%", // Custom width (adjust as needed, e.g., "100%", "600px")
                   height: "600px", // Custom height (adjust as needed, e.g., "400px", "80vh")
-                  border: "1px solid #ddd",
-                  maxWidth: "800px", // Optional: constrain max width
                 }}
                 title="PDF Preview"
+                className="border"
               />
             </div>
           )}
