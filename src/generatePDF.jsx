@@ -3,15 +3,26 @@ import autoTable from 'jspdf-autotable';
 
 export function generatePDF(formData, isPreview=false) {
     const doc = new jsPDF();
-    let yPos = 60;
+    let yPos = 50;
 
+    function convertTo12Hour(time24) {
+        const [hours, minutes] = time24.split(':');
+        const date = new Date();
+        date.setHours(+hours);
+        date.setMinutes(+minutes);
 
+        return date.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+      }
 
     const title = 'Discharge Summary';
-    doc.setFontSize(20);
+    doc.setFontSize(25);
     doc.setFont('helvetica', 'bold');
 
-    yPos = yPos+24
+    yPos = yPos+34
 
     // Centered X position
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -45,8 +56,8 @@ export function generatePDF(formData, isPreview=false) {
             ['Address', formData.address],
             ['Consultant/s In Charge', formData.consultantInCharge],
             ['Bed No.', formData.bedNo],
-            ['Date & Time of Admission', `${formData.dateAdmission}, ${formData.timeAdmission}`],
-            ['Date & Time of Discharge', `${formData.dateDischarge}, ${formData.timeDischarge}`],
+            ['Date & Time of Admission', `${formData.dateAdmission}, ${convertTo12Hour(formData.timeAdmission)}`],
+            ['Date & Time of Discharge', `${formData.dateDischarge}, ${convertTo12Hour(formData.timeDischarge)}`],
             [
                 'Discharge Diagnosis',
                 formData.dischargeDiagnosis
@@ -88,49 +99,80 @@ export function generatePDF(formData, isPreview=false) {
         },
     });
 
-    // After autoTable
+    // After autoTabl
     // yPos = doc.lastAutoTable.finalY + 10;
     doc.addPage();
     yPos = 20; // Reset for new page content
 
+    // Add extra spacing
+    yPos += 4;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    yPos += 24; // space after the line before next heading
+
+
     // Clinical Findings
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     doc.text('Clinical Findings (On Admission):', 10, yPos);
-    yPos += 6;
+    yPos += 15;
 
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.text(`General Condition (GC): ${formData.generalCondition}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Pallor: ${formData.pallor}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Icterus: ${formData.icterus}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Blood Pressure: ${formData.bloodPressure} mmHg`, 15, yPos);
-    yPos += 5;
-    doc.text(`Pulse Rate: ${formData.pulseRate}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Respiratory Rate: ${formData.respiratoryRate}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Temperature: ${formData.temperature}`, 15, yPos);
-    yPos += 5;
-    doc.text(`SpO2: ${formData.spO2}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Chest: ${formData.chest}`, 15, yPos);
-    yPos += 10;
+    doc.setFontSize(12);
 
-    // Check if we need a new page
-    if (yPos > 250) {
-        doc.addPage();
-        yPos = 10;
-    }
+
+    const bullet = '•';
+    const indent = 15;
+    const lineHeight = 5;
+
+    // Each field: bold label + normal value in same line
+    const findings = [
+        { label: 'General Condition (GC)', value: formData.generalCondition },
+        { label: 'Pallor', value: formData.pallor },
+        { label: 'Icterus', value: formData.icterus },
+        { label: 'Blood Pressure', value: `${formData.bloodPressure} mmHg` },
+        { label: 'Pulse Rate', value: `${formData.pulseRate} bpm` },
+        { label: 'Respiratory Rate', value: `${formData.respiratoryRate} breaths/min` },
+        { label: 'Temperature', value: `${formData.temperature} °F` },
+        { label: 'SpO2', value: `${formData.spO2} ${formData.spO2Method}` },
+        { label: 'Chest', value: formData.chest }
+    ];
+
+    findings.forEach(({ label, value }) => {
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${bullet} `, indent, yPos); // draw bullet
+
+        const bulletWidth = doc.getTextWidth(`${bullet} `);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}: `, indent + bulletWidth, yPos); // bold label
+
+        const labelWidth = doc.getTextWidth(`${label}: `);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${value}`, indent + bulletWidth + labelWidth, yPos); // normal value
+
+        yPos += lineHeight+5 ;
+    });
+
+    // Add extra spacing
+    yPos += 4;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    yPos += 14; // space after the line before next heading
 
     // Systemic Examination
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(14);
     doc.text('Systemic Examination:', 10, yPos);
     yPos += 6;
+
+    doc.setFontSize(10);
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);

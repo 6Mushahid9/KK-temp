@@ -367,96 +367,96 @@ export function PatientDetails({
 
         {/* row 8 */}
         <div className="mt-3 border-2 rounded-sm p-4">
-  <h2 className="text-left font-semibold">
-    Presenting Complaints
-  </h2>
+          <h2 className="text-left font-semibold">
+            Presenting Complaints
+          </h2>
 
-  {formData.presentingComplaints.map((item, index) => (
-    <div key={index} className="mt-3 flex gap-2.5">
-      <input
-        type="text"
-        value={item}
-        onChange={(e) =>
-          handleArrayChange(
-            index,
-            "presentingComplaints",
-            e.target.value,
-            "presentingComplaints"
-          )
-        }
-        placeholder={`Presenting Complaint ${index + 1}`}
-        className="flex-1 border border-gray-300 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+          {formData.presentingComplaints.map((item, index) => (
+            <div key={index} className="mt-3 flex gap-2.5">
+              <input
+                type="text"
+                value={item}
+                onChange={(e) =>
+                  handleArrayChange(
+                    index,
+                    "presentingComplaints",
+                    e.target.value,
+                    "presentingComplaints"
+                  )
+                }
+                placeholder={`Presenting Complaint ${index + 1}`}
+                className="flex-1 border border-gray-300 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
 
-      {index > 0 && (
-        <button
-          type="button"
-          onClick={() => removeArrayItem("presentingComplaints", index)}
-          className="bg-red-500 text-white px-4 py-2.5 cursor-pointer rounded-sm"
-        >
-          Remove
-        </button>
-      )}
-    </div>
-  ))}
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeArrayItem("presentingComplaints", index)}
+                  className="bg-red-500 text-white px-4 py-2.5 cursor-pointer rounded-sm"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
 
-  <div className="flex flex-initial">
-    <button
-      type="button"
-      onClick={() => addArrayItem("presentingComplaints", "")}
-      className="bg-blue-600 text-white px-3 py-2 rounded-sm cursor-pointer mt-2.5"
-    >
-      Add +
-    </button>
-  </div>
-</div>
+          <div className="flex flex-initial">
+            <button
+              type="button"
+              onClick={() => addArrayItem("presentingComplaints", "")}
+              className="bg-blue-600 text-white px-3 py-2 rounded-sm cursor-pointer mt-2.5"
+            >
+              Add +
+            </button>
+          </div>
+        </div>
 
 
         {/* row 9 */}
         <div className="mt-3 border-2 rounded-sm p-4">
-  <h2 className="text-left font-semibold">
-    Known Comorbidities / Past Medical History
-  </h2>
+          <h2 className="text-left font-semibold">
+            Known Comorbidities / Past Medical History
+          </h2>
 
-  {formData.pastMedicalHistory.map((item, index) => (
-    <div key={index} className="mt-3 flex gap-2.5">
-      <input
-        type="text"
-        value={item}
-        onChange={(e) =>
-          handleArrayChange(
-            index,
-            "pastMedicalHistory",
-            e.target.value,
-            "pastMedicalHistory"
-          )
-        }
-        placeholder={`Past Medical History ${index + 1}`}
-        className="flex-1 border border-gray-300 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+          {formData.pastMedicalHistory.map((item, index) => (
+            <div key={index} className="mt-3 flex gap-2.5">
+              <input
+                type="text"
+                value={item}
+                onChange={(e) =>
+                  handleArrayChange(
+                    index,
+                    "pastMedicalHistory",
+                    e.target.value,
+                    "pastMedicalHistory"
+                  )
+                }
+                placeholder={`Past Medical History ${index + 1}`}
+                className="flex-1 border border-gray-300 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
 
-      {index > 0 && (
-        <button
-          type="button"
-          onClick={() => removeArrayItem("pastMedicalHistory", index)}
-          className="bg-red-500 text-white px-4 py-2.5 cursor-pointer rounded-sm"
-        >
-          Remove
-        </button>
-      )}
-    </div>
-  ))}
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeArrayItem("pastMedicalHistory", index)}
+                  className="bg-red-500 text-white px-4 py-2.5 cursor-pointer rounded-sm"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
 
-  <div className="flex flex-initial">
-    <button
-      type="button"
-      onClick={() => addArrayItem("pastMedicalHistory", "")}
-      className="bg-blue-600 text-white px-3 py-2 rounded-sm cursor-pointer mt-2.5"
-    >
-      Add +
-    </button>
-  </div>
-</div>
+          <div className="flex flex-initial">
+            <button
+              type="button"
+              onClick={() => addArrayItem("pastMedicalHistory", "")}
+              className="bg-blue-600 text-white px-3 py-2 rounded-sm cursor-pointer mt-2.5"
+            >
+              Add +
+            </button>
+          </div>
+        </div>
 
       </div>
     </div>

@@ -30,13 +30,7 @@ export function ClinicalFindings({ handleChange, formData }) {
             name="generalCondition"
             value={formData.generalCondition}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "8px",
-              marginTop: "5px",
-              borderRadius: "4px",
-              border: "1px solid #ddd",
-            }}
+            className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -73,8 +67,8 @@ export function ClinicalFindings({ handleChange, formData }) {
               className="bg-white w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select</option>
-              <option value="roomAir">at Room Air</option>
-              <option value="oxygen">at Oxygen Support</option>
+              <option value="at Room Air">at Room Air</option>
+              <option value="at Oxygen Support">at Oxygen Support</option>
             </select>
           </div>
         </div>
@@ -179,7 +173,7 @@ export function ClinicalFindings({ handleChange, formData }) {
         <div className="form-group col-span-3 mt-3" style={{ position: "relative" }}>
           <label htmlFor="pulseRate">Pulse Rate:</label>
           <input
-            type="text"
+            type="number"
             id="pulseRate"
             name="pulseRate"
             value={formData.pulseRate}
@@ -203,14 +197,14 @@ export function ClinicalFindings({ handleChange, formData }) {
               pointerEvents: "none",
             }}
           >
-            bpm
+            beats / min
           </span>
         </div>
 
         <div className="form-group col-span-3 mt-3" style={{ position: "relative" }}>
           <label htmlFor="respiratoryRate">Respiratory Rate:</label>
           <input
-            type="text"
+            type="number"
             id="respiratoryRate"
             name="respiratoryRate"
             value={formData.respiratoryRate}
@@ -234,14 +228,14 @@ export function ClinicalFindings({ handleChange, formData }) {
               pointerEvents: "none",
             }}
           >
-            breaths/min
+            breaths / min
           </span>
         </div>
 
         <div className="form-group col-span-3 mt-3" style={{ position: "relative" }}>
           <label htmlFor="temperature">Temperature:</label>
           <input
-            type="text"
+            type="number"
             id="temperature"
             name="temperature"
             value={formData.temperature}
