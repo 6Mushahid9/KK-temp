@@ -49,6 +49,7 @@ const DischargeSummaryForm = () => {
     cvs: "",
     respiratorySystem: "",
     perAbdomen: "",
+    bowelSounds: "",
 
     // Key Blood Investigations
     bloodInvestigations: [

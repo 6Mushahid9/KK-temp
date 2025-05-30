@@ -164,26 +164,83 @@ export function generatePDF(formData, isPreview=false) {
     doc.setLineWidth(0.1);
     doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
 
-    yPos += 14; // space after the line before next heading
+    yPos += 20; // space after the line before next heading
 
     // Systemic Examination
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
+    doc.setFontSize(16);
     doc.text('Systemic Examination:', 10, yPos);
-    yPos += 6;
+    yPos += 15;
 
-    doc.setFontSize(10);
+    doc.setFontSize(12);
 
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.text(`Central Nervous System (CNS): ${formData.cns}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Cardiovascular System (CVS): ${formData.cvs}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Respiratory System: ${formData.respiratorySystem}`, 15, yPos);
-    yPos += 5;
-    doc.text(`Per/Abdomen (P/A): ${formData.perAbdomen}`, 15, yPos);
-    yPos += 10;
+    const systemicFindings = [
+        { label: 'Central Nervous System (CNS)', value: formData.cns },
+        { label: 'Cardiovascular System (CVS)', value: `${formData.cvs}` },
+        { label: 'Respiratory System', value: formData.respiratorySystem },
+        { label: 'Per/Abdomen (P/A)', value: formData.perAbdomen },
+        { label: 'Bowel Sounds', value: formData.bowelSounds }
+    ];
+
+    systemicFindings.forEach(({ label, value }) => {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(16);
+        doc.text(`${bullet} `, indent, yPos);
+
+        doc.setFontSize(12);
+
+
+        const bulletWidth = doc.getTextWidth(`${bullet} `);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}: `, indent + bulletWidth, yPos);
+
+        const labelWidth = doc.getTextWidth(`${label}: `);
+
+        // Special handling for CVS field with S₁ S₂
+        if (label === 'Cardiovascular System (CVS)') {
+            const xStart = indent + bulletWidth + labelWidth;
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text(' S', xStart, yPos);
+            let s1Width = doc.getTextWidth('S');
+
+            doc.setFontSize(8);
+            doc.text(' 1', xStart + s1Width, yPos + 1);
+
+            const s1TotalWidth = doc.getTextWidth('S1');
+
+            doc.setFontSize(10);
+            doc.text(' S', xStart + s1TotalWidth + 1, yPos);
+
+            let s2Width = doc.getTextWidth(' S');
+
+            doc.setFontSize(8);
+            doc.text('2', xStart + s1TotalWidth + 1 + s2Width, yPos + 1);
+
+            // Now print the rest of the value
+            doc.setFontSize(10);
+            doc.text(` ${value}`, xStart + s1TotalWidth + 1 + s2Width + doc.getTextWidth('2 '), yPos);
+        } else {
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text(value, indent + bulletWidth + labelWidth, yPos);
+        }
+
+        yPos += lineHeight + 5;
+    });
+
+    // Add extra spacing
+    yPos += 4;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    yPos += 20; // space after the line before next heading
+
+    doc.addPage();
+    yPos = 20; // Reset for new page content
 
     // Key Blood Investigations
     doc.setFont('helvetica', 'bold');
