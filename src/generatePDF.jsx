@@ -242,34 +242,67 @@ export function generatePDF(formData, isPreview=false) {
     doc.addPage();
     yPos = 20; // Reset for new page content
 
+
+    yPos += 6;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
     // Key Blood Investigations
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     doc.text('Key Blood Investigations (Pathology):', 10, yPos);
-    yPos += 6;
+    yPos += 15;
 
+    // bullet = '•';
+    // indent = 15;
+    // lineHeight = 5;
+
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
+
     formData.bloodInvestigations.forEach((investigation, index) => {
-        doc.text(`${investigation.date}:`, 15, yPos);
-        yPos += 5;
+        // Date as a bold heading
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.text(`${investigation.date}:`, indent, yPos);
+        yPos += lineHeight + 2;
 
         investigation.tests.forEach((test) => {
-            doc.text(`${test.name}: ${test.value} ${test.unit}`, 20, yPos);
-            yPos += 5;
+            // Draw bullet
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(12);
+            doc.text(`${bullet} `, indent, yPos);
+
+            const bulletWidth = doc.getTextWidth(`${bullet} `);
+
+            // Draw test name in bold
+            doc.setFont('helvetica', 'bold');
+            const label = `${test.name}: `;
+            doc.text(label, indent + bulletWidth, yPos);
+
+            const labelWidth = doc.getTextWidth(label);
+
+            // Draw value + unit in normal font
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text(`${test.value} ${test.unit}`, indent + bulletWidth + labelWidth, yPos);
+
+            yPos += lineHeight + 3;
+
+            // Add page if needed
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
         });
 
-        if (index < formData.bloodInvestigations.length - 1) {
-            yPos += 2;
-        }
-
-        // Check if we need a new page
-        if (yPos > 270) {
-            doc.addPage();
-            yPos = 10;
-        }
+        yPos += 5;
     });
-    yPos += 5;
 
     // Radiological & Diagnostic Findings
     doc.setFont('helvetica', 'bold');
@@ -434,6 +467,24 @@ export function generatePDF(formData, isPreview=false) {
         yPos += 5;
     });
 
+
+
+    const totalPages = doc.getNumberOfPages();
+
+    for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+
+        const pageText = `Page ${i} of ${totalPages}`;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const textWidth = doc.getTextWidth(pageText);
+        const x = (pageWidth - textWidth) / 2; // Centered
+        const y = doc.internal.pageSize.getHeight() - 10; // 10 units from bottom
+
+        doc.text(pageText, x, y);
+    }
+    
     // // Save the PDF
     // doc.save('discharge-summary.pdf');
 

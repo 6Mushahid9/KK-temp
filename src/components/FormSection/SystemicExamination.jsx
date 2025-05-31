@@ -10,7 +10,7 @@ export function SystemicExamination({ handleChange, formData }) {
       }}
     >
       <h2
-        className="h2 "
+        className="h2"
         style={{
           borderBottom: "1px solid #ddd",
           paddingBottom: "10px",
@@ -20,25 +20,26 @@ export function SystemicExamination({ handleChange, formData }) {
         Systemic Examination
       </h2>
 
-      {/* row 1 */}
-      <div className="mt-3">
-        <label htmlFor="cns">Central Nervous System (CNS):</label>
-        <input
-          id="cns"
-          name="cns"
-          value={formData.cns}
-          onChange={handleChange}
-          className=""
-        />
-      </div>
+      <div className="grid grid-cols-12 gap-3.5">
+        {/* row 1 */}
+        <div className="form-group col-span-12 mt-3">
+          <label htmlFor="cns" className="block mb-1 font-medium text-gray-700">
+            Central Nervous System (CNS):
+          </label>
+          <input
+            id="cns"
+            name="cns"
+            value={formData.cns}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-      {/* row 2 */}
-      <div className="mt-3 grid grid-cols-12 gap-4 items-center">
-        {/* Left Column: S1S2 Radio Buttons */}
-        <div className="col-span-6">
+        {/* row 2 */}
+        <div className="form-group col-span-6 mt-3">
           <label
-            htmlFor="s1s2"
-            className="block font-medium text-gray-700"
+            htmlFor="cvs"
+            className="block mb-1 font-medium text-gray-700"
           >
             Cardiovascular System (CVS):
           </label>
@@ -47,10 +48,10 @@ export function SystemicExamination({ handleChange, formData }) {
             <label className="!flex !items-center whitespace-nowrap gap-2">
               <input
                 type="radio"
-                id="s1s2-present"
-                name="s1s2"
-                value="Present"
-                checked={formData.s1s2 === "Present"}
+                id="cvs-heard"
+                name="cvs"
+                value="heard"
+                checked={formData.cvs === "heard"}
                 onChange={handleChange}
               />
               <span>Heard</span>
@@ -58,10 +59,10 @@ export function SystemicExamination({ handleChange, formData }) {
             <label className="!flex !items-center whitespace-nowrap gap-2">
               <input
                 type="radio"
-                id="s1s2-absent"
-                name="s1s2"
-                value="Absent"
-                checked={formData.s1s2 === "Absent"}
+                id="cvs-not-heard"
+                name="cvs"
+                value="not heard"
+                checked={formData.cvs === "not heard"}
                 onChange={handleChange}
               />
               <span>Not Heard</span>
@@ -69,36 +70,48 @@ export function SystemicExamination({ handleChange, formData }) {
           </div>
         </div>
 
-        {/* Right Column: Additional CVS Info Input */}
-       <div className="col-span-6">
-        <label htmlFor="respiratorySystem" className="mb-1">Respiratory System:</label>
-        <input
-          type="text"
-          id="respiratorySystem"
-          name="respiratorySystem"
-          value={formData.respiratorySystem}
-          onChange={handleChange}
-        />
-      </div>
-      </div>
+        <div className="form-group col-span-6 mt-3">
+          <label
+            htmlFor="respiratorySystem"
+            className="block mb-1 font-medium text-gray-700"
+          >
+            Respiratory System:
+          </label>
+          <input
+            type="text"
+            id="respiratorySystem"
+            name="respiratorySystem"
+            value={formData.respiratorySystem}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-     
-
-      {/* row 3*/}
-      <div className="grid grid-cols-12 gap-3 mt-3">
-        <div className="col-span-6">
-          <label htmlFor="perAbdomen">Per/Abdomen (P/A):</label>
+        {/* row 3 */}
+        <div className="form-group col-span-6 mt-3">
+          <label
+            htmlFor="perAbdomen"
+            className="block mb-1 font-medium text-gray-700"
+          >
+            Per/Abdomen (P/A):
+          </label>
           <input
             type="text"
             id="perAbdomen"
             name="perAbdomen"
             value={formData.perAbdomen}
             onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        <div className="col-span-6">
-          <label htmlFor="bowel-sounds-present">Bowel Sounds:</label>
+        <div className="form-group col-span-6 mt-3">
+          <label
+            htmlFor="bowel-sounds-present"
+            className="block mb-1 font-medium text-gray-700"
+          >
+            Bowel Sounds:
+          </label>
           <div className="flex justify-evenly rounded-sm h-12 bg-white">
             <label className="!flex !items-center whitespace-nowrap gap-2">
               <input
