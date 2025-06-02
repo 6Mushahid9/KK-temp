@@ -151,11 +151,10 @@ export function generatePDF(formData, isPreview=false) {
         { label: 'Pallor', value: formData.pallor },
         { label: 'Icterus', value: formData.icterus },
         { label: 'Blood Pressure', value: `${formData.bloodPressure} mmHg` },
-        { label: 'Pulse Rate', value: `${formData.pulseRate} bpm` },
+        { label: 'Pulse Rate', value: `${formData.pulseRate} beats/min` },
         { label: 'Respiratory Rate', value: `${formData.respiratoryRate} breaths/min` },
-        { label: 'Temperature', value: `${formData.temperature} °F` },
-        { label: 'SpO2', value: `${formData.spO2} ${formData.spO2Method}` },
-        { label: 'Chest', value: formData.chest }
+        { label: 'Temperature', value: `${formData.temperature}°F` },
+        { label: 'SpO2', value: `${formData.spO2}% ${formData.spO2Method}` }
     ];
 
     findings.forEach(({ label, value }) => {
@@ -216,7 +215,7 @@ export function generatePDF(formData, isPreview=false) {
         // Special handling for CVS field with S₁ S₂
         if (label === 'Cardiovascular System (CVS)') {
             const xStart = indent + bulletWidth + labelWidth;
-            doc.setFontSize(10);
+            doc.setFontSize(12);
             doc.setFont('times', 'normal');
             doc.text(' S', xStart, yPos);
             let s1Width = doc.getTextWidth('S');
@@ -226,7 +225,7 @@ export function generatePDF(formData, isPreview=false) {
 
             const s1TotalWidth = doc.getTextWidth('S1');
 
-            doc.setFontSize(10);
+            doc.setFontSize(12);
             doc.text(' S', xStart + s1TotalWidth + 1, yPos);
 
             let s2Width = doc.getTextWidth(' S');
@@ -235,11 +234,11 @@ export function generatePDF(formData, isPreview=false) {
             doc.text('2', xStart + s1TotalWidth + 1 + s2Width, yPos + 1);
 
             // Now print the rest of the value
-            doc.setFontSize(10);
+            doc.setFontSize(12);
             doc.text(` ${value}`, xStart + s1TotalWidth + 1 + s2Width + doc.getTextWidth('2 '), yPos);
         } else {
             doc.setFont('times', 'normal');
-            doc.setFontSize(10);
+            doc.setFontSize(12);
             doc.text(value, indent + bulletWidth + labelWidth, yPos);
         }
 
@@ -294,7 +293,7 @@ export function generatePDF(formData, isPreview=false) {
 
             // Test name
             doc.setFont('times', 'bold');
-            doc.setFontSize(10);
+            doc.setFontSize(12);
             doc.text(`-> ${test.name}: `, xStart, yStart);
             const nameWidth = doc.getTextWidth(`-> ${test.name}: `);
 
@@ -302,7 +301,7 @@ export function generatePDF(formData, isPreview=false) {
 
             // Test value (with superscript if needed)
             doc.setFont('times', 'normal');
-            doc.setFontSize(10);
+            doc.setFontSize(12);
             xCurrent = renderTextWithSuperscript(doc, test.value, xCurrent, yStart);
 
             // Small gap between value and unit
@@ -327,7 +326,7 @@ export function generatePDF(formData, isPreview=false) {
     function renderTextWithSuperscript(doc, text, x, y) {
         let i = 0;
         let xPos = x;
-        doc.setFontSize(10);
+        doc.setFontSize(12);
 
         while (i < text.length) {
             if (text[i] === '^') {
@@ -388,50 +387,103 @@ export function generatePDF(formData, isPreview=false) {
 
     // Radiological & Diagnostic Findings
     doc.setFont('times', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     doc.text('Radiological & Diagnostic Findings:', 10, yPos);
-    yPos += 6;
+    yPos += 15;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    formData.radiologicalFindings.forEach((finding) => {
-        doc.text(`${finding.date}`, 15, yPos);
-        yPos += 5;
+    doc.setFontSize(12);
 
-        // Split long descriptions into multiple lines
-        const descriptionLines = doc.splitTextToSize(finding.description, 180);
-        descriptionLines.forEach((line) => {
-            doc.text(line, 20, yPos);
-            yPos += 5;
+    formData.radiologicalFindings.forEach((finding, index) => {
+        // Bullet and Date Line
+        const bullet = '\u2022'; // Unicode bullet
+        const indent = 15;
+
+        doc.setFont('times', 'bold');
+        doc.setFontSize(12);
+        doc.text(`${bullet} ${finding.name} (${finding.date}):`, indent, yPos);
+        yPos += 8;
+
+        // Description lines
+        finding.descriptions.forEach((desc) => {
+            const descriptionLines = doc.splitTextToSize(desc, 180);
+            descriptionLines.forEach((line) => {
+                doc.setFont('times', 'normal');
+                doc.setFontSize(12);
+                doc.text(`-> ${line}`, indent + 5, yPos);
+                yPos += 6;
+
+                // Add page if needed
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+            });
         });
 
-        // Check if we need a new page
-        if (yPos > 270) {
-            doc.addPage();
-            yPos = 10;
-        }
+        yPos += 4; // Extra space after each finding
     });
-    yPos += 5;
+
+
+    yPos += 6;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
+
+
 
     // Diagnosis
     doc.setFont('times', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     doc.text('Diagnosis:', 10, yPos);
-    yPos += 6;
+    yPos += 11;
 
     doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    formData.diagnosis.forEach((item, index) => {
-        doc.text(`${index + 1}. ${item}`, 15, yPos);
-        yPos += 5;
+    doc.setFontSize(12);
 
-        // Check if we need a new page
-        if (yPos > 270) {
-            doc.addPage();
-            yPos = 10;
-        }
-    });
-    yPos += 5;
+    if (formData.dischargeDiagnosis.length === 0) {
+        // No diagnosis available
+        doc.text('N/A', 15, yPos);
+        yPos += 7;
+    } else if (formData.dischargeDiagnosis.length === 1) {
+        // Single diagnosis - just print as paragraph
+        const lines = doc.splitTextToSize(formData.dischargeDiagnosis[0], 180);
+        lines.forEach((line) => {
+            doc.text(line, 15, yPos);
+            yPos += 7;
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
+        });
+    } else {
+        // Multiple diagnoses - list with numbers
+        formData.dischargeDiagnosis.forEach((diagnosis, index) => {
+            const lines = doc.splitTextToSize(`${index + 1}. ${diagnosis}`, 180);
+            lines.forEach((line) => {
+                doc.text(line, 15, yPos);
+                yPos += 7;
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+            });
+        });
+    }
+
+    yPos += 6;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
 
     // Hospital Course & Treatment
     doc.setFont('times', 'bold');

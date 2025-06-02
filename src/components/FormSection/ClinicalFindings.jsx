@@ -54,7 +54,7 @@ export function ClinicalFindings({ handleChange, formData }) {
                 className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter value"
               />
-              <span className="absolute inset-y-0 right-2 flex items-center text-gray-500 text-sm pointer-events-none">
+              <span className="absolute inset-y-0 right-2 flex items-center text-gray-500 text-sm pointer-events-none italic">
                 %
               </span>
             </div>
@@ -148,15 +148,28 @@ export function ClinicalFindings({ handleChange, formData }) {
               name="bloodPressure"
               value={formData.bloodPressure}
               onChange={handleChange}
+              placeholder="mmHg"
               style={{
                 width: "100%",
-                padding: "8px",
+                padding: "8px 8px 8px 8px",
                 borderRadius: "4px",
                 border: "1px solid #ddd",
                 boxSizing: "border-box",
+                paddingRight: "60px", // Space for the unit
               }}
             />
-            <span style={{ marginLeft: "5px", color: "#333", whiteSpace: "nowrap" }}>mmHg</span>
+            <span
+              style={{
+                position: "absolute",
+                right: "10px",
+                color: "#555",
+                fontSize: "0.9em",
+                fontStyle: "italic",
+                fontWeight: "300",
+              }}
+            >
+              mmHg
+            </span>
           </div>
         </div>
 
@@ -164,20 +177,33 @@ export function ClinicalFindings({ handleChange, formData }) {
           <label htmlFor="pulseRate">Pulse Rate:</label>
           <div style={{ display: "flex", alignItems: "center", marginTop: "5px", position: "relative" }}>
             <input
-              type="number"
+              type="text"
               id="pulseRate"
               name="pulseRate"
               value={formData.pulseRate}
               onChange={handleChange}
+              placeholder="beats/min"
               style={{
                 width: "100%",
-                padding: "8px",
+                padding: "8px 8px 8px 8px",
                 borderRadius: "4px",
                 border: "1px solid #ddd",
                 boxSizing: "border-box",
+                paddingRight: "80px", // Space for the unit
               }}
             />
-            <span style={{ marginLeft: "5px", color: "#333", whiteSpace: "nowrap" }}>beats / min</span>
+            <span
+              style={{
+                position: "absolute",
+                right: "10px",
+                color: "#555",
+                fontSize: "0.9em",
+                fontStyle: "italic",
+                fontWeight: "300",
+              }}
+            >
+              beats/min
+            </span>
           </div>
         </div>
 
@@ -185,20 +211,33 @@ export function ClinicalFindings({ handleChange, formData }) {
           <label htmlFor="respiratoryRate">Respiratory Rate:</label>
           <div style={{ display: "flex", alignItems: "center", marginTop: "5px", position: "relative" }}>
             <input
-              type="number"
+              type="text"
               id="respiratoryRate"
               name="respiratoryRate"
               value={formData.respiratoryRate}
               onChange={handleChange}
+              placeholder="breaths/min"
               style={{
                 width: "100%",
-                padding: "8px",
+                padding: "8px 8px 8px 8px",
                 borderRadius: "4px",
                 border: "1px solid #ddd",
                 boxSizing: "border-box",
+                paddingRight: "90px", // Space for the unit
               }}
             />
-            <span style={{ marginLeft: "5px", color: "#333", whiteSpace: "nowrap" }}>breaths / min</span>
+            <span
+              style={{
+                position: "absolute",
+                right: "10px",
+                color: "#555",
+                fontSize: "0.9em",
+                fontStyle: "italic",
+                fontWeight: "300",
+              }}
+            >
+              breaths/min
+            </span>
           </div>
         </div>
 
@@ -206,20 +245,33 @@ export function ClinicalFindings({ handleChange, formData }) {
           <label htmlFor="temperature">Temperature:</label>
           <div style={{ display: "flex", alignItems: "center", marginTop: "5px", position: "relative" }}>
             <input
-              type="number"
+              type="text"
               id="temperature"
               name="temperature"
               value={formData.temperature}
               onChange={handleChange}
+              placeholder="°F"
               style={{
                 width: "100%",
-                padding: "8px",
+                padding: "8px 8px 8px 8px",
                 borderRadius: "4px",
                 border: "1px solid #ddd",
                 boxSizing: "border-box",
+                paddingRight: "40px", // Space for the unit
               }}
             />
-            <span style={{ marginLeft: "5px", color: "#333", whiteSpace: "nowrap" }}>°F</span>
+            <span
+              style={{
+                position: "absolute",
+                right: "10px",
+                color: "#555",
+                fontSize: "0.9em",
+                fontStyle: "italic",
+                fontWeight: "300",
+              }}
+            >
+              °F
+            </span>
           </div>
         </div>
       </div>
