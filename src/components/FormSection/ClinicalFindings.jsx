@@ -52,7 +52,6 @@ export function ClinicalFindings({ handleChange, formData }) {
                 value={formData.spO2}
                 onChange={handleChange}
                 className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter value"
               />
               <span className="absolute inset-y-0 right-2 flex items-center text-gray-500 text-sm pointer-events-none italic">
                 %
@@ -148,7 +147,6 @@ export function ClinicalFindings({ handleChange, formData }) {
               name="bloodPressure"
               value={formData.bloodPressure}
               onChange={handleChange}
-              placeholder="mmHg"
               style={{
                 width: "100%",
                 padding: "8px 8px 8px 8px",
@@ -182,7 +180,6 @@ export function ClinicalFindings({ handleChange, formData }) {
               name="pulseRate"
               value={formData.pulseRate}
               onChange={handleChange}
-              placeholder="beats/min"
               style={{
                 width: "100%",
                 padding: "8px 8px 8px 8px",
@@ -216,7 +213,6 @@ export function ClinicalFindings({ handleChange, formData }) {
               name="respiratoryRate"
               value={formData.respiratoryRate}
               onChange={handleChange}
-              placeholder="breaths/min"
               style={{
                 width: "100%",
                 padding: "8px 8px 8px 8px",
@@ -250,7 +246,6 @@ export function ClinicalFindings({ handleChange, formData }) {
               name="temperature"
               value={formData.temperature}
               onChange={handleChange}
-              placeholder="°F"
               style={{
                 width: "100%",
                 padding: "8px 8px 8px 8px",

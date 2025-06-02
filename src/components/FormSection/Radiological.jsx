@@ -32,10 +32,10 @@ export function Radiological({
             {formData.radiologicalFindings.map((finding, index) => (
                 <div
                     key={index}
-                    className="border border-gray-200 rounded-md p-4 mb-5"
+                    className="border border-gray-200 rounded-md p-4 mb-5 pr-8"
                 >
                     <div className="flex justify-between items-center mb-3">
-                        <div className="form-group w-3/5">
+                        <div className="form-group w-[30%]">
                             <label
                                 htmlFor={`finding-date-${index}`}
                                 className="block mb-1 font-medium text-gray-700"
@@ -43,13 +43,13 @@ export function Radiological({
                                 Date:
                             </label>
                             <input
-                                type="text"
+                                type="date"
                                 id={`finding-date-${index}`}
                                 value={finding.date}
                                 onChange={(e) =>
                                     handleRadiologicalFindingChange(formData, setFormData, index, "date", e.target.value)
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className=" bg-green-500 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
@@ -68,9 +68,9 @@ export function Radiological({
                         <div className="form-group col-span-12">
                             <label
                                 htmlFor={`finding-name-${index}`}
-                                className="block mb-1 font-medium text-gray-700"
+                                className="block my-3 font-medium text-gray-700"
                             >
-                                Name:
+                                Radiological / Diagnostic Test & its Findings:
                             </label>
                             <input
                                 type="text"
