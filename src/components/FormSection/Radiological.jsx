@@ -1,9 +1,14 @@
 export function Radiological({
     formData,
-    addArrayItem,
-    removeArrayItem,
-  }){
-    return(
+    setFormData,
+    addRadiologicalFinding,
+    removeRadiologicalFinding,
+    handleRadiologicalFindingChange,
+    handleDescriptionChange,
+    addDescription,
+    removeDescription,
+}) {
+    return (
         <div
             className="form-section"
             style={{
@@ -14,6 +19,7 @@ export function Radiological({
             }}
         >
             <h2
+                className="h2"
                 style={{
                     borderBottom: "1px solid #ddd",
                     paddingBottom: "10px",
@@ -26,114 +32,112 @@ export function Radiological({
             {formData.radiologicalFindings.map((finding, index) => (
                 <div
                     key={index}
-                    style={{
-                        marginBottom: "15px",
-                        display: "grid",
-                        gridTemplateColumns: "1fr",
-                        gap: "10px",
-                    }}
+                    className="border border-gray-200 rounded-md p-4 mb-5"
                 >
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-end",
-                        }}
-                    >
-                        <div className="form-group" style={{ width: "60%" }}>
-                            <label htmlFor={`finding-date-${index}`}>Date:</label>
+                    <div className="flex justify-between items-center mb-3">
+                        <div className="form-group w-3/5">
+                            <label
+                                htmlFor={`finding-date-${index}`}
+                                className="block mb-1 font-medium text-gray-700"
+                            >
+                                Date:
+                            </label>
                             <input
                                 type="text"
                                 id={`finding-date-${index}`}
                                 value={finding.date}
-                                onChange={(e) => {
-                                    const updatedFindings = [
-                                        ...formData.radiologicalFindings,
-                                    ];
-                                    updatedFindings[index].date = e.target.value;
-                                    setFormData({
-                                        ...formData,
-                                        radiologicalFindings: updatedFindings,
-                                    });
-                                }}
-                                style={{
-                                    width: "100%",
-                                    padding: "8px",
-                                    marginTop: "5px",
-                                    borderRadius: "4px",
-                                    border: "1px solid #ddd",
-                                }}
+                                onChange={(e) =>
+                                    handleRadiologicalFindingChange(formData, setFormData, index, "date", e.target.value)
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
                         {index > 0 && (
                             <button
                                 type="button"
-                                onClick={() =>
-                                    removeArrayItem("radiologicalFindings", index)
-                                }
-                                style={{
-                                    background: "#f44336",
-                                    color: "white",
-                                    border: "none",
-                                    padding: "5px 10px",
-                                    borderRadius: "4px",
-                                    cursor: "pointer",
-                                }}
+                                onClick={() => removeRadiologicalFinding(formData, setFormData, index)}
+                                className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
                             >
-                                Remove
+                                Remove Date
                             </button>
                         )}
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor={`finding-description-${index}`}>
-                            Description:
-                        </label>
-                        <textarea
-                            id={`finding-description-${index}`}
-                            value={finding.description}
-                            onChange={(e) => {
-                                const updatedFindings = [...formData.radiologicalFindings];
-                                updatedFindings[index].description = e.target.value;
-                                setFormData({
-                                    ...formData,
-                                    radiologicalFindings: updatedFindings,
-                                });
-                            }}
-                            style={{
-                                width: "100%",
-                                padding: "8px",
-                                marginTop: "5px",
-                                borderRadius: "4px",
-                                border: "1px solid #ddd",
-                                minHeight: "80px",
-                            }}
-                        />
+                    <div className="grid grid-cols-12 gap-3.5">
+                        <div className="form-group col-span-12">
+                            <label
+                                htmlFor={`finding-name-${index}`}
+                                className="block mb-1 font-medium text-gray-700"
+                            >
+                                Name:
+                            </label>
+                            <input
+                                type="text"
+                                id={`finding-name-${index}`}
+                                value={finding.name}
+                                onChange={(e) =>
+                                    handleRadiologicalFindingChange(formData, setFormData, index, "name", e.target.value)
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        {finding.descriptions.map((desc, descIndex) => (
+                            <div
+                                key={descIndex}
+                                className="col-span-12 grid grid-cols-12 gap-3.5 mb-3"
+                            >
+                                <div className="form-group col-span-11">
+                                    <label
+                                        htmlFor={`description-${index}-${descIndex}`}
+                                        className="block mb-1 font-medium text-gray-700"
+                                    >
+                                        Description:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={`description-${index}-${descIndex}`}
+                                        value={desc}
+                                        onChange={(e) =>
+                                            handleDescriptionChange(formData, setFormData, index, descIndex, e.target.value)
+                                        }
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+
+                                {descIndex > 0 && (
+                                    <div className="form-group col-span-1 flex items-end">
+                                        <button
+                                            type="button"
+                                            onClick={() => removeDescription(formData, setFormData, index, descIndex)}
+                                            className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
                     </div>
+
+                    <button
+                        type="button"
+                        onClick={() => addDescription(formData, setFormData, index)}
+                        className="bg-green-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-green-600"
+                    >
+                        Add Description
+                    </button>
                 </div>
             ))}
 
             <button
                 type="button"
-                onClick={() =>
-                    addArrayItem("radiologicalFindings", {
-                        date: "",
-                        description: "",
-                    })
-                }
-                style={{
-                    background: "#2196F3",
-                    color: "white",
-                    border: "none",
-                    padding: "8px 15px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    marginTop: "10px",
-                }}
+                onClick={() => addRadiologicalFinding(formData, setFormData)}
+                className="bg-blue-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-blue-600"
             >
                 Add Finding
             </button>
         </div>
-    )
-}
+    );
+  }

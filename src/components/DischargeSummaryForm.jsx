@@ -59,7 +59,14 @@ const DischargeSummaryForm = () => {
     ],
 
     // Radiological & Diagnostic Findings
-    radiologicalFindings: [{ date: "", description: "" }],
+    radiologicalFindings: [
+      {
+        name: "",              // e.g., "Chest X-Ray"
+        date: "",              // e.g., "2025-06-01"
+        descriptions: [""]     // e.g., ["Normal lung fields", "No pleural effusion"]
+      }
+    ],
+
 
     // Diagnosis
     diagnosis: [""],
@@ -176,13 +183,82 @@ const DischargeSummaryForm = () => {
     });
   };
 
-  
+
   const handleTestChange = (investigationIndex, testIndex, field, value) => {
     const updatedInvestigations = [...formData.bloodInvestigations];
     updatedInvestigations[investigationIndex].tests[testIndex][field] = value;
     setFormData({
       ...formData,
       bloodInvestigations: updatedInvestigations,
+    });
+  };
+
+
+
+  const addRadiologicalFinding = (formData, setFormData) => {
+    setFormData({
+      ...formData,
+      radiologicalFindings: [
+        ...formData.radiologicalFindings,
+        { name: "", date: "", descriptions: [""] },
+      ],
+    });
+  };
+
+  const removeRadiologicalFinding = (formData, setFormData, index) => {
+    const updatedFindings = [...formData.radiologicalFindings];
+    updatedFindings.splice(index, 1);
+    setFormData({
+      ...formData,
+      radiologicalFindings: updatedFindings,
+    });
+  };
+
+  const handleRadiologicalFindingChange = (
+    formData,
+    setFormData,
+    index,
+    field,
+    value
+  ) => {
+    const updatedFindings = [...formData.radiologicalFindings];
+    updatedFindings[index][field] = value;
+    setFormData({
+      ...formData,
+      radiologicalFindings: updatedFindings,
+    });
+  };
+
+  const handleDescriptionChange = (
+    formData,
+    setFormData,
+    index,
+    descIndex,
+    value
+  ) => {
+    const updatedFindings = [...formData.radiologicalFindings];
+    updatedFindings[index].descriptions[descIndex] = value;
+    setFormData({
+      ...formData,
+      radiologicalFindings: updatedFindings,
+    });
+  };
+
+  const addDescription = (formData, setFormData, index) => {
+    const updatedFindings = [...formData.radiologicalFindings];
+    updatedFindings[index].descriptions.push("");
+    setFormData({
+      ...formData,
+      radiologicalFindings: updatedFindings,
+    });
+  };
+
+  const removeDescription = (formData, setFormData, index, descIndex) => {
+    const updatedFindings = [...formData.radiologicalFindings];
+    updatedFindings[index].descriptions.splice(descIndex, 1);
+    setFormData({
+      ...formData,
+      radiologicalFindings: updatedFindings,
     });
   };
 
@@ -217,10 +293,10 @@ const DischargeSummaryForm = () => {
         <SystemicExamination handleChange={handleChange} formData={formData} />
 
         {/* Key Blood Investigations Section */}
-        <BloodInvestigation formData={formData} removeArrayItem={removeArrayItem} addArrayItem={addArrayItem} addBloodInvestigation={addBloodInvestigation} addTestToInvestigation={addTestToInvestigation} removeTestFromInvestigation={removeTestFromInvestigation} handleBloodInvestigationChange={handleBloodInvestigationChange} handleTestChange={handleTestChange}/>
+        <BloodInvestigation formData={formData} removeArrayItem={removeArrayItem} addArrayItem={addArrayItem} addBloodInvestigation={addBloodInvestigation} addTestToInvestigation={addTestToInvestigation} removeTestFromInvestigation={removeTestFromInvestigation} handleBloodInvestigationChange={handleBloodInvestigationChange} handleTestChange={handleTestChange} />
 
         {/* Radiological & Diagnostic Findings Section */}
-        <Radiological formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem}/>
+        <Radiological formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} addRadiologicalFinding={addRadiologicalFinding} handleRadiologicalFindingChange={handleRadiologicalFindingChange} removeRadiologicalFinding={removeRadiologicalFinding} handleDescriptionChange={handleDescriptionChange} addDescription={addDescription} removeDescription={removeDescription} setFormData={setFormData} />
 
         {/* Diagnosis Section */}
         <div
