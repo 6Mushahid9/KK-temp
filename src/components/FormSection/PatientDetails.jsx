@@ -324,7 +324,7 @@ export function PatientDetails({
         </div>
 
         {/* row 7 */}
-        <div className="mt-3 border-2 rounded-sm p-4">
+        <div className="mt-3 border-2 border-gray-300 rounded-md p-4">
           <h2 className="text-left font-semibold">Discharge Diagnosis</h2>
           {formData.dischargeDiagnosis.map((item, index) => (
             <div key={index} className="mt-3 flex gap-2.5">
@@ -366,7 +366,7 @@ export function PatientDetails({
         </div>
 
         {/* row 8 */}
-        <div className="mt-3 border-2 rounded-sm p-4">
+        <div className="mt-3 border-2 border-gray-300 rounded-md p-4">
           <h2 className="text-left font-semibold">
             Presenting Complaints
           </h2>
@@ -413,7 +413,7 @@ export function PatientDetails({
 
 
         {/* row 9 */}
-        <div className="mt-3 border-2 rounded-sm p-4">
+        <div className="mt-3 border-2 border-gray-300 rounded-md p-4">
           <h2 className="text-left font-semibold">
             Known Comorbidities / Past Medical History
           </h2>

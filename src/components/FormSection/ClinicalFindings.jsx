@@ -139,128 +139,88 @@ export function ClinicalFindings({ handleChange, formData }) {
           </div>
         </div>
 
-        <div className="form-group col-span-3 mt-3" style={{ position: "relative" }}>
+        <div className="form-group col-span-3 mt-3">
           <label htmlFor="bloodPressure">Blood Pressure:</label>
-          <input
-            type="text"
-            id="bloodPressure"
-            name="bloodPressure"
-            value={formData.bloodPressure}
-            onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "8px 50px 8px 8px", // space for unit on the right
-              marginTop: "5px",
-              borderRadius: "4px",
-              border: "1px solid #ddd",
-              boxSizing: "border-box",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "53px",
-              transform: "translateY(-50%)",
-              color: "#555",
-              pointerEvents: "none",
-            }}
-          >
-            mmHg
-          </span>
+          <div style={{ display: "flex", alignItems: "center", marginTop: "5px", position: "relative" }}>
+            <input
+              type="text"
+              id="bloodPressure"
+              name="bloodPressure"
+              value={formData.bloodPressure}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ddd",
+                boxSizing: "border-box",
+              }}
+            />
+            <span style={{ marginLeft: "5px", color: "#333", whiteSpace: "nowrap" }}>mmHg</span>
+          </div>
         </div>
 
-        <div className="form-group col-span-3 mt-3" style={{ position: "relative" }}>
+        <div className="form-group col-span-3 mt-3">
           <label htmlFor="pulseRate">Pulse Rate:</label>
-          <input
-            type="number"
-            id="pulseRate"
-            name="pulseRate"
-            value={formData.pulseRate}
-            onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "8px 50px 8px 8px", // padding-right for unit
-              marginTop: "5px",
-              borderRadius: "4px",
-              border: "1px solid #ddd",
-              boxSizing: "border-box",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "53px",
-              transform: "translateY(-50%)",
-              color: "#555",
-              pointerEvents: "none",
-            }}
-          >
-            beats / min
-          </span>
+          <div style={{ display: "flex", alignItems: "center", marginTop: "5px", position: "relative" }}>
+            <input
+              type="number"
+              id="pulseRate"
+              name="pulseRate"
+              value={formData.pulseRate}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ddd",
+                boxSizing: "border-box",
+              }}
+            />
+            <span style={{ marginLeft: "5px", color: "#333", whiteSpace: "nowrap" }}>beats / min</span>
+          </div>
         </div>
 
-        <div className="form-group col-span-3 mt-3" style={{ position: "relative" }}>
+        <div className="form-group col-span-3 mt-3">
           <label htmlFor="respiratoryRate">Respiratory Rate:</label>
-          <input
-            type="number"
-            id="respiratoryRate"
-            name="respiratoryRate"
-            value={formData.respiratoryRate}
-            onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "8px 70px 8px 8px", // extra space for longer unit
-              marginTop: "5px",
-              borderRadius: "4px",
-              border: "1px solid #ddd",
-              boxSizing: "border-box",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "53px",
-              transform: "translateY(-50%)",
-              color: "#555",
-              pointerEvents: "none",
-            }}
-          >
-            breaths / min
-          </span>
+          <div style={{ display: "flex", alignItems: "center", marginTop: "5px", position: "relative" }}>
+            <input
+              type="number"
+              id="respiratoryRate"
+              name="respiratoryRate"
+              value={formData.respiratoryRate}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ddd",
+                boxSizing: "border-box",
+              }}
+            />
+            <span style={{ marginLeft: "5px", color: "#333", whiteSpace: "nowrap" }}>breaths / min</span>
+          </div>
         </div>
 
-        <div className="form-group col-span-3 mt-3" style={{ position: "relative" }}>
+        <div className="form-group col-span-3 mt-3">
           <label htmlFor="temperature">Temperature:</label>
-          <input
-            type="number"
-            id="temperature"
-            name="temperature"
-            value={formData.temperature}
-            onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "8px 50px 8px 8px",
-              marginTop: "5px",
-              borderRadius: "4px",
-              border: "1px solid #ddd",
-              boxSizing: "border-box",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              right: "10px",
-              top: "53px",
-              transform: "translateY(-50%)",
-              color: "#555",
-              pointerEvents: "none",
-            }}
-          >
-            °F
-          </span>
+          <div style={{ display: "flex", alignItems: "center", marginTop: "5px", position: "relative" }}>
+            <input
+              type="number"
+              id="temperature"
+              name="temperature"
+              value={formData.temperature}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ddd",
+                boxSizing: "border-box",
+              }}
+            />
+            <span style={{ marginLeft: "5px", color: "#333", whiteSpace: "nowrap" }}>°F</span>
+          </div>
         </div>
       </div>
     </div>

@@ -176,6 +176,7 @@ const DischargeSummaryForm = () => {
     });
   };
 
+  
   const handleTestChange = (investigationIndex, testIndex, field, value) => {
     const updatedInvestigations = [...formData.bloodInvestigations];
     updatedInvestigations[investigationIndex].tests[testIndex][field] = value;
@@ -184,6 +185,7 @@ const DischargeSummaryForm = () => {
       bloodInvestigations: updatedInvestigations,
     });
   };
+
 
   const handlePreview = () => {
     const pdfUrl = generatePDF(formData, true); // Get Data URL for preview
@@ -215,7 +217,7 @@ const DischargeSummaryForm = () => {
         <SystemicExamination handleChange={handleChange} formData={formData} />
 
         {/* Key Blood Investigations Section */}
-        <BloodInvestigation formData={formData} addArrayItem={addArrayItem} addBloodInvestigation={addBloodInvestigation} addTestToInvestigation={addTestToInvestigation} removeTestFromInvestigation={removeTestFromInvestigation} handleBloodInvestigationChange={handleBloodInvestigationChange} handleTestChange={handleTestChange}/>
+        <BloodInvestigation formData={formData} removeArrayItem={removeArrayItem} addArrayItem={addArrayItem} addBloodInvestigation={addBloodInvestigation} addTestToInvestigation={addTestToInvestigation} removeTestFromInvestigation={removeTestFromInvestigation} handleBloodInvestigationChange={handleBloodInvestigationChange} handleTestChange={handleTestChange}/>
 
         {/* Radiological & Diagnostic Findings Section */}
         <Radiological formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem}/>

@@ -1,6 +1,8 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+import { LogoBase64 } from './LogoBase64';
+
 export function generatePDF(formData, isPreview=false) {
     const doc = new jsPDF();
     let yPos = 50;
@@ -20,7 +22,7 @@ export function generatePDF(formData, isPreview=false) {
 
     const title = 'Discharge Summary';
     doc.setFontSize(25);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
 
     yPos = yPos+34
 
@@ -30,6 +32,11 @@ export function generatePDF(formData, isPreview=false) {
     const x = (pageWidth - textWidth) / 2;
     const y = 60;
 
+    // 👇 ADD YOUR BASE64 IMAGE HERE (replace with actual Base64 string)
+    // 👇 Add logo image above title
+    doc.addImage(LogoBase64, 'PNG', (pageWidth - 30) / 2, 15, 30, 30); // centered at top
+
+    
     doc.text(title, x, y);
 
     // Underline
@@ -39,7 +46,7 @@ export function generatePDF(formData, isPreview=false) {
 
     // Patient Details Table
     doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.text('Patient Details:', 10, yPos);
     yPos += 7;
 
@@ -58,44 +65,54 @@ export function generatePDF(formData, isPreview=false) {
             ['Bed No.', formData.bedNo],
             ['Date & Time of Admission', `${formData.dateAdmission}, ${convertTo12Hour(formData.timeAdmission)}`],
             ['Date & Time of Discharge', `${formData.dateDischarge}, ${convertTo12Hour(formData.timeDischarge)}`],
-            [
-                'Discharge Diagnosis',
-                formData.dischargeDiagnosis
-                    .map((item, index) => `${index + 1}) ${item}`)
-                    .join('\n')
-                    .trim() || 'N/A', // Fallback to 'N/A' if array is empty
-              ],
-            ['Presenting Complaints', 
-                formData.presentingComplaints
-                    .map((item, index) => `${index + 1}) ${item}`)
-                    .join('\n')
-                    .trim() || 'N/A', // Fallback to 'N/A' if array is empty
+            ['Discharge Diagnosis',
+                formData.dischargeDiagnosis.length === 1
+                    ? formData.dischargeDiagnosis[0]
+                    : formData.dischargeDiagnosis
+                        .map((item, index) => `${index + 1}) ${item}`)
+                        .join('\n')
+                        .trim() || 'N/A',
             ],
-            ['Known Comorbidities/Past Medical History', 
-                formData.pastMedicalHistory
-                    .map((item, index) => `${index + 1}) ${item}`)
-                    .join('\n')
-                    .trim() || 'N/A', // Fallback to 'N/A' if array is empty
+            ['Presenting Complaints',
+                formData.presentingComplaints.length === 1
+                    ? formData.presentingComplaints[0]
+                    : formData.presentingComplaints
+                        .map((item, index) => `${index + 1}) ${item}`)
+                        .join('\n')
+                        .trim() || 'N/A',
+            ],
+            ['Known Comorbidities/Past Medical History',
+                formData.pastMedicalHistory.length === 1
+                    ? formData.pastMedicalHistory[0]
+                    : formData.pastMedicalHistory
+                        .map((item, index) => `${index + 1}) ${item}`)
+                        .join('\n')
+                        .trim() || 'N/A',
             ],
             ['Treatment/Procedure', formData.procedure],
         ],
         didParseCell: function (data) {
-            data.cell.styles.lineColor = [0, 0, 0]; // black
-            data.cell.styles.cellPadding = 2; 
-            if (data.row.index === 0 && data.section === 'body') { // Row 1 (second row)
-                data.cell.styles.cellPadding = 0.3; // Reduce vertical padding
+            data.cell.styles.lineColor = [0, 0, 0];
+            data.cell.styles.cellPadding = 2;
+            if (data.row.index === 0 && data.section === 'body') {
+                data.cell.styles.cellPadding = 0.3;
             }
-          },
+        },
         theme: 'grid',
-        styles: { fontSize: 10 },
+        styles: {
+            font: 'times',      // 👈 Set font to Times
+            fontSize: 10,
+            textColor: 0
+        },
         headStyles: {
-            fillColor: [0, 0, 0],  // Background color (RGB)
-            textColor: 255,             // Text color (255 = white)
+            font: 'times',      // 👈 Set font to Times for header
+            fillColor: [0, 0, 0],
+            textColor: 255,
             fontStyle: 'bold'
         },
         columnStyles: {
-            0: { cellWidth: 60, fontStyle: 'bold', textColor: 0},
-            1: { cellWidth: 'auto', fontStyle: 'normal' },
+            0: { cellWidth: 60, font: 'times', fontStyle: 'bold', textColor: 0 },
+            1: { cellWidth: 'auto', font: 'times', fontStyle: 'normal' },
         },
     });
 
@@ -116,7 +133,7 @@ export function generatePDF(formData, isPreview=false) {
 
 
     // Clinical Findings
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Clinical Findings (On Admission):', 10, yPos);
     yPos += 15;
@@ -142,15 +159,15 @@ export function generatePDF(formData, isPreview=false) {
     ];
 
     findings.forEach(({ label, value }) => {
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('times', 'normal');
         doc.text(`${bullet} `, indent, yPos); // draw bullet
 
         const bulletWidth = doc.getTextWidth(`${bullet} `);
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('times', 'bold');
         doc.text(`${label}: `, indent + bulletWidth, yPos); // bold label
 
         const labelWidth = doc.getTextWidth(`${label}: `);
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('times', 'normal');
         doc.text(`${value}`, indent + bulletWidth + labelWidth, yPos); // normal value
 
         yPos += lineHeight+5 ;
@@ -167,7 +184,7 @@ export function generatePDF(formData, isPreview=false) {
     yPos += 20; // space after the line before next heading
 
     // Systemic Examination
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Systemic Examination:', 10, yPos);
     yPos += 15;
@@ -183,7 +200,7 @@ export function generatePDF(formData, isPreview=false) {
     ];
 
     systemicFindings.forEach(({ label, value }) => {
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('times', 'normal');
         doc.setFontSize(16);
         doc.text(`${bullet} `, indent, yPos);
 
@@ -191,7 +208,7 @@ export function generatePDF(formData, isPreview=false) {
 
 
         const bulletWidth = doc.getTextWidth(`${bullet} `);
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('times', 'bold');
         doc.text(`${label}: `, indent + bulletWidth, yPos);
 
         const labelWidth = doc.getTextWidth(`${label}: `);
@@ -200,7 +217,7 @@ export function generatePDF(formData, isPreview=false) {
         if (label === 'Cardiovascular System (CVS)') {
             const xStart = indent + bulletWidth + labelWidth;
             doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
+            doc.setFont('times', 'normal');
             doc.text(' S', xStart, yPos);
             let s1Width = doc.getTextWidth('S');
 
@@ -221,7 +238,7 @@ export function generatePDF(formData, isPreview=false) {
             doc.setFontSize(10);
             doc.text(` ${value}`, xStart + s1TotalWidth + 1 + s2Width + doc.getTextWidth('2 '), yPos);
         } else {
-            doc.setFont('helvetica', 'normal');
+            doc.setFont('times', 'normal');
             doc.setFontSize(10);
             doc.text(value, indent + bulletWidth + labelWidth, yPos);
         }
@@ -253,64 +270,129 @@ export function generatePDF(formData, isPreview=false) {
     yPos += 15;
 
     // Key Blood Investigations
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Key Blood Investigations (Pathology):', 10, yPos);
     yPos += 15;
 
-    // bullet = '•';
-    // indent = 15;
-    // lineHeight = 5;
-
     doc.setFontSize(12);
-    doc.setFont('helvetica', 'normal');
 
     formData.bloodInvestigations.forEach((investigation, index) => {
-        // Date as a bold heading
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('times', 'bold');
         doc.setFontSize(12);
-        doc.text(`${investigation.date}:`, indent, yPos);
-        yPos += lineHeight + 2;
+        if (index===0){
+            doc.text(`${bullet} ${investigation.date} (On Admission):`, indent, yPos);
+        } else {
+            doc.text(`${bullet} ${investigation.date}:`, indent, yPos);
+        }
+        
+        yPos += 8;
 
         investigation.tests.forEach((test) => {
-            // Draw bullet
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(12);
-            doc.text(`${bullet} `, indent, yPos);
+            const xStart = indent + 5;
+            const yStart = yPos;
 
-            const bulletWidth = doc.getTextWidth(`${bullet} `);
-
-            // Draw test name in bold
-            doc.setFont('helvetica', 'bold');
-            const label = `${test.name}: `;
-            doc.text(label, indent + bulletWidth, yPos);
-
-            const labelWidth = doc.getTextWidth(label);
-
-            // Draw value + unit in normal font
-            doc.setFont('helvetica', 'normal');
+            // Test name
+            doc.setFont('times', 'bold');
             doc.setFontSize(10);
-            doc.text(`${test.value} ${test.unit}`, indent + bulletWidth + labelWidth, yPos);
+            doc.text(`-> ${test.name}: `, xStart, yStart);
+            const nameWidth = doc.getTextWidth(`-> ${test.name}: `);
+
+            let xCurrent = xStart + nameWidth;
+
+            // Test value (with superscript if needed)
+            doc.setFont('times', 'normal');
+            doc.setFontSize(10);
+            xCurrent = renderTextWithSuperscript(doc, test.value, xCurrent, yStart);
+
+            // Small gap between value and unit
+            doc.text(' ', xCurrent, yStart);
+            xCurrent += 1;
+
+            // Unit (with superscript if needed)
+            xCurrent = renderTextWithSuperscript(doc, test.unit, xCurrent, yStart);
 
             yPos += lineHeight + 3;
 
-            // Add page if needed
+            // Add page if space exceeds
             if (yPos > 270) {
                 doc.addPage();
                 yPos = 20;
             }
         });
 
-        yPos += 5;
+        yPos += 4; // Extra space between dates
     });
 
+    function renderTextWithSuperscript(doc, text, x, y) {
+        let i = 0;
+        let xPos = x;
+        doc.setFontSize(10);
+
+        while (i < text.length) {
+            if (text[i] === '^') {
+                i++; // move past ^
+                let superText = '';
+                while (i < text.length && text[i] !== ' ') {
+                    superText += text[i];
+                    i++;
+                }
+                doc.setFontSize(8);
+                doc.text(superText, xPos, y - 1.5);
+                xPos += doc.getTextWidth(superText);
+                doc.setFontSize(10);
+            } else {
+                let normalText = '';
+                while (i < text.length && text[i] !== '^') {
+                    normalText += text[i];
+                    i++;
+                }
+                doc.text(normalText, xPos, y);
+                xPos += doc.getTextWidth(normalText);
+            }
+        }
+
+        return xPos;
+    }
+
+
+    yPos += 6;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
+
+
+
+    doc.addPage();
+    yPos = 20; // Reset for new page content
+
+
+
+
+    yPos += 6;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+    
+    
+
+
     // Radiological & Diagnostic Findings
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('Radiological & Diagnostic Findings:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     formData.radiologicalFindings.forEach((finding) => {
         doc.text(`${finding.date}`, 15, yPos);
@@ -332,12 +414,12 @@ export function generatePDF(formData, isPreview=false) {
     yPos += 5;
 
     // Diagnosis
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('Diagnosis:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     formData.diagnosis.forEach((item, index) => {
         doc.text(`${index + 1}. ${item}`, 15, yPos);
@@ -352,12 +434,12 @@ export function generatePDF(formData, isPreview=false) {
     yPos += 5;
 
     // Hospital Course & Treatment
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('Hospital Course & Treatment Administered:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     const hospitalCourseLines = doc.splitTextToSize(formData.hospitalCourse, 180);
     hospitalCourseLines.forEach((line) => {
@@ -373,12 +455,12 @@ export function generatePDF(formData, isPreview=false) {
     yPos += 5;
 
     // Challenges During Treatment
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('Challenges During Treatment & Reasons for Prolonged Hospitalization:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     formData.treatmentChallenges.forEach((challenge, index) => {
         doc.text(`${index + 1}. ${challenge}`, 15, yPos);
@@ -393,12 +475,12 @@ export function generatePDF(formData, isPreview=false) {
     yPos += 5;
 
     // Condition at Discharge
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('Condition at Discharge:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     doc.text(formData.conditionAtDischarge, 15, yPos);
     yPos += 10;
@@ -410,12 +492,12 @@ export function generatePDF(formData, isPreview=false) {
     }
 
     // Discharge Medication
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('Discharge Medication:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     formData.dischargeMedication.forEach((medication, index) => {
         doc.text(`${index + 1}. ${medication.name} – ${medication.dosage} for ${medication.duration}`, 15, yPos);
@@ -430,34 +512,34 @@ export function generatePDF(formData, isPreview=false) {
     yPos += 5;
 
     // Special Instructions
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('Special Instruction/s:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     doc.text(formData.specialInstructions, 15, yPos);
     yPos += 10;
 
     // Review Date
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('Review Date:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     doc.text(`Follow-up: ${formData.reviewDate}`, 15, yPos);
     yPos += 10;
 
     // Emergency Contact
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('times', 'bold');
     doc.setFontSize(12);
     doc.text('In case any of these symptoms persist, please contact immediately on:', 10, yPos);
     yPos += 6;
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(10);
     doc.text(formData.emergencyContact, 15, yPos);
     yPos += 5;
@@ -474,7 +556,7 @@ export function generatePDF(formData, isPreview=false) {
     for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i);
         doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('times', 'normal');
 
         const pageText = `Page ${i} of ${totalPages}`;
         const pageWidth = doc.internal.pageSize.getWidth();

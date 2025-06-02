@@ -5,9 +5,9 @@ export function BloodInvestigation({
     addTestToInvestigation,
     removeTestFromInvestigation,
     handleBloodInvestigationChange,
-    handleTestChange
-  }){
-    return(
+    handleTestChange,
+}) {
+    return (
         <div
             className="form-section"
             style={{
@@ -18,6 +18,7 @@ export function BloodInvestigation({
             }}
         >
             <h2
+                className="h2"
                 style={{
                     borderBottom: "1px solid #ddd",
                     paddingBottom: "10px",
@@ -27,86 +28,57 @@ export function BloodInvestigation({
                 Key Blood Investigations (Pathology)
             </h2>
 
-            {formData.bloodInvestigations.map(
-                (investigation, investigationIndex) => (
-                    <div
-                        key={investigationIndex}
-                        style={{
-                            marginBottom: "20px",
-                            padding: "15px",
-                            border: "1px solid #eee",
-                            borderRadius: "4px",
-                        }}
-                    >
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                marginBottom: "10px",
-                            }}
-                        >
-                            <div className="form-group" style={{ width: "60%" }}>
-                                <label htmlFor={`investigation-date-${investigationIndex}`}>
-                                    Date:
-                                </label>
-                                <input
-                                    type="text"
-                                    id={`investigation-date-${investigationIndex}`}
-                                    value={investigation.date}
-                                    onChange={(e) =>
-                                        handleBloodInvestigationChange(
-                                            investigationIndex,
-                                            "date",
-                                            e.target.value
-                                        )
-                                    }
-                                    style={{
-                                        width: "100%",
-                                        padding: "8px",
-                                        marginTop: "5px",
-                                        borderRadius: "4px",
-                                        border: "1px solid #ddd",
-                                    }}
-                                />
-                            </div>
-
-                            {investigationIndex > 0 && (
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        removeArrayItem(
-                                            "bloodInvestigations",
-                                            investigationIndex
-                                        )
-                                    }
-                                    style={{
-                                        background: "#f44336",
-                                        color: "white",
-                                        border: "none",
-                                        padding: "5px 10px",
-                                        borderRadius: "4px",
-                                        cursor: "pointer",
-                                    }}
-                                >
-                                    Remove Date
-                                </button>
-                            )}
+            {formData.bloodInvestigations.map((investigation, investigationIndex) => (
+                <div
+                    key={investigationIndex}
+                    className="border border-gray-200 rounded-md p-4 mb-5"
+                >
+                    <div className="flex justify-between items-center mb-3">
+                        <div className="form-group w-3/5">
+                            <label
+                                htmlFor={`investigation-date-${investigationIndex}`}
+                                className="block mb-1 font-medium text-gray-700"
+                            >
+                                Date:
+                            </label>
+                            <input
+                                type="text"
+                                id={`investigation-date-${investigationIndex}`}
+                                value={investigation.date}
+                                onChange={(e) =>
+                                    handleBloodInvestigationChange(
+                                        investigationIndex,
+                                        "date",
+                                        e.target.value
+                                    )
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
                         </div>
 
+                        {investigationIndex > 0 && (
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    removeArrayItem("bloodInvestigations", investigationIndex)
+                                }
+                                className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
+                            >
+                                Remove Date
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="grid grid-cols-12 gap-3.5">
                         {investigation.tests.map((test, testIndex) => (
                             <div
                                 key={testIndex}
-                                style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "2fr 1fr 1fr auto",
-                                    gap: "10px",
-                                    marginBottom: "10px",
-                                }}
+                                className="col-span-12 grid grid-cols-12 gap-3.5 mb-3"
                             >
-                                <div className="form-group">
+                                <div className="form-group col-span-5">
                                     <label
                                         htmlFor={`test-name-${investigationIndex}-${testIndex}`}
+                                        className="block mb-1 font-medium text-gray-700"
                                     >
                                         Test Name:
                                     </label>
@@ -122,19 +94,14 @@ export function BloodInvestigation({
                                                 e.target.value
                                             )
                                         }
-                                        style={{
-                                            width: "100%",
-                                            padding: "8px",
-                                            marginTop: "5px",
-                                            borderRadius: "4px",
-                                            border: "1px solid #ddd",
-                                        }}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
 
-                                <div className="form-group">
+                                <div className="form-group col-span-3">
                                     <label
                                         htmlFor={`test-value-${investigationIndex}-${testIndex}`}
+                                        className="block mb-1 font-medium text-gray-700"
                                     >
                                         Value:
                                     </label>
@@ -150,19 +117,14 @@ export function BloodInvestigation({
                                                 e.target.value
                                             )
                                         }
-                                        style={{
-                                            width: "100%",
-                                            padding: "8px",
-                                            marginTop: "5px",
-                                            borderRadius: "4px",
-                                            border: "1px solid #ddd",
-                                        }}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
 
-                                <div className="form-group">
+                                <div className="form-group col-span-3">
                                     <label
                                         htmlFor={`test-unit-${investigationIndex}-${testIndex}`}
+                                        className="block mb-1 font-medium text-gray-700"
                                     >
                                         Unit:
                                     </label>
@@ -178,76 +140,44 @@ export function BloodInvestigation({
                                                 e.target.value
                                             )
                                         }
-                                        style={{
-                                            width: "100%",
-                                            padding: "8px",
-                                            marginTop: "5px",
-                                            borderRadius: "4px",
-                                            border: "1px solid #ddd",
-                                        }}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 </div>
 
                                 {testIndex > 0 && (
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            removeTestFromInvestigation(
-                                                investigationIndex,
-                                                testIndex
-                                            )
-                                        }
-                                        style={{
-                                            background: "#f44336",
-                                            color: "white",
-                                            border: "none",
-                                            padding: "5px 10px",
-                                            borderRadius: "4px",
-                                            cursor: "pointer",
-                                            alignSelf: "end",
-                                            marginBottom: "5px",
-                                        }}
-                                    >
-                                        Remove
-                                    </button>
+                                    <div className="form-group col-span-1 flex items-end">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                removeTestFromInvestigation(investigationIndex, testIndex)
+                                            }
+                                            className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         ))}
-
-                        <button
-                            type="button"
-                            onClick={() => addTestToInvestigation(investigationIndex)}
-                            style={{
-                                background: "#4CAF50",
-                                color: "white",
-                                border: "none",
-                                padding: "8px 15px",
-                                borderRadius: "4px",
-                                cursor: "pointer",
-                                marginTop: "10px",
-                            }}
-                        >
-                            Add Test
-                        </button>
                     </div>
-                )
-            )}
+
+                    <button
+                        type="button"
+                        onClick={() => addTestToInvestigation(investigationIndex)}
+                        className="bg-green-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-green-600"
+                    >
+                        Add Test
+                    </button>
+                </div>
+            ))}
 
             <button
                 type="button"
                 onClick={addBloodInvestigation}
-                style={{
-                    background: "#2196F3",
-                    color: "white",
-                    border: "none",
-                    padding: "8px 15px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    marginTop: "10px",
-                }}
+                className="bg-blue-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-blue-600"
             >
                 Add Investigation Date
             </button>
         </div>
-    )
-}
+    );
+  }
