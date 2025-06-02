@@ -487,44 +487,121 @@ export function generatePDF(formData, isPreview=false) {
 
     // Hospital Course & Treatment
     doc.setFont('times', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     doc.text('Hospital Course & Treatment Administered:', 10, yPos);
+    yPos += 15;
+
+    doc.setFontSize(12);
+
+    formData.hospitalCourse.forEach((course, index) => {
+        // Bullet and Treatment Line
+        const bullet = '\u2022'; // Unicode bullet
+        const indent = 15;
+
+        // Check if there are any non-empty subpoints
+        const hasValidSubpoints = course.subpoints.some(subpoint => subpoint.trim() !== '');
+
+        doc.setFont('times', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0); // Black text
+        doc.text(`${bullet} ${course.treatment}${hasValidSubpoints ? ':' : ''}`, indent, yPos);
+        yPos += 8;
+
+        // Subpoints lines (only if non-empty)
+        course.subpoints.forEach((subpoint) => {
+            if (subpoint.trim() !== '') { // Only process non-empty subpoints
+                const subpointLines = doc.splitTextToSize(subpoint, 180);
+                subpointLines.forEach((line) => {
+                    doc.setFont('times', 'normal');
+                    doc.setFontSize(12);
+                    doc.setTextColor(0, 0, 0); // Black text
+                    doc.text(`-> ${line}`, indent + 5, yPos); // Arrow prefix as in provided code
+                    yPos += 6;
+
+                    // Add page if needed
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                });
+            }
+        });
+
+        yPos += 4; // Extra space after each treatment
+    });
+
+
+
+    doc.addPage();
+    yPos = 20; // Reset for new page content
+
     yPos += 6;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    const hospitalCourseLines = doc.splitTextToSize(formData.hospitalCourse, 180);
-    hospitalCourseLines.forEach((line) => {
-        doc.text(line, 15, yPos);
-        yPos += 5;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
 
-        // Check if we need a new page
-        if (yPos > 270) {
-            doc.addPage();
-            yPos = 10;
-        }
-    });
-    yPos += 5;
+    // Add extra spacing
+    yPos += 15;
+
 
     // Challenges During Treatment
     doc.setFont('times', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     doc.text('Challenges During Treatment & Reasons for Prolonged Hospitalization:', 10, yPos);
+    yPos += 15;
+
+    doc.setFontSize(12);
+
+    formData.treatmentChallenges.forEach((challenge, index) => {
+        // Numbered Challenge Line
+        const indent = 15;
+
+        // Check if there are any non-empty subpoints
+        const hasValidSubpoints = challenge.subpoints.some(subpoint => subpoint.trim() !== '');
+
+        doc.setFont('times', 'normal'); // Normal font for challenge
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0); // Black text
+        doc.text(`${index + 1}. ${challenge.challenges}${hasValidSubpoints ? ':' : ''}`, indent, yPos);
+        yPos += 8;
+
+        // Subpoints lines (only if non-empty)
+        challenge.subpoints.forEach((subpoint) => {
+            if (subpoint.trim() !== '') { // Only process non-empty subpoints
+                const subpointLines = doc.splitTextToSize(subpoint, 180);
+                subpointLines.forEach((line) => {
+                    doc.setFont('times', 'normal');
+                    doc.setFontSize(12);
+                    doc.setTextColor(0, 0, 0); // Black text
+                    doc.text(`-> ${line}`, indent + 5, yPos); // Arrow prefix as in original code
+                    yPos += 6;
+
+                    // Add page if needed
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                });
+            }
+        });
+
+        yPos += 4; // Extra space after each challenge
+    });
+
+
     yPos += 6;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    formData.treatmentChallenges.forEach((challenge, index) => {
-        doc.text(`${index + 1}. ${challenge}`, 15, yPos);
-        yPos += 5;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
 
-        // Check if we need a new page
-        if (yPos > 270) {
-            doc.addPage();
-            yPos = 10;
-        }
-    });
-    yPos += 5;
+    // Add extra spacing
+    yPos += 15;
+
+
 
     // Condition at Discharge
     doc.setFont('times', 'bold');
@@ -543,63 +620,64 @@ export function generatePDF(formData, isPreview=false) {
         yPos = 10;
     }
 
-    // Discharge Medication
-    doc.setFont('times', 'bold');
-    doc.setFontSize(12);
-    doc.text('Discharge Medication:', 10, yPos);
-    yPos += 6;
+ 
+    // // Discharge Medication
+    // doc.setFont('times', 'bold');
+    // doc.setFontSize(12);
+    // doc.text('Discharge Medication:', 10, yPos);
+    // yPos += 6;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    formData.dischargeMedication.forEach((medication, index) => {
-        doc.text(`${index + 1}. ${medication.name} – ${medication.dosage} for ${medication.duration}`, 15, yPos);
-        yPos += 5;
+    // doc.setFont('times', 'normal');
+    // doc.setFontSize(10);
+    // formData.dischargeMedication.forEach((medication, index) => {
+    //     doc.text(`${index + 1}. ${medication.name} – ${medication.dosage} for ${medication.duration}`, 15, yPos);
+    //     yPos += 5;
 
-        // Check if we need a new page
-        if (yPos > 270) {
-            doc.addPage();
-            yPos = 10;
-        }
-    });
-    yPos += 5;
+    //     // Check if we need a new page
+    //     if (yPos > 270) {
+    //         doc.addPage();
+    //         yPos = 10;
+    //     }
+    // });
+    // yPos += 5;
 
-    // Special Instructions
-    doc.setFont('times', 'bold');
-    doc.setFontSize(12);
-    doc.text('Special Instruction/s:', 10, yPos);
-    yPos += 6;
+    // // Special Instructions
+    // doc.setFont('times', 'bold');
+    // doc.setFontSize(12);
+    // doc.text('Special Instruction/s:', 10, yPos);
+    // yPos += 6;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    doc.text(formData.specialInstructions, 15, yPos);
-    yPos += 10;
+    // doc.setFont('times', 'normal');
+    // doc.setFontSize(10);
+    // doc.text(formData.specialInstructions, 15, yPos);
+    // yPos += 10;
 
-    // Review Date
-    doc.setFont('times', 'bold');
-    doc.setFontSize(12);
-    doc.text('Review Date:', 10, yPos);
-    yPos += 6;
+    // // Review Date
+    // doc.setFont('times', 'bold');
+    // doc.setFontSize(12);
+    // doc.text('Review Date:', 10, yPos);
+    // yPos += 6;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    doc.text(`Follow-up: ${formData.reviewDate}`, 15, yPos);
-    yPos += 10;
+    // doc.setFont('times', 'normal');
+    // doc.setFontSize(10);
+    // doc.text(`Follow-up: ${formData.reviewDate}`, 15, yPos);
+    // yPos += 10;
 
-    // Emergency Contact
-    doc.setFont('times', 'bold');
-    doc.setFontSize(12);
-    doc.text('In case any of these symptoms persist, please contact immediately on:', 10, yPos);
-    yPos += 6;
+    // // Emergency Contact
+    // doc.setFont('times', 'bold');
+    // doc.setFontSize(12);
+    // doc.text('In case any of these symptoms persist, please contact immediately on:', 10, yPos);
+    // yPos += 6;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    doc.text(formData.emergencyContact, 15, yPos);
-    yPos += 5;
+    // doc.setFont('times', 'normal');
+    // doc.setFontSize(10);
+    // doc.text(formData.emergencyContact, 15, yPos);
+    // yPos += 5;
 
-    formData.emergencySymptoms.forEach((symptom, index) => {
-        doc.text(`${index + 1}. ${symptom}`, 15, yPos);
-        yPos += 5;
-    });
+    // formData.emergencySymptoms.forEach((symptom, index) => {
+    //     doc.text(`${index + 1}. ${symptom}`, 15, yPos);
+    //     yPos += 5;
+    // });
 
 
 

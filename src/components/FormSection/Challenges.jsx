@@ -1,63 +1,61 @@
-export function HospitalCourse({
+export function Challenges({
     formData,
     setFormData,
 }) {
-
-    const addHospitalCourse = (formData, setFormData) => {
+    const addChallenge = (formData, setFormData) => {
         setFormData({
             ...formData,
-            hospitalCourse: [
-                ...formData.hospitalCourse,
-                { treatment: "", subpoints: [""] },
+            treatmentChallenges: [
+                ...formData.treatmentChallenges,
+                { challenges: "", subpoints: [""] },
             ],
         });
     };
 
-    const removeHospitalCourse = (formData, setFormData, index) => {
-        const updatedHospitalCourse = [...formData.hospitalCourse];
-        updatedHospitalCourse.splice(index, 1);
+    const removeChallenge = (formData, setFormData, index) => {
+        const updatedChallenges = [...formData.treatmentChallenges];
+        updatedChallenges.splice(index, 1);
         setFormData({
             ...formData,
-            hospitalCourse: updatedHospitalCourse,
+            treatmentChallenges: updatedChallenges,
         });
     };
 
-    const handleHospitalCourseChange = (formData, setFormData, index, field, value) => {
-        const updatedHospitalCourse = [...formData.hospitalCourse];
-        updatedHospitalCourse[index][field] = value;
+    const handleChallengeChange = (formData, setFormData, index, field, value) => {
+        const updatedChallenges = [...formData.treatmentChallenges];
+        updatedChallenges[index][field] = value;
         setFormData({
             ...formData,
-            hospitalCourse: updatedHospitalCourse,
+            treatmentChallenges: updatedChallenges,
         });
     };
 
     const handleSubpointChange = (formData, setFormData, index, subpointIndex, value) => {
-        const updatedHospitalCourse = [...formData.hospitalCourse];
-        updatedHospitalCourse[index].subpoints[subpointIndex] = value;
+        const updatedChallenges = [...formData.treatmentChallenges];
+        updatedChallenges[index].subpoints[subpointIndex] = value;
         setFormData({
             ...formData,
-            hospitalCourse: updatedHospitalCourse,
+            treatmentChallenges: updatedChallenges,
         });
     };
 
     const addSubpoint = (formData, setFormData, index) => {
-        const updatedHospitalCourse = [...formData.hospitalCourse];
-        updatedHospitalCourse[index].subpoints.push("");
+        const updatedChallenges = [...formData.treatmentChallenges];
+        updatedChallenges[index].subpoints.push("");
         setFormData({
             ...formData,
-            hospitalCourse: updatedHospitalCourse,
+            treatmentChallenges: updatedChallenges,
         });
     };
 
     const removeSubpoint = (formData, setFormData, index, subpointIndex) => {
-        const updatedHospitalCourse = [...formData.hospitalCourse];
-        updatedHospitalCourse[index].subpoints.splice(subpointIndex, 1);
+        const updatedChallenges = [...formData.treatmentChallenges];
+        updatedChallenges[index].subpoints.splice(subpointIndex, 1);
         setFormData({
             ...formData,
-            hospitalCourse: updatedHospitalCourse,
+            treatmentChallenges: updatedChallenges,
         });
     };
-
 
     return (
         <div
@@ -77,10 +75,10 @@ export function HospitalCourse({
                     marginBottom: "20px",
                 }}
             >
-                Hospital Course and Treatment Administered
+                Challenges During Treatment
             </h2>
 
-            {formData.hospitalCourse.map((hc, index) => (
+            {formData.treatmentChallenges.map((challenge, index) => (
                 <div
                     key={index}
                     className="border border-gray-200 rounded-md p-4 mb-5"
@@ -89,7 +87,7 @@ export function HospitalCourse({
                         {index > 0 && (
                             <button
                                 type="button"
-                                onClick={() => removeHospitalCourse(formData, setFormData, index)}
+                                onClick={() => removeChallenge(formData, setFormData, index)}
                                 className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
                             >
                                 Remove Section
@@ -100,23 +98,23 @@ export function HospitalCourse({
                     <div className="grid grid-cols-12 gap-3.5">
                         <div className="form-group col-span-12">
                             <label
-                                htmlFor={`treatment-${index}`}
+                                htmlFor={`challenge-${index}`}
                                 className="block mb-1 font-medium text-gray-700"
                             >
-                                Course and Treatment:
+                                Challenge:
                             </label>
                             <input
                                 type="text"
-                                id={`treatment-${index}`}
-                                value={hc.treatment}
+                                id={`challenge-${index}`}
+                                value={challenge.challenges}
                                 onChange={(e) =>
-                                    handleHospitalCourseChange(formData, setFormData, index, "treatment", e.target.value)
+                                    handleChallengeChange(formData, setFormData, index, "challenges", e.target.value)
                                 }
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
-                        {hc.subpoints.map((sub, subpointIndex) => (
+                        {challenge.subpoints.map((sub, subpointIndex) => (
                             <div
                                 key={subpointIndex}
                                 className="col-span-12 grid grid-cols-12 gap-3.5 mb-3"
@@ -166,10 +164,10 @@ export function HospitalCourse({
 
             <button
                 type="button"
-                onClick={() => addHospitalCourse(formData, setFormData)}
+                onClick={() => addChallenge(formData, setFormData)}
                 className="bg-blue-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-blue-600"
             >
-                Add Course / Treatment
+                Add Challenge
             </button>
         </div>
     );

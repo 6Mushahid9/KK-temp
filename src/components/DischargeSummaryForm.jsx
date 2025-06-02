@@ -10,6 +10,7 @@ import { SystemicExamination } from "./FormSection/SystemicExamination";
 import { BloodInvestigation } from "./FormSection/BloodInvestigation";
 import { Radiological } from "./FormSection/Radiological";
 import { HospitalCourse } from "./FormSection/HospitalCourse";
+import { Challenges } from "./FormSection/Challenges";
 import "./dischargesummaryform.css";
 
 const DischargeSummaryForm = () => {
@@ -69,14 +70,21 @@ const DischargeSummaryForm = () => {
     ],
 
 
-    // Diagnosis
-    diagnosis: [""],
-
     // Hospital Course & Treatment
-    hospitalCourse: "",
+    hospitalCourse: [
+      {
+      treatment: "",
+      subpoints: [""],
+    }
+  ],
 
     // Challenges During Treatment
-    treatmentChallenges: [""],
+    treatmentChallenges: [
+      {
+        challenges:"",
+        subpoints:[""]
+      }
+    ],
 
     // Condition at Discharge
     conditionAtDischarge: "",
@@ -302,92 +310,8 @@ const DischargeSummaryForm = () => {
         <HospitalCourse formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} addRadiologicalFinding={addRadiologicalFinding} handleRadiologicalFindingChange={handleRadiologicalFindingChange} removeRadiologicalFinding={removeRadiologicalFinding} handleDescriptionChange={handleDescriptionChange} addDescription={addDescription} removeDescription={removeDescription} setFormData={setFormData} />
 
         {/* Challenges During Treatment Section */}
-        <div
-          className="form-section"
-          style={{
-            marginBottom: "30px",
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2
-            style={{
-              borderBottom: "1px solid #ddd",
-              paddingBottom: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            Challenges During Treatment & Reasons for Prolonged Hospitalization
-          </h2>
+        <Challenges formData={formData} setFormData={setFormData} />
 
-          {formData.treatmentChallenges.map((challenge, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "10px",
-                gap: "10px",
-              }}
-            >
-              <div style={{ flex: 1 }}>
-                <input
-                  type="text"
-                  value={challenge}
-                  onChange={(e) =>
-                    handleArrayChange(
-                      index,
-                      "treatmentChallenges",
-                      e.target.value,
-                      "treatmentChallenges"
-                    )
-                  }
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                  placeholder={`Challenge ${index + 1}`}
-                />
-              </div>
-
-              {index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => removeArrayItem("treatmentChallenges", index)}
-                  style={{
-                    background: "#f44336",
-                    color: "white",
-                    border: "none",
-                    padding: "5px 10px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-          ))}
-
-          <button
-            type="button"
-            onClick={() => addArrayItem("treatmentChallenges", "")}
-            style={{
-              background: "#2196F3",
-              color: "white",
-              border: "none",
-              padding: "8px 15px",
-              borderRadius: "4px",
-              cursor: "pointer",
-              marginTop: "10px",
-            }}
-          >
-            Add Challenge
-          </button>
-        </div>
 
         {/* Condition at Discharge Section */}
         <div
