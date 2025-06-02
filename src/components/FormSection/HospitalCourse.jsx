@@ -1,4 +1,13 @@
-export function HospitalCourse({ formData, handleChange }) {
+export function HospitalCourse({ 
+    formData,
+    setFormData,
+    addRadiologicalFinding,
+    removeRadiologicalFinding,
+    handleRadiologicalFindingChange,
+    handleDescriptionChange,
+    addDescription,
+    removeDescription, }) {
+    
     return (
         <div
             className="form-section"
@@ -9,32 +18,126 @@ export function HospitalCourse({ formData, handleChange }) {
                 borderRadius: "5px",
             }}
         >
-            {/* Hospital Course & Treatment Section */}
             <h2
+                className="h2"
                 style={{
                     borderBottom: "1px solid #ddd",
                     paddingBottom: "10px",
                     marginBottom: "20px",
                 }}
             >
-                Hospital Course & Treatment Administered
+                Hospital Course and Treatment Administered
             </h2>
 
-            <div className="form-group">
-                <textarea
-                    id="hospitalCourse"
-                    name="hospitalCourse"
-                    value={formData.hospitalCourse}
-                    onChange={handleChange}
-                    style={{
-                        width: "100%",
-                        padding: "8px",
-                        borderRadius: "4px",
-                        border: "1px solid #ddd",
-                        minHeight: "120px",
-                    }}
-                />
-            </div>
+            {formData.radiologicalFindings.map((finding, index) => (
+                <div
+                    key={index}
+                    className="border border-gray-200 rounded-md p-4 mb-5 pr-8"
+                >
+                    <div className="flex justify-between items-center mb-3">
+                        {/* <div className="form-group w-[30%]">
+                            <label
+                                htmlFor={`finding-date-${index}`}
+                                className="block mb-1 font-medium text-gray-700"
+                            >
+                                Date:
+                            </label>
+                            <input
+                                type="date"
+                                id={`finding-date-${index}`}
+                                value={finding.date}
+                                onChange={(e) =>
+                                    handleRadiologicalFindingChange(formData, setFormData, index, "date", e.target.value)
+                                }
+                                className=" bg-green-500 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div> */}
+
+                        {index > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => removeRadiologicalFinding(formData, setFormData, index)}
+                                className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
+                            >
+                                Remove Section
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="grid grid-cols-12 gap-3.5">
+                        <div className="form-group col-span-12">
+                            <label
+                                htmlFor={`finding-name-${index}`}
+                                className="block my-3 font-medium text-gray-700"
+                            >
+                                Course and Treatment:
+                            </label>
+                            <input
+                                type="text"
+                                id={`finding-name-${index}`}
+                                value={finding.name}
+                                onChange={(e) =>
+                                    handleRadiologicalFindingChange(formData, setFormData, index, "name", e.target.value)
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        {finding.descriptions.map((desc, descIndex) => (
+                            <div
+                                key={descIndex}
+                                className="col-span-12 grid grid-cols-12 gap-3.5 mb-3"
+                            >
+                                <div className="form-group col-span-11">
+                                    <label
+                                        htmlFor={`description-${index}-${descIndex}`}
+                                        className="block mb-1 font-medium text-gray-700"
+                                    >
+                                        Subpoints:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id={`description-${index}-${descIndex}`}
+                                        value={desc}
+                                        onChange={(e) =>
+                                            handleDescriptionChange(formData, setFormData, index, descIndex, e.target.value)
+                                        }
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+
+                                {descIndex > 0 && (
+                                    <div className="form-group col-span-1 flex items-end">
+                                        <button
+                                            type="button"
+                                            onClick={() => removeDescription(formData, setFormData, index, descIndex)}
+                                            className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => addDescription(formData, setFormData, index)}
+                        className="bg-green-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-green-600"
+                    >
+                        Add Subpoint
+                    </button>
+                </div>
+            ))}
+
+            <button
+                type="button"
+                onClick={() => addRadiologicalFinding(formData, setFormData)}
+                className="bg-blue-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-blue-600"
+            >
+                Add Course / Treatment
+            </button>
         </div>
     );
   }
