@@ -5,7 +5,7 @@
     /* Slightly more padding for breathing room */
     border-radius: 12px;
     /* Smoother, larger radius for modern feel */
-    border: 3px solid #d32f2f;
+    /* border: 3px solid #d32f2f; */
     /* Slightly brighter red for vibrancy */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     /* Subtle shadow for depth */

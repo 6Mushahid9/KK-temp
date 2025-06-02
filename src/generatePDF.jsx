@@ -3,7 +3,7 @@ import autoTable from 'jspdf-autotable';
 
 import { LogoBase64 } from './LogoBase64';
 
-export function generatePDF(formData, isPreview=false) {
+export function generatePDF(formData, isPreview = false) {
     const doc = new jsPDF();
     let yPos = 50;
 
@@ -18,13 +18,13 @@ export function generatePDF(formData, isPreview=false) {
             minute: '2-digit',
             hour12: true
         });
-      }
+    }
 
     const title = 'Discharge Summary';
     doc.setFontSize(25);
     doc.setFont('times', 'bold');
 
-    yPos = yPos+34
+    yPos = yPos + 34
 
     // Centered X position
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -36,7 +36,7 @@ export function generatePDF(formData, isPreview=false) {
     // 👇 Add logo image above title
     doc.addImage(LogoBase64, 'PNG', (pageWidth - 30) / 2, 15, 30, 30); // centered at top
 
-    
+
     doc.text(title, x, y);
 
     // Underline
@@ -169,7 +169,7 @@ export function generatePDF(formData, isPreview=false) {
         doc.setFont('times', 'normal');
         doc.text(`${value}`, indent + bulletWidth + labelWidth, yPos); // normal value
 
-        yPos += lineHeight+5 ;
+        yPos += lineHeight + 5;
     });
 
     // Add extra spacing
@@ -279,12 +279,12 @@ export function generatePDF(formData, isPreview=false) {
     formData.bloodInvestigations.forEach((investigation, index) => {
         doc.setFont('times', 'bold');
         doc.setFontSize(12);
-        if (index===0){
+        if (index === 0) {
             doc.text(`${bullet} ${investigation.date} (On Admission):`, indent, yPos);
         } else {
             doc.text(`${bullet} ${investigation.date}:`, indent, yPos);
         }
-        
+
         yPos += 8;
 
         investigation.tests.forEach((test) => {
@@ -381,8 +381,8 @@ export function generatePDF(formData, isPreview=false) {
 
     // Add extra spacing
     yPos += 15;
-    
-    
+
+
 
 
     // Radiological & Diagnostic Findings
@@ -605,22 +605,45 @@ export function generatePDF(formData, isPreview=false) {
 
     // Condition at Discharge
     doc.setFont('times', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     doc.text('Condition at Discharge:', 10, yPos);
+    yPos += 15;
+
+    doc.setFontSize(12);
+
+    formData.conditionAtDischarge.forEach((condition) => {
+        // Only process non-empty conditions
+        if (condition.trim() !== '') {
+            // Bullet Condition Line
+            const bullet = '\u2022'; // Unicode bullet
+            const indent = 15;
+
+            doc.setFont('times', 'normal'); // Normal font for condition
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0); // Black text
+            doc.text(`${bullet} ${condition}`, indent, yPos);
+            yPos += 5;
+
+            // Add page if needed
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
+
+            yPos += 4; // Extra space after each condition
+        }
+    });
+
     yPos += 6;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    doc.text(formData.conditionAtDischarge, 15, yPos);
-    yPos += 10;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
 
-    // Check if we need a new page
-    if (yPos > 250) {
-        doc.addPage();
-        yPos = 10;
-    }
+    // Add extra spacing
+    yPos += 15;
 
- 
     // // Discharge Medication
     // doc.setFont('times', 'bold');
     // doc.setFontSize(12);
@@ -696,7 +719,7 @@ export function generatePDF(formData, isPreview=false) {
 
         doc.text(pageText, x, y);
     }
-    
+
     // // Save the PDF
     // doc.save('discharge-summary.pdf');
 

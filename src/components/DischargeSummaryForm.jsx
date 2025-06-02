@@ -11,6 +11,7 @@ import { BloodInvestigation } from "./FormSection/BloodInvestigation";
 import { Radiological } from "./FormSection/Radiological";
 import { HospitalCourse } from "./FormSection/HospitalCourse";
 import { Challenges } from "./FormSection/Challenges";
+import { ConditionAtDischarge } from "./FormSection/ConditionAtDischarge";
 import "./dischargesummaryform.css";
 
 const DischargeSummaryForm = () => {
@@ -73,21 +74,21 @@ const DischargeSummaryForm = () => {
     // Hospital Course & Treatment
     hospitalCourse: [
       {
-      treatment: "",
-      subpoints: [""],
-    }
-  ],
+        treatment: "",
+        subpoints: [""],
+      }
+    ],
 
     // Challenges During Treatment
     treatmentChallenges: [
       {
-        challenges:"",
-        subpoints:[""]
+        challenges: "",
+        subpoints: [""]
       }
     ],
 
     // Condition at Discharge
-    conditionAtDischarge: "",
+    conditionAtDischarge: [""],
 
     // Discharge Medication
     dischargeMedication: [{ name: "", dosage: "", duration: "" }],
@@ -307,48 +308,15 @@ const DischargeSummaryForm = () => {
         {/* Radiological & Diagnostic Findings Section */}
         <Radiological formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} addRadiologicalFinding={addRadiologicalFinding} handleRadiologicalFindingChange={handleRadiologicalFindingChange} removeRadiologicalFinding={removeRadiologicalFinding} handleDescriptionChange={handleDescriptionChange} addDescription={addDescription} removeDescription={removeDescription} setFormData={setFormData} />
 
-        <HospitalCourse formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} addRadiologicalFinding={addRadiologicalFinding} handleRadiologicalFindingChange={handleRadiologicalFindingChange} removeRadiologicalFinding={removeRadiologicalFinding} handleDescriptionChange={handleDescriptionChange} addDescription={addDescription} removeDescription={removeDescription} setFormData={setFormData} />
+        {/* hospitalCourse */}
+        <HospitalCourse formData={formData} setFormData={setFormData} />
 
         {/* Challenges During Treatment Section */}
         <Challenges formData={formData} setFormData={setFormData} />
 
 
         {/* Condition at Discharge Section */}
-        <div
-          className="form-section"
-          style={{
-            marginBottom: "30px",
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2
-            style={{
-              borderBottom: "1px solid #ddd",
-              paddingBottom: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            Condition at Discharge
-          </h2>
-
-          <div className="form-group">
-            <input
-              type="text"
-              id="conditionAtDischarge"
-              name="conditionAtDischarge"
-              value={formData.conditionAtDischarge}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "8px",
-                borderRadius: "4px",
-                border: "1px solid #ddd",
-              }}
-            />
-          </div>
-        </div>
+        <ConditionAtDischarge formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem}/>
 
         {/* Discharge Medication Section */}
         <div
