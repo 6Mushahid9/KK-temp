@@ -9,6 +9,7 @@ import { ClinicalFindings } from "./FormSection/ClinicalFindings";
 import { SystemicExamination } from "./FormSection/SystemicExamination";
 import { BloodInvestigation } from "./FormSection/BloodInvestigation";
 import { Radiological } from "./FormSection/Radiological";
+import { HospitalCourse } from "./FormSection/HospitalCourse";
 import "./dischargesummaryform.css";
 
 const DischargeSummaryForm = () => {
@@ -298,44 +299,7 @@ const DischargeSummaryForm = () => {
         {/* Radiological & Diagnostic Findings Section */}
         <Radiological formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} addRadiologicalFinding={addRadiologicalFinding} handleRadiologicalFindingChange={handleRadiologicalFindingChange} removeRadiologicalFinding={removeRadiologicalFinding} handleDescriptionChange={handleDescriptionChange} addDescription={addDescription} removeDescription={removeDescription} setFormData={setFormData} />
 
-        
-
-        {/* Hospital Course & Treatment Section */}
-        <div
-          className="form-section"
-          style={{
-            marginBottom: "30px",
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2
-            style={{
-              borderBottom: "1px solid #ddd",
-              paddingBottom: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            Hospital Course & Treatment Administered
-          </h2>
-
-          <div className="form-group">
-            <textarea
-              id="hospitalCourse"
-              name="hospitalCourse"
-              value={formData.hospitalCourse}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "8px",
-                borderRadius: "4px",
-                border: "1px solid #ddd",
-                minHeight: "120px",
-              }}
-            />
-          </div>
-        </div>
+        <hospitalCourse />
 
         {/* Challenges During Treatment Section */}
         <div
