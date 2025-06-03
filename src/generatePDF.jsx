@@ -530,6 +530,17 @@ export function generatePDF(formData, isPreview = false) {
         yPos += 4; // Extra space after each treatment
     });
 
+    yPos += 6;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
+
 
 
     doc.addPage();
@@ -644,25 +655,102 @@ export function generatePDF(formData, isPreview = false) {
     // Add extra spacing
     yPos += 15;
 
-    // // Discharge Medication
-    // doc.setFont('times', 'bold');
-    // doc.setFontSize(12);
-    // doc.text('Discharge Medication:', 10, yPos);
-    // yPos += 6;
 
-    // doc.setFont('times', 'normal');
-    // doc.setFontSize(10);
-    // formData.dischargeMedication.forEach((medication, index) => {
-    //     doc.text(`${index + 1}. ${medication.name} – ${medication.dosage} for ${medication.duration}`, 15, yPos);
-    //     yPos += 5;
 
-    //     // Check if we need a new page
-    //     if (yPos > 270) {
-    //         doc.addPage();
-    //         yPos = 10;
-    //     }
-    // });
-    // yPos += 5;
+    doc.addPage();
+    yPos = 20; // Reset for new page content
+
+    yPos += 6;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
+
+
+    // Discharge Medication
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+    doc.text('Discharge Medication:', 10, yPos);
+    yPos += 15;
+
+    doc.setFontSize(12);
+
+    // Debugging: Log the dischargeMedication data
+    console.log('Discharge Medication Data:', formData.dischargeMedication);
+
+    if (!formData.dischargeMedication || formData.dischargeMedication.length === 0) {
+        // Fallback if no medications
+        doc.setFont('times', 'normal');
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text('No medications recorded.', 15, yPos);
+        yPos += 8;
+        yPos += 4;
+    } else {
+        formData.dischargeMedication.forEach((medication, index) => {
+            // Debugging: Log each medication entry
+            console.log(`Medication ${index + 1}:`, medication);
+
+            // Only process if medication object is valid and has a non-empty name
+            if (medication && medication.name && medication.name.trim() !== '') {
+                // Numbered Medication Line
+                const indent = 15;
+
+                // Medication name (bold)
+                doc.setFont('times', 'bold');
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0); // Black text
+                const nameText = `${index + 1}.  ${medication.name}`;
+                const nameWidth = doc.getTextWidth(nameText);
+                doc.text(nameText, indent, yPos);
+
+                // Dosage and duration (normal, only if non-empty)
+                if (medication.dosageDuration && medication.dosageDuration.trim() !== '') {
+                    doc.setFont('times', 'normal');
+                    doc.setFontSize(12);
+                    doc.setTextColor(0, 0, 0); // Black text
+                    doc.text(` —— ${medication.dosageDuration}`, indent + nameWidth, yPos);
+                }
+
+                yPos += 4;
+
+                // Add page if needed
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+
+                yPos += 4; // Extra space after each medication
+            }
+        });
+
+        // Fallback if no valid medications were rendered
+        if (!formData.dischargeMedication.some(med => med && med.name && med.name.trim() !== '')) {
+            doc.setFont('times', 'normal');
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text('No valid medications recorded.', 15, yPos);
+            yPos += 8;
+            yPos += 4;
+        }
+    }
+
+
+    yPos += 6;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
 
     // // Special Instructions
     // doc.setFont('times', 'bold');

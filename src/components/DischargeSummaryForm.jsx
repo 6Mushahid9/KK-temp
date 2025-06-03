@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import { useState } from "react";
 
 import { generatePDF } from "../generatePDF";
 
@@ -12,6 +10,7 @@ import { Radiological } from "./FormSection/Radiological";
 import { HospitalCourse } from "./FormSection/HospitalCourse";
 import { Challenges } from "./FormSection/Challenges";
 import { ConditionAtDischarge } from "./FormSection/ConditionAtDischarge";
+import { DischargeMedication } from "./FormSection/DischargeMedication";
 import "./dischargesummaryform.css";
 
 const DischargeSummaryForm = () => {
@@ -91,7 +90,7 @@ const DischargeSummaryForm = () => {
     conditionAtDischarge: [""],
 
     // Discharge Medication
-    dischargeMedication: [{ name: "", dosage: "", duration: "" }],
+    dischargeMedication: [{ name: "", dosageDuration: ""}],
 
     // Special Instructions
     specialInstructions: "",
@@ -319,158 +318,7 @@ const DischargeSummaryForm = () => {
         <ConditionAtDischarge formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem}/>
 
         {/* Discharge Medication Section */}
-        <div
-          className="form-section"
-          style={{
-            marginBottom: "30px",
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2
-            style={{
-              borderBottom: "1px solid #ddd",
-              paddingBottom: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            Discharge Medication
-          </h2>
-
-          {formData.dischargeMedication.map((medication, index) => (
-            <div
-              key={index}
-              style={{
-                marginBottom: "15px",
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr auto",
-                gap: "10px",
-              }}
-            >
-              <div className="form-group">
-                <label htmlFor={`medication-name-${index}`}>Medication:</label>
-                <input
-                  type="text"
-                  id={`medication-name-${index}`}
-                  value={medication.name}
-                  onChange={(e) => {
-                    const updatedMedications = [
-                      ...formData.dischargeMedication,
-                    ];
-                    updatedMedications[index].name = e.target.value;
-                    setFormData({
-                      ...formData,
-                      dischargeMedication: updatedMedications,
-                    });
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    marginTop: "5px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor={`medication-dosage-${index}`}>Dosage:</label>
-                <input
-                  type="text"
-                  id={`medication-dosage-${index}`}
-                  value={medication.dosage}
-                  onChange={(e) => {
-                    const updatedMedications = [
-                      ...formData.dischargeMedication,
-                    ];
-                    updatedMedications[index].dosage = e.target.value;
-                    setFormData({
-                      ...formData,
-                      dischargeMedication: updatedMedications,
-                    });
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    marginTop: "5px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor={`medication-duration-${index}`}>
-                  Duration:
-                </label>
-                <input
-                  type="text"
-                  id={`medication-duration-${index}`}
-                  value={medication.duration}
-                  onChange={(e) => {
-                    const updatedMedications = [
-                      ...formData.dischargeMedication,
-                    ];
-                    updatedMedications[index].duration = e.target.value;
-                    setFormData({
-                      ...formData,
-                      dischargeMedication: updatedMedications,
-                    });
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    marginTop: "5px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                />
-              </div>
-
-              {index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => removeArrayItem("dischargeMedication", index)}
-                  style={{
-                    background: "#f44336",
-                    color: "white",
-                    border: "none",
-                    padding: "5px 10px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    alignSelf: "end",
-                    marginBottom: "5px",
-                  }}
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-          ))}
-
-          <button
-            type="button"
-            onClick={() =>
-              addArrayItem("dischargeMedication", {
-                name: "",
-                dosage: "",
-                duration: "",
-              })
-            }
-            style={{
-              background: "#2196F3",
-              color: "white",
-              border: "none",
-              padding: "8px 15px",
-              borderRadius: "4px",
-              cursor: "pointer",
-              marginTop: "10px",
-            }}
-          >
-            Add Medication
-          </button>
-        </div>
+        <DischargeMedication formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} setFormData={setFormData}/>
 
         {/* Special Instructions Section */}
         <div
