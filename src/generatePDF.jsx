@@ -903,9 +903,9 @@ export function generatePDF(formData, isPreview = false) {
 
     // Symptoms Section
     doc.setFont('times', 'bold');
-    doc.setFontSize(16);
-    doc.text('Post-Discharge Instructions:', 10, yPos);
-    yPos += 15;
+    // doc.setFontSize(16);
+    // doc.text('Post-Discharge Instructions:', 10, yPos);
+    yPos += 120;
 
     // Contact Instruction (bold)
     doc.setFont('times', 'bold');
@@ -915,7 +915,7 @@ export function generatePDF(formData, isPreview = false) {
     const contactLines = doc.splitTextToSize(contactText, 180); // Wrap text if too long
     contactLines.forEach((line) => {
         doc.text(line, 15, yPos);
-        yPos += 5;
+        yPos += 6;
     });
 
     // Symptoms List (normal font)
@@ -924,7 +924,7 @@ export function generatePDF(formData, isPreview = false) {
         'Redness on the site of operation.',
         'Vomiting.',
         'Severe pain at the site of operation.',
-        'Any other incurable complication/s.'
+        'Any other incurable complication(s).'
     ];
 
     doc.setFont('times', 'normal');

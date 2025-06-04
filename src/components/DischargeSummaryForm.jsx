@@ -12,6 +12,7 @@ import { Challenges } from "./FormSection/Challenges";
 import { ConditionAtDischarge } from "./FormSection/ConditionAtDischarge";
 import { DischargeMedication } from "./FormSection/DischargeMedication";
 import { SpecialInstructions } from "./FormSection/SpecialInstructions";
+import { ReviewDate } from "./FormSection/ReviewDate";
 import "./dischargesummaryform.css";
 
 const DischargeSummaryForm = () => {
@@ -325,7 +326,7 @@ const DischargeSummaryForm = () => {
         <SpecialInstructions formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem}/>
 
         {/* Review Date Section */}
-        
+        <ReviewDate />
 
         {/* Emergency Contact Section */}
         <div
