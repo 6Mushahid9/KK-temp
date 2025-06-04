@@ -11,6 +11,7 @@ import { HospitalCourse } from "./FormSection/HospitalCourse";
 import { Challenges } from "./FormSection/Challenges";
 import { ConditionAtDischarge } from "./FormSection/ConditionAtDischarge";
 import { DischargeMedication } from "./FormSection/DischargeMedication";
+import { SpecialInstructions } from "./FormSection/SpecialInstructions";
 import "./dischargesummaryform.css";
 
 const DischargeSummaryForm = () => {
@@ -93,7 +94,7 @@ const DischargeSummaryForm = () => {
     dischargeMedication: [{ name: "", dosageDuration: ""}],
 
     // Special Instructions
-    specialInstructions: "",
+    specialInstructions: [""],
 
     // Review Date
     reviewDate: "",
@@ -321,80 +322,10 @@ const DischargeSummaryForm = () => {
         <DischargeMedication formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} setFormData={setFormData}/>
 
         {/* Special Instructions Section */}
-        <div
-          className="form-section"
-          style={{
-            marginBottom: "30px",
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2
-            style={{
-              borderBottom: "1px solid #ddd",
-              paddingBottom: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            Special Instruction/s
-          </h2>
-
-          <div className="form-group">
-            <textarea
-              id="specialInstructions"
-              name="specialInstructions"
-              value={formData.specialInstructions}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "8px",
-                borderRadius: "4px",
-                border: "1px solid #ddd",
-                minHeight: "80px",
-              }}
-            />
-          </div>
-        </div>
+        <SpecialInstructions formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem}/>
 
         {/* Review Date Section */}
-        <div
-          className="form-section"
-          style={{
-            marginBottom: "30px",
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2
-            style={{
-              borderBottom: "1px solid #ddd",
-              paddingBottom: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            Review Date
-          </h2>
-
-          <div className="form-group">
-            <label htmlFor="reviewDate">Follow-up:</label>
-            <input
-              type="text"
-              id="reviewDate"
-              name="reviewDate"
-              value={formData.reviewDate}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "8px",
-                marginTop: "5px",
-                borderRadius: "4px",
-                border: "1px solid #ddd",
-              }}
-            />
-          </div>
-        </div>
+        
 
         {/* Emergency Contact Section */}
         <div

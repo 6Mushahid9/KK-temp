@@ -752,46 +752,203 @@ export function generatePDF(formData, isPreview = false) {
     yPos += 15;
 
 
-    // // Special Instructions
-    // doc.setFont('times', 'bold');
-    // doc.setFontSize(12);
-    // doc.text('Special Instruction/s:', 10, yPos);
-    // yPos += 6;
+    // Special Instructions
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+    doc.text('Special Instruction(s):', 10, yPos);
+    yPos += 15;
 
-    // doc.setFont('times', 'normal');
-    // doc.setFontSize(10);
-    // doc.text(formData.specialInstructions, 15, yPos);
-    // yPos += 10;
+    doc.setFontSize(12);
 
-    // // Review Date
-    // doc.setFont('times', 'bold');
-    // doc.setFontSize(12);
-    // doc.text('Review Date:', 10, yPos);
-    // yPos += 6;
+    formData.specialInstructions.forEach((instruction) => {
+        // Only process non-empty instructions
+        if (instruction.trim() !== '') {
+            // Bullet Instruction Line
+            const bullet = '\u2022'; // Unicode bullet
+            const indent = 15;
 
-    // doc.setFont('times', 'normal');
-    // doc.setFontSize(10);
-    // doc.text(`Follow-up: ${formData.reviewDate}`, 15, yPos);
-    // yPos += 10;
+            doc.setFont('times', 'normal'); // Normal font for instruction
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0); // Black text
+            doc.text(`${bullet} ${instruction}`, indent, yPos);
+            yPos += 5;
 
-    // // Emergency Contact
-    // doc.setFont('times', 'bold');
-    // doc.setFontSize(12);
-    // doc.text('In case any of these symptoms persist, please contact immediately on:', 10, yPos);
-    // yPos += 6;
+            // Add page if needed
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
 
-    // doc.setFont('times', 'normal');
-    // doc.setFontSize(10);
-    // doc.text(formData.emergencyContact, 15, yPos);
-    // yPos += 5;
-
-    // formData.emergencySymptoms.forEach((symptom, index) => {
-    //     doc.text(`${index + 1}. ${symptom}`, 15, yPos);
-    //     yPos += 5;
-    // });
+            yPos += 4; // Extra space after each instruction
+        }
+    });
 
 
+    yPos += 6;
 
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
+
+
+
+    doc.addPage();
+    yPos = 20; // Reset for new page content
+
+    yPos += 6;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
+
+
+
+
+    // Review Date
+    doc.setFont('times', 'bold');
+    doc.setFontSize(12);
+    doc.text('Review Date:', 10, yPos);
+    yPos += 6;
+
+    doc.setFont('times', 'normal');
+    doc.setFontSize(10);
+    doc.text(`Follow-up: ${formData.reviewDate}`, 15, yPos);
+    yPos += 10;
+
+    // Emergency Contact
+    doc.setFont('times', 'bold');
+    doc.setFontSize(12);
+    doc.text('In case any of these symptoms persist, please contact immediately on:', 10, yPos);
+    yPos += 6;
+
+    doc.setFont('times', 'normal');
+    doc.setFontSize(10);
+    doc.text(formData.emergencyContact, 15, yPos);
+    yPos += 5;
+
+    formData.emergencySymptoms.forEach((symptom, index) => {
+        doc.text(`${index + 1}. ${symptom}`, 15, yPos);
+        yPos += 5;
+    });
+
+
+
+
+
+    yPos += 6;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+    
+
+
+
+    // Consultant and Medical Officer
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+    // doc.text('Consultant and Medical Officer:', 10, yPos);
+    yPos += 12;
+
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0); // Black text
+
+    // // Page width for right alignment (A4 width = ~595 points in jsPDF)
+    // const pageWidth = 595;
+    // const indent = 15;
+    const rightMargin = 16;
+
+    // Consultant (left side)
+    const consultantText = 'Consultant';
+    doc.text(consultantText, indent, yPos);
+
+    // Medical Officer (right side)
+    const medicalOfficerText = 'Medical Officer';
+    const medicalOfficerWidth = doc.getTextWidth(medicalOfficerText);
+    doc.text(medicalOfficerText, pageWidth - medicalOfficerWidth - rightMargin, yPos);
+
+    yPos += 8;
+
+    // Add page if needed
+    if (yPos > 270) {
+        doc.addPage();
+        yPos = 20;
+    }
+
+    yPos += 4; // Extra space after section
+
+
+
+// discclaimer
+    // Check if there's enough space for the symptoms section (approximate height: ~60 points)
+    if (yPos > 200) { // Adjust threshold to ensure section fits at bottom
+        doc.addPage();
+        yPos = 20;
+    }
+
+    // Symptoms Section
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+    doc.text('Post-Discharge Instructions:', 10, yPos);
+    yPos += 15;
+
+    // Contact Instruction (bold)
+    doc.setFont('times', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); // Black text
+    const contactText = 'In case any of these symptoms persist, please contact immediately on: - 0522-2619049/50 or 2231932';
+    const contactLines = doc.splitTextToSize(contactText, 180); // Wrap text if too long
+    contactLines.forEach((line) => {
+        doc.text(line, 15, yPos);
+        yPos += 5;
+    });
+
+    // Symptoms List (normal font)
+    const symptoms = [
+        'Fever.',
+        'Redness on the site of operation.',
+        'Vomiting.',
+        'Severe pain at the site of operation.',
+        'Any other incurable complication/s.'
+    ];
+
+    doc.setFont('times', 'normal');
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); // Black text
+
+    symptoms.forEach((symptom, index) => {
+        const indent = 15;
+        doc.text(`${index + 1}. ${symptom}`, indent, yPos);
+        yPos += 5;
+
+        // Add page if needed
+        if (yPos > 270) {
+            doc.addPage();
+            yPos = 20;
+        }
+    });
+
+    yPos += 4; // Extra space after section
+
+
+
+
+    
     const totalPages = doc.getNumberOfPages();
 
     for (let i = 1; i <= totalPages; i++) {
@@ -807,6 +964,11 @@ export function generatePDF(formData, isPreview = false) {
 
         doc.text(pageText, x, y);
     }
+
+
+
+
+
 
     // // Save the PDF
     // doc.save('discharge-summary.pdf');
