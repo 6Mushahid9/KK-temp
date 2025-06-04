@@ -98,7 +98,10 @@ const DischargeSummaryForm = () => {
     specialInstructions: [""],
 
     // Review Date
-    reviewDate: "",
+    reviewDate: {
+      followUp:"",
+      NA: "---"
+    },
 
     // Emergency Contact
     emergencyContact: "",
@@ -326,118 +329,7 @@ const DischargeSummaryForm = () => {
         <SpecialInstructions formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem}/>
 
         {/* Review Date Section */}
-        <ReviewDate />
-
-        {/* Emergency Contact Section */}
-        <div
-          className="form-section"
-          style={{
-            marginBottom: "30px",
-            border: "1px solid #ddd",
-            padding: "20px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2
-            style={{
-              borderBottom: "1px solid #ddd",
-              paddingBottom: "10px",
-              marginBottom: "20px",
-            }}
-          >
-            Emergency Contact Information
-          </h2>
-
-          <div className="form-group">
-            <label htmlFor="emergencyContact">Contact Number:</label>
-            <input
-              type="text"
-              id="emergencyContact"
-              name="emergencyContact"
-              value={formData.emergencyContact}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "8px",
-                marginTop: "5px",
-                borderRadius: "4px",
-                border: "1px solid #ddd",
-              }}
-              placeholder="e.g., 0522-2619049/50 or 2231932"
-            />
-          </div>
-
-          <h3 style={{ marginTop: "20px", marginBottom: "10px" }}>
-            Symptoms to watch for:
-          </h3>
-
-          {formData.emergencySymptoms.map((symptom, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "10px",
-                gap: "10px",
-              }}
-            >
-              <div style={{ flex: 1 }}>
-                <input
-                  type="text"
-                  value={symptom}
-                  onChange={(e) =>
-                    handleArrayChange(
-                      index,
-                      "emergencySymptoms",
-                      e.target.value,
-                      "emergencySymptoms"
-                    )
-                  }
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                  }}
-                  placeholder={`Symptom ${index + 1}`}
-                />
-              </div>
-
-              {index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => removeArrayItem("emergencySymptoms", index)}
-                  style={{
-                    background: "#f44336",
-                    color: "white",
-                    border: "none",
-                    padding: "5px 10px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-          ))}
-
-          <button
-            type="button"
-            onClick={() => addArrayItem("emergencySymptoms", "")}
-            style={{
-              background: "#2196F3",
-              color: "white",
-              border: "none",
-              padding: "8px 15px",
-              borderRadius: "4px",
-              cursor: "pointer",
-              marginTop: "10px",
-            }}
-          >
-            Add Symptom
-          </button>
-        </div>
+        <ReviewDate formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} setFormData={setFormData}/>
 
         {/* Generate PDF and Preview Buttons */}
         <div

@@ -3,7 +3,6 @@ export function DischargeMedication({
     handleArrayChange,
     addArrayItem,
     removeArrayItem,
-    handleChange
 }) {
     return (
         <div
