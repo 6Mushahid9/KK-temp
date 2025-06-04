@@ -6,20 +6,20 @@ export function SpecialInstructions({
 }) {
     return (
         <div className="form-section mt-3 border-2 border-gray-300 rounded-md p-4">
-            <h2 className="text-left font-semibold">Special Instruction/s</h2>
+            <h2 className="h2"
+                style={{
+                    borderBottom: "1px solid #ddd",
+                    paddingBottom: "10px",
+                    marginBottom: "20px",
+                }}>Special Instruction(s)</h2>
 
             {formData.specialInstructions.map((item, index) => (
                 <div
                     key={index}
-                    className="form-section"
-                    style={{
-                        marginBottom: "30px",
-                        border: "1px solid #ddd",
-                        padding: "20px",
-                        borderRadius: "5px",
-                    }}
+                    className="flex gap-4"
+                    
                 >
-                    <textarea
+                    <input
                         value={item}
                         onChange={(e) =>
                             handleArrayChange(
@@ -30,18 +30,15 @@ export function SpecialInstructions({
                             )
                         }
                         placeholder={`Special Instruction ${index + 1}`}
-                        className="flex-1 border border-gray-300 px-3 py-2 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        style={{
-                            width: "100%",
-                            minHeight: "80px",
-                        }}
+                        className="mt-3"
+                        
                     />
 
                     {index > 0 && (
                         <button
                             type="button"
                             onClick={() => removeArrayItem("specialInstructions", index)}
-                            className="bg-red-500 text-white px-4 py-2.5 cursor-pointer rounded-sm mt-2"
+                            className="bg-red-500 text-white cursor-pointer rounded-sm h-12 mt-3 px-3"
                         >
                             Remove
                         </button>

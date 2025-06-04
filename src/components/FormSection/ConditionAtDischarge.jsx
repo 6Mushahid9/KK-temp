@@ -6,16 +6,16 @@ export function ConditionAtDischarge({
 }) {
     return (
         <div className="form-section mt-3 border-2 border-gray-300 rounded-md p-4">
-            <h2 className="text-left font-semibold">Condition at Discharge</h2>
+            <h2 className="h2"
+                style={{
+                    borderBottom: "1px solid #ddd",
+                    paddingBottom: "10px",
+                    marginBottom: "20px",
+                }}>Condition at Discharge</h2>
 
             {formData.conditionAtDischarge.map((item, index) => (
-                <div key={index} className="form-section"
-                    style={{
-                        marginBottom: "30px",
-                        border: "1px solid #ddd",
-                        padding: "20px",
-                        borderRadius: "5px",
-                }}>
+                <div key={index} className="mt-3 flex gap-2.5">
+
                     <input
                         type="text"
                         value={item}

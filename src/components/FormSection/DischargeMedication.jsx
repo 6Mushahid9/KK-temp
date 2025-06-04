@@ -16,6 +16,7 @@ export function DischargeMedication({
             }}
         >
             <h2
+                className="h2"
                 style={{
                     borderBottom: "1px solid #ddd",
                     paddingBottom: "10px",
@@ -28,14 +29,10 @@ export function DischargeMedication({
             {formData.dischargeMedication.map((medication, index) => (
                 <div
                     key={index}
-                    style={{
-                        marginBottom: "15px",
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr auto",
-                        gap: "10px",
-                    }}
                 >
-                    <div className="form-group">
+
+                    <div className="flex gap-5 mt-3">
+                    <div className="w-1/4">
                         <label htmlFor={`medication-name-${index}`}>Medication:</label>
                         <input
                             type="text"
@@ -59,11 +56,12 @@ export function DischargeMedication({
                         />
                     </div>
 
-                    <div className="form-group">
+                    <div className="w-3/4">
                         <label htmlFor={`medication-dosage-${index}`}>Dosage & Duration:</label>
-                        <input
+                        <textarea
                             type="text"
                             id={`medication-dosage-${index}`}
+                            rows={2}
                             value={medication.dosageDuration}
                             onChange={(e) =>
                                 handleArrayChange(
@@ -82,8 +80,11 @@ export function DischargeMedication({
                             }}
                         />
                     </div>
+                    </div>
+
 
                     {index > 0 && (
+                        <div className="flex justify-end">
                         <button
                             type="button"
                             onClick={() => removeArrayItem("dischargeMedication", index)}
@@ -94,15 +95,18 @@ export function DischargeMedication({
                                 padding: "5px 10px",
                                 borderRadius: "4px",
                                 cursor: "pointer",
-                                alignSelf: "end",
-                                marginBottom: "5px",
+                                // alignSelf: "end",
+                                marginTop: "3px",
                             }}
                         >
                             Remove
                         </button>
+                        </div>
                     )}
                 </div>
             ))}
+
+<div className="mt-3 flex">
 
             <button
                 type="button"
@@ -112,18 +116,12 @@ export function DischargeMedication({
                         dosage: "",
                     })
                 }
-                style={{
-                    background: "#2196F3",
-                    color: "white",
-                    border: "none",
-                    padding: "8px 15px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    marginTop: "10px",
-                }}
+                className="bg-blue-600 text-white px-3 py-2 rounded-sm cursor-pointer"
             >
-                Add Medication
+                Add +
             </button>
+</div>
+
         </div>
     );
   }
