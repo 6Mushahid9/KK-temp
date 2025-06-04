@@ -394,30 +394,63 @@ export function generatePDF(formData, isPreview = false) {
     doc.setFontSize(12);
 
     formData.radiologicalFindings.forEach((finding, index) => {
-        // Bullet and Date Line
+        // Bullet and Finding Line
         const bullet = '\u2022'; // Unicode bullet
-        const indent = 15;
+        // const indent = 15 - 12; // Adjust indent by -12mm (resulting indent: 3mm)
+        const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
+        const maxWidth = pageWidth - indent - 12; // Leave 12mm right margin
 
+        // Check if there are any non-empty descriptions
+        const hasValidDescriptions = finding.descriptions.some(desc => desc.trim() !== '');
+
+        // Split finding text for wrapping
         doc.setFont('times', 'bold');
         doc.setFontSize(12);
-        doc.text(`${bullet} ${finding.name} (${finding.date}):`, indent, yPos);
-        yPos += 8;
+        doc.setTextColor(0, 0, 0); // Black text
+        const findingText = `${bullet} ${finding.name} (${finding.date})${hasValidDescriptions ? ':' : ''}`;
+        const findingLines = doc.splitTextToSize(findingText, maxWidth);
 
-        // Description lines
+        // Calculate the width of the bullet and space to align wrapped lines
+        const bulletWidth = doc.getTextWidth(`${bullet} `); // Width of "• "
+        const textIndent = indent + bulletWidth; // Align wrapped lines with text start
+
+        // Render finding lines
+        findingLines.forEach((line, lineIndex) => {
+            const xPos = lineIndex === 0 ? indent : textIndent;
+            doc.text(line, xPos, yPos);
+            yPos += 6; // Line spacing for finding text
+        });
+
+        // Description lines (only if non-empty)
         finding.descriptions.forEach((desc) => {
-            const descriptionLines = doc.splitTextToSize(desc, 180);
-            descriptionLines.forEach((line) => {
+            if (desc.trim() !== '') { // Only process non-empty descriptions
+                const descIndent = indent + 5; // Description indent (3mm + 5mm = 8mm)
+                const descMaxWidth = pageWidth - descIndent - 12; // Adjust max width for description
+
+                // Split description text for wrapping
+                const descText = `-> ${desc}`;
+                const descLines = doc.splitTextToSize(descText, descMaxWidth);
+
+                // Calculate the width of the arrow and space to align wrapped lines
+                const arrowWidth = doc.getTextWidth(`-> `); // Width of "-> "
+                const descTextIndent = descIndent + arrowWidth; // Align wrapped lines with text start
+
+                // Render description lines
                 doc.setFont('times', 'normal');
                 doc.setFontSize(12);
-                doc.text(`-> ${line}`, indent + 5, yPos);
-                yPos += 6;
+                doc.setTextColor(0, 0, 0); // Black text
+                descLines.forEach((line, lineIndex) => {
+                    const xPos = lineIndex === 0 ? descIndent : descTextIndent;
+                    doc.text(line, xPos, yPos);
+                    yPos += 6; // Line spacing for description text
 
-                // Add page if needed
-                if (yPos > 270) {
-                    doc.addPage();
-                    yPos = 20;
-                }
-            });
+                    // Add page if needed
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                });
+            }
         });
 
         yPos += 4; // Extra space after each finding
@@ -496,27 +529,63 @@ export function generatePDF(formData, isPreview = false) {
     formData.hospitalCourse.forEach((course, index) => {
         // Bullet and Treatment Line
         const bullet = '\u2022'; // Unicode bullet
-        const indent = 15;
+        const indent = 15; // Base indent (you mentioned adjusting by -12mm, so assuming 15mm base)
+        const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
+        const maxWidth = pageWidth - indent - 12; // Leave 12mm right margin
 
         // Check if there are any non-empty subpoints
         const hasValidSubpoints = course.subpoints.some(subpoint => subpoint.trim() !== '');
 
+        // Split treatment text for wrapping
         doc.setFont('times', 'bold');
         doc.setFontSize(12);
         doc.setTextColor(0, 0, 0); // Black text
-        doc.text(`${bullet} ${course.treatment}${hasValidSubpoints ? ':' : ''}`, indent, yPos);
-        yPos += 8;
+        const treatmentText = `${bullet} ${course.treatment}${hasValidSubpoints ? ':' : ''}`;
+        const treatmentLines = doc.splitTextToSize(treatmentText, maxWidth);
+
+        // Calculate the width of the bullet and space to align wrapped lines
+        const bulletWidth = doc.getTextWidth(`${bullet} `); // Width of "• "
+        const textIndent = indent + bulletWidth; // Align wrapped lines with text start
+
+        // Render treatment lines
+        treatmentLines.forEach((line, lineIndex) => {
+            // First line starts at indent (includes bullet)
+            // Wrapped lines (lineIndex > 0) start at textIndent
+            const xPos = lineIndex === 0 ? indent : textIndent;
+            doc.text(line, xPos, yPos);
+            yPos += 6; // Line spacing for treatment text
+
+            // Add page if needed
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
+        });
 
         // Subpoints lines (only if non-empty)
         course.subpoints.forEach((subpoint) => {
             if (subpoint.trim() !== '') { // Only process non-empty subpoints
-                const subpointLines = doc.splitTextToSize(subpoint, 180);
-                subpointLines.forEach((line) => {
-                    doc.setFont('times', 'normal');
-                    doc.setFontSize(12);
-                    doc.setTextColor(0, 0, 0); // Black text
-                    doc.text(`-> ${line}`, indent + 5, yPos); // Arrow prefix as in provided code
-                    yPos += 6;
+                const subpointIndent = indent + 5; // Subpoint indent (3mm + 5mm = 8mm)
+                const subpointMaxWidth = pageWidth - subpointIndent - 12; // Adjust max width for subpoint
+
+                // Split subpoint text for wrapping
+                const subpointText = `-> ${subpoint}`;
+                const subpointLines = doc.splitTextToSize(subpointText, subpointMaxWidth);
+
+                // Calculate the width of the arrow and space to align wrapped lines
+                const arrowWidth = doc.getTextWidth(`-> `); // Width of "-> "
+                const subpointTextIndent = subpointIndent + arrowWidth; // Align wrapped lines with text start
+
+                // Render subpoint lines
+                doc.setFont('times', 'normal');
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0); // Black text
+                subpointLines.forEach((line, lineIndex) => {
+                    // First line starts at subpointIndent (includes arrow)
+                    // Wrapped lines (lineIndex > 0) start at subpointTextIndent
+                    const xPos = lineIndex === 0 ? subpointIndent : subpointTextIndent;
+                    doc.text(line, xPos, yPos);
+                    yPos += 6; // Line spacing for subpoint text
 
                     // Add page if needed
                     if (yPos > 270) {
@@ -529,6 +598,8 @@ export function generatePDF(formData, isPreview = false) {
 
         yPos += 4; // Extra space after each treatment
     });
+
+
 
     yPos += 6;
 
@@ -680,9 +751,6 @@ export function generatePDF(formData, isPreview = false) {
 
     doc.setFontSize(12);
 
-    // Debugging: Log the dischargeMedication data
-    console.log('Discharge Medication Data:', formData.dischargeMedication);
-
     if (!formData.dischargeMedication || formData.dischargeMedication.length === 0) {
         // Fallback if no medications
         doc.setFont('times', 'normal');
@@ -700,12 +768,14 @@ export function generatePDF(formData, isPreview = false) {
             if (medication && medication.name && medication.name.trim() !== '') {
                 // Numbered Medication Line
                 const indent = 15;
+                const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
+                const maxWidth = pageWidth - indent - 12; // Leave some margin (10mm right margin)
 
                 // Medication name (bold)
                 doc.setFont('times', 'bold');
                 doc.setFontSize(12);
                 doc.setTextColor(0, 0, 0); // Black text
-                const nameText = `${index + 1}.  ${medication.name}`;
+                const nameText = `${index + 1}.  ${medication.name}  — `;
                 const nameWidth = doc.getTextWidth(nameText);
                 doc.text(nameText, indent, yPos);
 
@@ -714,10 +784,25 @@ export function generatePDF(formData, isPreview = false) {
                     doc.setFont('times', 'normal');
                     doc.setFontSize(12);
                     doc.setTextColor(0, 0, 0); // Black text
-                    doc.text(` —— ${medication.dosageDuration}`, indent + nameWidth, yPos);
-                }
 
-                yPos += 4;
+                    // Calculate the available width for dosage text
+                    const dosageIndent = indent + nameWidth;
+                    const dosageMaxWidth = maxWidth - nameWidth;
+
+                    // Split the dosage text into lines
+                    const dosageText = `${medication.dosageDuration}`;
+                    const splitDosage = doc.splitTextToSize(dosageText, dosageMaxWidth);
+
+                    // Render each line of dosage text
+                    splitDosage.forEach((line, lineIndex) => {
+                        doc.text(line, dosageIndent, yPos + (lineIndex * 6)); // Adjust yPos for each line
+                    });
+
+                    // Update yPos based on the number of lines
+                    yPos += splitDosage.length * 6; // 6mm per line
+                } else {
+                    yPos += 4; // Default spacing if no dosage
+                }
 
                 // Add page if needed
                 if (yPos > 270) {
@@ -812,50 +897,81 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-
-
     // Review Date
     doc.setFont('times', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     doc.text('Review Date:', 10, yPos);
-    yPos += 6;
+    yPos += 12;
 
     doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    doc.text(`Follow-up: ${formData.reviewDate}`, 15, yPos);
-    yPos += 10;
-
-    // Emergency Contact
-    doc.setFont('times', 'bold');
     doc.setFontSize(12);
-    doc.text('In case any of these symptoms persist, please contact immediately on:', 10, yPos);
-    yPos += 6;
 
-    doc.setFont('times', 'normal');
-    doc.setFontSize(10);
-    doc.text(formData.emergencyContact, 15, yPos);
-    yPos += 5;
+    // const bullet = '\u2022'; // Unicode bullet
+    // const indent = 15; // Base indent (consistent with previous sections)
+    // const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
+    const maxWidth = pageWidth - indent - 12; // Leave 12mm right margin
 
-    formData.emergencySymptoms.forEach((symptom, index) => {
-        doc.text(`${index + 1}. ${symptom}`, 15, yPos);
-        yPos += 5;
+    // Define review date fields
+    const reviewDateFields = [
+        { label: 'Follow Up', value: formData.reviewDate.followUp || '', bold: true },
+        // { label: 'N/A', value: formData.reviewDate.NA || '', bold: false }
+    ];
+
+    // Render each field as a bullet point
+    reviewDateFields.forEach((field) => {
+        if (field.value.trim() !== '') { // Only process non-empty values
+            // Calculate the width of the bullet, label, and separators to align wrapped lines
+            doc.setFont('times', field.bold ? 'bold' : 'normal');
+            const bulletWidth = doc.getTextWidth(`${bullet} `); // Width of "• "
+            const textIndent = indent + bulletWidth; // Align wrapped lines with text start after bullet
+
+            if (field.bold) {
+                // For "Follow Up", render bullet, label, and value separately
+                const labelText = `${field.label}: `; // Added space after colon
+                const valueText = field.value;
+
+                // Split value text for wrapping (bullet and label on first line only)
+                doc.setFont('times', 'normal');
+                const valueLines = doc.splitTextToSize(valueText, maxWidth - bulletWidth - doc.getTextWidth(labelText));
+
+                // Render first line: bullet + bold label + value start
+                doc.setFont('times', 'bold');
+                doc.text(`${bullet} ${labelText}`, indent, yPos);
+                doc.setFont('times', 'normal');
+                const labelWidth = doc.getTextWidth(`${bullet} ${labelText}`);
+                doc.text(valueLines[0], indent + labelWidth, yPos);
+
+                // Render wrapped lines (value only, aligned after bullet)
+                valueLines.slice(1).forEach((line, lineIndex) => {
+                    doc.text(line, textIndent, yPos + 6 * (lineIndex + 1));
+                });
+
+                yPos += 6 * valueLines.length; // Adjust yPos based on number of lines
+            } else {
+                // For non-bold fields (N/A), render as before
+                const fieldText = `${bullet} ${field.label}: ${field.value}`; // Added space after colon
+                const fieldLines = doc.splitTextToSize(fieldText, maxWidth);
+
+                // Render field lines
+                fieldLines.forEach((line, lineIndex) => {
+                    const xPos = lineIndex === 0 ? indent : textIndent;
+                    doc.setFont('times', 'normal');
+                    doc.setFontSize(12);
+                    doc.setTextColor(0, 0, 0); // Black text
+                    doc.text(line, xPos, yPos);
+                    yPos += 6; // Line spacing for field text
+                });
+            }
+
+            // Add page if needed
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
+
+            yPos += 2; // Extra space after each field
+        }
     });
-
-
-
-
-
-    yPos += 6;
-
-    // Draw a horizontal line
-    doc.setDrawColor(0); // black
-    doc.setLineWidth(0.1);
-    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
-
-    // Add extra spacing
-    yPos += 15;
-    
-
 
 
     // Consultant and Medical Officer
@@ -906,6 +1022,8 @@ export function generatePDF(formData, isPreview = false) {
     // doc.setFontSize(16);
     // doc.text('Post-Discharge Instructions:', 10, yPos);
     yPos += 120;
+
+
 
     // Contact Instruction (bold)
     doc.setFont('times', 'bold');

@@ -10,7 +10,7 @@ export function ReviewDate({ formData, setFormData }) {
       reviewDate: {
         ...prev.reviewDate,
         NA: isNASelected ? "NA" : "",
-        followUp: isNASelected ? "---" : "", // set followUp accordingly
+        followUp: isNASelected ? "NA" : "", // set followUp accordingly
       },
     }));
   } else if (name.includes(".")) {
@@ -54,7 +54,7 @@ export function ReviewDate({ formData, setFormData }) {
 
       <div className="flex gap-4 w-full">
         {/* Radio Buttons Row */}
-        <div className="flex justify-evenly items-center rounded-sm h-12 bg-white border border-gray-200 w-1/2">
+        <div className="flex justify-evenly items-center rounded-sm h-11 mt-1.5 bg-white border border-gray-200 w-1/2">
           <label className="flex items-center gap-2">
             <input
               type="radio"
@@ -67,7 +67,7 @@ export function ReviewDate({ formData, setFormData }) {
             <span>Follow Up</span>
           </label>
 
-          <label className="flex items-center gap-2">
+          {/* <label className="flex items-center gap-2">
             <input
               type="radio"
               id="followup-not-required"
@@ -77,7 +77,7 @@ export function ReviewDate({ formData, setFormData }) {
               onChange={handleChange}
             />
             <span>N/A</span>
-          </label>
+          </label> */}
         </div>
 
         {/* Date Input */}
@@ -89,7 +89,7 @@ export function ReviewDate({ formData, setFormData }) {
             value={formData.reviewDate.followUp}
             onChange={handleChange}
             onFocus={(e) => {
-              if (e.target.value === "---") e.target.value = "";
+              if (e.target.value === "NA") e.target.value = "";
             }}
             style={{
               width: "100%",

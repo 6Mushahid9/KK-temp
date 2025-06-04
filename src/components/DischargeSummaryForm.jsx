@@ -100,7 +100,6 @@ const DischargeSummaryForm = () => {
     // Review Date
     reviewDate: {
       followUp:"",
-      NA: "---"
     },
 
     // Emergency Contact
