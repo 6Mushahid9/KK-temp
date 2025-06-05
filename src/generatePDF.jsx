@@ -622,38 +622,64 @@ export function generatePDF(formData, isPreview = false) {
 
 
     
-    // Challenges During Treatment Heading (unchanged)
-    doc.setFont('times', 'bold');
-    doc.setFontSize(16);
-    doc.text('Challenges During Treatment & Reasons for Prolonged Hospitalization:', 10, yPos);
-    const textWidthChallenges = doc.getTextWidth('Challenges During Treatment & Reasons for Prolonged Hospitalization:');
-    doc.setLineWidth(0.5); // Increase line thickness for bold underline
-    doc.line(10, yPos + 2, 10 + textWidthChallenges + 1, yPos + 2); // Extend line width by 1 unit
-    yPos += 15;
+    // Challenges During Treatment Heading
+    doc.setFont('times', 'bold'); // Set font to Times, bold for the heading
+    doc.setFontSize(16); // Set font size to 16 for the heading
+    doc.text('Challenges During Treatment & Reasons for Prolonged Hospitalization:', 10, yPos); // Add heading text
+    const textWidthChallenges = doc.getTextWidth('Challenges During Treatment & Reasons for Prolonged Hospitalization:'); // Calculate heading width
+    doc.setLineWidth(0.5); // Set line thickness for underline
+    doc.line(10, yPos + 2, 10 + textWidthChallenges + 1, yPos + 2); // Draw underline
+    yPos += 15; // Space below heading
 
-    doc.setFontSize(14); // Changed from 12 to 14
+    doc.setFontSize(14); // Set font size to 14 for points and subpoints
 
     formData.treatmentChallenges.forEach((challenge, index) => {
-        const indent = 15;
-        const hasValidSubpoints = challenge.subpoints.some(subpoint => subpoint.trim() !== '');
+        const indent = 15; // Base indentation for challenge points
+        const hasValidSubpoints = challenge.subpoints.some(subpoint => subpoint.trim() !== ''); // Check for non-empty subpoints
 
-        doc.setFont('times', 'normal');
-        doc.setFontSize(14); // Changed from 12 to 14
-        doc.setTextColor(0, 0, 0);
-        doc.text(`${index + 1}. ${challenge.challenges}${hasValidSubpoints ? ':' : ''}`, indent, yPos);
-        yPos += 8;
+        // Handle wrapping for the main challenge text
+        doc.setFont('times', 'normal'); // Set font to Times, normal
+        doc.setFontSize(14); // Ensure font size is 14
+        doc.setTextColor(0, 0, 0); // Set text color to black
+        const challengeText = `${index + 1}. ${challenge.challenges}${hasValidSubpoints ? ':' : ''}`; // Format challenge text
+        const numberPrefix = `${index + 1}. `; // Number prefix (e.g., "1. ")
+        const numberPrefixWidth = doc.getTextWidth(numberPrefix); // Width of number prefix for alignment
+        const challengeLines = doc.splitTextToSize(challengeText, 180); // Split text to wrap at 180 units
 
+        // Print wrapped challenge lines
+        challengeLines.forEach((line, lineIndex) => {
+            const lineIndent = lineIndex === 0 ? indent : indent + numberPrefixWidth; // Align wrapped lines under challenge text
+            doc.text(line, lineIndent, yPos); // Print the line
+            yPos += 6; // Spacing between wrapped challenge lines
+            if (yPos > 270) { // Check for page overflow
+                doc.addPage();
+                yPos = 20;
+            }
+        });
+
+        // Add space before subpoints only if there are valid subpoints
+        if (hasValidSubpoints) {
+            yPos += 2; // Space between challenge point and its subpoints
+            if (yPos > 270) { // Check for page overflow
+                doc.addPage();
+                yPos = 20;
+            }
+        }
+
+        // Handle subpoints
         challenge.subpoints.forEach((subpoint) => {
-            if (subpoint.trim() !== '') {
-                const subpointLines = doc.splitTextToSize(subpoint, 180);
-                subpointLines.forEach((line) => {
+            if (subpoint.trim() !== '') { // Process non-empty subpoints
+                const bulletPrefix = '- '; // Bullet prefix for subpoints
+                const bulletPrefixWidth = doc.getTextWidth(bulletPrefix); // Calculate width of bullet prefix
+                const subpointLines = doc.splitTextToSize(`- ${subpoint}`, 180); // Split subpoint text to wrap
+                subpointLines.forEach((line, lineIndex) => {
+                    const subpointIndent = lineIndex === 0 ? indent + 5 : indent + 5 + bulletPrefixWidth; // Align wrapped lines under subpoint text
                     doc.setFont('times', 'normal');
-                    doc.setFontSize(14); // Changed from 12 to 14
+                    doc.setFontSize(14);
                     doc.setTextColor(0, 0, 0);
-                    doc.text(`- ${line}`, indent + 5, yPos);
-                    yPos += 6;
-
-                    if (yPos > 270) {
+                    doc.text(line, subpointIndent, yPos); // Print subpoint line
+                    yPos += 6; // Spacing between wrapped subpoint lines
+                    if (yPos > 270) { // Check for page overflow
                         doc.addPage();
                         yPos = 20;
                     }
@@ -661,9 +687,9 @@ export function generatePDF(formData, isPreview = false) {
             }
         });
 
-        yPos += 4;
+        // Space after subpoints (or challenge point if no subpoints) before next challenge
+        yPos += 8; // Space between challenges (or after subpoints)
     });
-
 
     yPos += 6;
 
@@ -677,34 +703,34 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Condition at Discharge
+    // Condition at Discharge Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Condition at Discharge:', 10, yPos);
+    const textWidthCondition = doc.getTextWidth('Condition at Discharge:');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthCondition + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
     formData.conditionAtDischarge.forEach((condition) => {
-        // Only process non-empty conditions
         if (condition.trim() !== '') {
-            // Bullet Condition Line
-            const bullet = '\u2022'; // Unicode bullet
+            const bullet = '\u2022';
             const indent = 15;
 
-            doc.setFont('times', 'normal'); // Normal font for condition
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0); // Black text
+            doc.setFont('times', 'normal');
+            doc.setFontSize(14); // Changed from 12 to 14
+            doc.setTextColor(0, 0, 0);
             doc.text(`${bullet} ${condition}`, indent, yPos);
             yPos += 5;
 
-            // Add page if needed
             if (yPos > 270) {
                 doc.addPage();
                 yPos = 20;
             }
 
-            yPos += 4; // Extra space after each condition
+            yPos += 4;
         }
     });
 
@@ -735,81 +761,70 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Discharge Medication
+    // Discharge Medication Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Discharge Medication:', 10, yPos);
+    const textWidthDischargeMed = doc.getTextWidth('Discharge Medication:');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthDischargeMed + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
     if (!formData.dischargeMedication || formData.dischargeMedication.length === 0) {
-        // Fallback if no medications
         doc.setFont('times', 'normal');
-        doc.setFontSize(12);
+        doc.setFontSize(14); // Changed from 12 to 14
         doc.setTextColor(0, 0, 0);
         doc.text('No medications recorded.', 15, yPos);
         yPos += 8;
         yPos += 4;
     } else {
         formData.dischargeMedication.forEach((medication, index) => {
-            // Debugging: Log each medication entry
-            console.log(`Medication ${index + 1}:`, medication);
-
-            // Only process if medication object is valid and has a non-empty name
             if (medication && medication.name && medication.name.trim() !== '') {
-                // Numbered Medication Line
                 const indent = 15;
-                const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
-                const maxWidth = pageWidth - indent - 12; // Leave some margin (10mm right margin)
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const maxWidth = pageWidth - indent - 12;
 
-                // Medication name (bold)
                 doc.setFont('times', 'bold');
-                doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0); // Black text
+                doc.setFontSize(14); // Changed from 12 to 14
+                doc.setTextColor(0, 0, 0);
                 const nameText = `${index + 1}.  ${medication.name}  — `;
                 const nameWidth = doc.getTextWidth(nameText);
                 doc.text(nameText, indent, yPos);
 
-                // Dosage and duration (normal, only if non-empty)
                 if (medication.dosageDuration && medication.dosageDuration.trim() !== '') {
                     doc.setFont('times', 'normal');
-                    doc.setFontSize(12);
-                    doc.setTextColor(0, 0, 0); // Black text
+                    doc.setFontSize(14); // Changed from 12 to 14
+                    doc.setTextColor(0, 0, 0);
 
-                    // Calculate the available width for dosage text
                     const dosageIndent = indent + nameWidth;
                     const dosageMaxWidth = maxWidth - nameWidth;
 
-                    // Split the dosage text into lines
                     const dosageText = `${medication.dosageDuration}`;
                     const splitDosage = doc.splitTextToSize(dosageText, dosageMaxWidth);
 
-                    // Render each line of dosage text
                     splitDosage.forEach((line, lineIndex) => {
-                        doc.text(line, dosageIndent, yPos + (lineIndex * 6)); // Adjust yPos for each line
+                        doc.text(line, dosageIndent, yPos + (lineIndex * 6));
                     });
 
-                    // Update yPos based on the number of lines
-                    yPos += splitDosage.length * 6; // 6mm per line
+                    yPos += splitDosage.length * 6;
                 } else {
-                    yPos += 4; // Default spacing if no dosage
+                    yPos += 4;
                 }
 
-                // Add page if needed
                 if (yPos > 270) {
                     doc.addPage();
                     yPos = 20;
                 }
 
-                yPos += 4; // Extra space after each medication
+                yPos += 4;
             }
         });
 
-        // Fallback if no valid medications were rendered
         if (!formData.dischargeMedication.some(med => med && med.name && med.name.trim() !== '')) {
             doc.setFont('times', 'normal');
-            doc.setFontSize(12);
+            doc.setFontSize(14); // Changed from 12 to 14
             doc.setTextColor(0, 0, 0);
             doc.text('No valid medications recorded.', 15, yPos);
             yPos += 8;
@@ -829,34 +844,34 @@ export function generatePDF(formData, isPreview = false) {
     yPos += 15;
 
 
-    // Special Instructions
+    // Special Instructions Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Special Instruction(s):', 10, yPos);
+    const textWidthSpecialInstructions = doc.getTextWidth('Special Instruction(s):');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthSpecialInstructions + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
     formData.specialInstructions.forEach((instruction) => {
-        // Only process non-empty instructions
         if (instruction.trim() !== '') {
-            // Bullet Instruction Line
-            const bullet = '\u2022'; // Unicode bullet
+            const bullet = '\u2022';
             const indent = 15;
 
-            doc.setFont('times', 'normal'); // Normal font for instruction
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0); // Black text
+            doc.setFont('times', 'normal');
+            doc.setFontSize(14); // Changed from 12 to 14
+            doc.setTextColor(0, 0, 0);
             doc.text(`${bullet} ${instruction}`, indent, yPos);
             yPos += 5;
 
-            // Add page if needed
             if (yPos > 270) {
                 doc.addPage();
                 yPos = 20;
             }
 
-            yPos += 4; // Extra space after each instruction
+            yPos += 4;
         }
     });
 
@@ -889,45 +904,45 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Review Date
+    // Review Date Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Review Date:', 10, yPos);
+    const textWidthReviewDate = doc.getTextWidth('Review Date:');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthReviewDate + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 12;
 
     doc.setFont('times', 'normal');
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
-    // Define review date fields
     const reviewDateFields = [
         { label: 'Follow Up', value: formData.reviewDate.followUp || '' },
     ];
 
-    // Render each field as a bullet point
     reviewDateFields.forEach((field) => {
-        if (field.value.trim() !== '') { // Only process non-empty values
-            const bullet = '\u2022'; // Unicode bullet
-            const indent = 15; // Base indent
+        if (field.value.trim() !== '') {
+            const bullet = '\u2022';
+            const indent = 15;
 
-            // Render bullet and bold label with space after colon
             doc.setFont('times', 'bold');
-            const labelText = `${bullet} ${field.label}: `; // Space after colon
+            doc.setFontSize(14); // Changed from 12 to 14
+            const labelText = `${bullet} ${field.label}: `;
             doc.text(labelText, indent, yPos);
 
-            // Render value in normal font with slight offset to ensure space visibility
             doc.setFont('times', 'normal');
-            const labelWidth = doc.getTextWidth(labelText) + 1; // Add small padding to preserve space
+            doc.setFontSize(14); // Changed from 12 to 14
+            const labelWidth = doc.getTextWidth(labelText) + 1;
             doc.text(field.value, indent + labelWidth, yPos);
 
-            yPos += 6; // Line spacing
+            yPos += 6;
 
-            // Add page if needed
             if (yPos > 270) {
                 doc.addPage();
                 yPos = 20;
             }
 
-            yPos += 2; // Extra space after each field
+            yPos += 2;
         }
     });
 
@@ -996,7 +1011,7 @@ export function generatePDF(formData, isPreview = false) {
 
     // Contact Instruction (bold)
     doc.setFont('times', 'bold');
-    doc.setFontSize(12);
+    doc.setFontSize(15);
     doc.setTextColor(0, 0, 0); // Black text
     const contactText = 'In case any of these symptoms persist, please contact immediately on: - 0522-2619049/50 or 2231932';
     const contactLines = doc.splitTextToSize(contactText, 180); // Wrap text if too long
@@ -1004,6 +1019,8 @@ export function generatePDF(formData, isPreview = false) {
         doc.text(line, 15, yPos);
         yPos += 6;
     });
+
+    yPos += 4;
 
     // Symptoms List (normal font)
     const symptoms = [
@@ -1015,13 +1032,13 @@ export function generatePDF(formData, isPreview = false) {
     ];
 
     doc.setFont('times', 'normal');
-    doc.setFontSize(12);
+    doc.setFontSize(14);
     doc.setTextColor(0, 0, 0); // Black text
 
     symptoms.forEach((symptom, index) => {
         const indent = 15;
         doc.text(`${index + 1}. ${symptom}`, indent, yPos);
-        yPos += 5;
+        yPos += 6;
 
         // Add page if needed
         if (yPos > 270) {
