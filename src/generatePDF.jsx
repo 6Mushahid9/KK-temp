@@ -906,62 +906,28 @@ export function generatePDF(formData, isPreview = false) {
     doc.setFont('times', 'normal');
     doc.setFontSize(12);
 
-    // const bullet = '\u2022'; // Unicode bullet
-    // const indent = 15; // Base indent (consistent with previous sections)
-    // const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
-    const maxWidth = pageWidth - indent - 12; // Leave 12mm right margin
-
     // Define review date fields
     const reviewDateFields = [
-        { label: 'Follow Up', value: formData.reviewDate.followUp || '', bold: true },
-        // { label: 'N/A', value: formData.reviewDate.NA || '', bold: false }
+        { label: 'Follow Up', value: formData.reviewDate.followUp || '' },
     ];
 
     // Render each field as a bullet point
     reviewDateFields.forEach((field) => {
         if (field.value.trim() !== '') { // Only process non-empty values
-            // Calculate the width of the bullet, label, and separators to align wrapped lines
-            doc.setFont('times', field.bold ? 'bold' : 'normal');
-            const bulletWidth = doc.getTextWidth(`${bullet} `); // Width of "• "
-            const textIndent = indent + bulletWidth; // Align wrapped lines with text start after bullet
+            const bullet = '\u2022'; // Unicode bullet
+            const indent = 15; // Base indent
 
-            if (field.bold) {
-                // For "Follow Up", render bullet, label, and value separately
-                const labelText = `${field.label}: `; // Added space after colon
-                const valueText = field.value;
+            // Render bullet and bold label with space after colon
+            doc.setFont('times', 'bold');
+            const labelText = `${bullet} ${field.label}: `; // Space after colon
+            doc.text(labelText, indent, yPos);
 
-                // Split value text for wrapping (bullet and label on first line only)
-                doc.setFont('times', 'normal');
-                const valueLines = doc.splitTextToSize(valueText, maxWidth - bulletWidth - doc.getTextWidth(labelText));
+            // Render value in normal font with slight offset to ensure space visibility
+            doc.setFont('times', 'normal');
+            const labelWidth = doc.getTextWidth(labelText) + 1; // Add small padding to preserve space
+            doc.text(field.value, indent + labelWidth, yPos);
 
-                // Render first line: bullet + bold label + value start
-                doc.setFont('times', 'bold');
-                doc.text(`${bullet} ${labelText}`, indent, yPos);
-                doc.setFont('times', 'normal');
-                const labelWidth = doc.getTextWidth(`${bullet} ${labelText}`);
-                doc.text(valueLines[0], indent + labelWidth, yPos);
-
-                // Render wrapped lines (value only, aligned after bullet)
-                valueLines.slice(1).forEach((line, lineIndex) => {
-                    doc.text(line, textIndent, yPos + 6 * (lineIndex + 1));
-                });
-
-                yPos += 6 * valueLines.length; // Adjust yPos based on number of lines
-            } else {
-                // For non-bold fields (N/A), render as before
-                const fieldText = `${bullet} ${field.label}: ${field.value}`; // Added space after colon
-                const fieldLines = doc.splitTextToSize(fieldText, maxWidth);
-
-                // Render field lines
-                fieldLines.forEach((line, lineIndex) => {
-                    const xPos = lineIndex === 0 ? indent : textIndent;
-                    doc.setFont('times', 'normal');
-                    doc.setFontSize(12);
-                    doc.setTextColor(0, 0, 0); // Black text
-                    doc.text(line, xPos, yPos);
-                    yPos += 6; // Line spacing for field text
-                });
-            }
+            yPos += 6; // Line spacing
 
             // Add page if needed
             if (yPos > 270) {
@@ -972,6 +938,17 @@ export function generatePDF(formData, isPreview = false) {
             yPos += 2; // Extra space after each field
         }
     });
+
+    yPos += 6;
+
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0.1);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
+    yPos += 15;
+
 
 
     // Consultant and Medical Officer
