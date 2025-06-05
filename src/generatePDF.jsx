@@ -553,7 +553,7 @@ export function generatePDF(formData, isPreview = false) {
         treatmentLines.forEach((line, lineIndex) => {
             const xPos = lineIndex === 0 ? indent : textIndent;
             doc.text(line, xPos, yPos);
-            yPos += 6;
+            yPos += 8;
 
             if (yPos > 270) {
                 doc.addPage();
@@ -566,10 +566,10 @@ export function generatePDF(formData, isPreview = false) {
                 const subpointIndent = indent + 5;
                 const subpointMaxWidth = pageWidth - subpointIndent - 12;
 
-                const subpointText = `-> ${subpoint}`;
+                const subpointText = `- ${subpoint}`;
                 const subpointLines = doc.splitTextToSize(subpointText, subpointMaxWidth);
 
-                const arrowWidth = doc.getTextWidth(`-> `);
+                const arrowWidth = doc.getTextWidth(`- `);
                 const subpointTextIndent = subpointIndent + arrowWidth;
 
                 doc.setFont('times', 'normal');
@@ -620,39 +620,39 @@ export function generatePDF(formData, isPreview = false) {
     yPos += 15;
 
 
-    // Challenges During Treatment
+
+    
+    // Challenges During Treatment Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Challenges During Treatment & Reasons for Prolonged Hospitalization:', 10, yPos);
+    const textWidthChallenges = doc.getTextWidth('Challenges During Treatment & Reasons for Prolonged Hospitalization:');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthChallenges + 1, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
     formData.treatmentChallenges.forEach((challenge, index) => {
-        // Numbered Challenge Line
         const indent = 15;
-
-        // Check if there are any non-empty subpoints
         const hasValidSubpoints = challenge.subpoints.some(subpoint => subpoint.trim() !== '');
 
-        doc.setFont('times', 'normal'); // Normal font for challenge
-        doc.setFontSize(12);
-        doc.setTextColor(0, 0, 0); // Black text
+        doc.setFont('times', 'normal');
+        doc.setFontSize(14); // Changed from 12 to 14
+        doc.setTextColor(0, 0, 0);
         doc.text(`${index + 1}. ${challenge.challenges}${hasValidSubpoints ? ':' : ''}`, indent, yPos);
         yPos += 8;
 
-        // Subpoints lines (only if non-empty)
         challenge.subpoints.forEach((subpoint) => {
-            if (subpoint.trim() !== '') { // Only process non-empty subpoints
+            if (subpoint.trim() !== '') {
                 const subpointLines = doc.splitTextToSize(subpoint, 180);
                 subpointLines.forEach((line) => {
                     doc.setFont('times', 'normal');
-                    doc.setFontSize(12);
-                    doc.setTextColor(0, 0, 0); // Black text
-                    doc.text(`-> ${line}`, indent + 5, yPos); // Arrow prefix as in original code
+                    doc.setFontSize(14); // Changed from 12 to 14
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(`- ${line}`, indent + 5, yPos);
                     yPos += 6;
 
-                    // Add page if needed
                     if (yPos > 270) {
                         doc.addPage();
                         yPos = 20;
@@ -661,7 +661,7 @@ export function generatePDF(formData, isPreview = false) {
             }
         });
 
-        yPos += 4; // Extra space after each challenge
+        yPos += 4;
     });
 
 
