@@ -187,13 +187,16 @@ export function generatePDF(formData, isPreview = false) {
 
     yPos += 20; // space after the line before next heading
 
-    // Systemic Examination Heading (unchanged)
-    doc.setFont('times', 'bold'); // Corrected 'times blogger.com' to 'times'
+
+
+
+    // Systemic Examination Heading 
+    doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Systemic Examination:', 10, yPos);
-    const textWidthSystemicExamintion = doc.getTextWidth('Systemic Examination:');
+    const textWidthSystemicExamination = doc.getTextWidth('Systemic Examination:'); // Corrected typo in variable name
     doc.setLineWidth(0.5); // Increase line thickness for bold underline
-    doc.line(10, yPos + 2, 10 + textWidthSystemicExamintion + 1, yPos + 2); // Extend line width by 2 units
+    doc.line(10, yPos + 2, 10 + textWidthSystemicExamination + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
     const systemicFindings = [
@@ -271,17 +274,23 @@ export function generatePDF(formData, isPreview = false) {
     // Add extra spacing
     yPos += 15;
 
-    // Key Blood Investigations
+
+
+
+    // Key Blood Investigations Heading (unchanged except for underline)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Key Blood Investigations (Pathology):', 10, yPos);
+    const textWidthKeyBlood = doc.getTextWidth('Key Blood Investigations (Pathology):');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthKeyBlood + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
     formData.bloodInvestigations.forEach((investigation, index) => {
         doc.setFont('times', 'bold');
-        doc.setFontSize(12);
+        doc.setFontSize(14); // Changed from 12 to 14
         if (index === 0) {
             doc.text(`${bullet} ${investigation.date} (On Admission):`, indent, yPos);
         } else {
@@ -294,55 +303,50 @@ export function generatePDF(formData, isPreview = false) {
             const xStart = indent + 5;
             const yStart = yPos;
 
-            // Test name
             doc.setFont('times', 'bold');
-            doc.setFontSize(12);
+            doc.setFontSize(14); // Changed from 12 to 14
             doc.text(`-> ${test.name}: `, xStart, yStart);
             const nameWidth = doc.getTextWidth(`-> ${test.name}: `);
 
             let xCurrent = xStart + nameWidth;
 
-            // Test value (with superscript if needed)
             doc.setFont('times', 'normal');
-            doc.setFontSize(12);
+            doc.setFontSize(14); // Changed from 12 to 14
             xCurrent = renderTextWithSuperscript(doc, test.value, xCurrent, yStart);
 
-            // Small gap between value and unit
             doc.text(' ', xCurrent, yStart);
             xCurrent += 1;
 
-            // Unit (with superscript if needed)
             xCurrent = renderTextWithSuperscript(doc, test.unit, xCurrent, yStart);
 
             yPos += lineHeight + 3;
 
-            // Add page if space exceeds
             if (yPos > 270) {
                 doc.addPage();
                 yPos = 20;
             }
         });
 
-        yPos += 4; // Extra space between dates
+        yPos += 4;
     });
 
     function renderTextWithSuperscript(doc, text, x, y) {
         let i = 0;
         let xPos = x;
-        doc.setFontSize(12);
+        doc.setFontSize(14); // Changed from 12 to 14 for normal text
 
         while (i < text.length) {
             if (text[i] === '^') {
-                i++; // move past ^
+                i++;
                 let superText = '';
                 while (i < text.length && text[i] !== ' ') {
                     superText += text[i];
                     i++;
                 }
-                doc.setFontSize(8);
+                doc.setFontSize(8); // Keep superscript at 8
                 doc.text(superText, xPos, y - 1.5);
                 xPos += doc.getTextWidth(superText);
-                doc.setFontSize(10);
+                doc.setFontSize(14); // Changed from 10 to 14
             } else {
                 let normalText = '';
                 while (i < text.length && text[i] !== '^') {
