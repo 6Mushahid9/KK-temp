@@ -277,7 +277,7 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Key Blood Investigations Heading (unchanged except for underline)
+    // Key Blood Investigations Heading 
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Key Blood Investigations (Pathology):', 10, yPos);
@@ -305,7 +305,7 @@ export function generatePDF(formData, isPreview = false) {
 
             doc.setFont('times', 'bold');
             doc.setFontSize(14); // Changed from 12 to 14
-            doc.text(`-> ${test.name}: `, xStart, yStart);
+            doc.text(`- ${test.name}: `, xStart, yStart);
             const nameWidth = doc.getTextWidth(`-> ${test.name}: `);
 
             let xCurrent = xStart + nameWidth;
@@ -392,66 +392,58 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Radiological & Diagnostic Findings
+    // Radiological & Diagnostic Findings Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Radiological & Diagnostic Findings:', 10, yPos);
+    const textWidthRadiological = doc.getTextWidth('Radiological & Diagnostic Findings:');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthRadiological + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
     formData.radiologicalFindings.forEach((finding, index) => {
-        // Bullet and Finding Line
-        const bullet = '\u2022'; // Unicode bullet
-        // const indent = 15 - 12; // Adjust indent by -12mm (resulting indent: 3mm)
-        const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
-        const maxWidth = pageWidth - indent - 12; // Leave 12mm right margin
+        const bullet = '\u2022';
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const maxWidth = pageWidth - indent - 12;
 
-        // Check if there are any non-empty descriptions
         const hasValidDescriptions = finding.descriptions.some(desc => desc.trim() !== '');
 
-        // Split finding text for wrapping
         doc.setFont('times', 'bold');
-        doc.setFontSize(12);
-        doc.setTextColor(0, 0, 0); // Black text
+        doc.setFontSize(14); // Changed from 12 to 14
+        doc.setTextColor(0, 0, 0);
         const findingText = `${bullet} ${finding.name} (${finding.date})${hasValidDescriptions ? ':' : ''}`;
         const findingLines = doc.splitTextToSize(findingText, maxWidth);
 
-        // Calculate the width of the bullet and space to align wrapped lines
-        const bulletWidth = doc.getTextWidth(`${bullet} `); // Width of "• "
-        const textIndent = indent + bulletWidth; // Align wrapped lines with text start
+        const bulletWidth = doc.getTextWidth(`${bullet} `);
+        const textIndent = indent + bulletWidth;
 
-        // Render finding lines
         findingLines.forEach((line, lineIndex) => {
             const xPos = lineIndex === 0 ? indent : textIndent;
             doc.text(line, xPos, yPos);
-            yPos += 6; // Line spacing for finding text
+            yPos += 6;
         });
 
-        // Description lines (only if non-empty)
         finding.descriptions.forEach((desc) => {
-            if (desc.trim() !== '') { // Only process non-empty descriptions
-                const descIndent = indent + 5; // Description indent (3mm + 5mm = 8mm)
-                const descMaxWidth = pageWidth - descIndent - 12; // Adjust max width for description
+            if (desc.trim() !== '') {
+                const descIndent = indent + 5;
+                const descMaxWidth = pageWidth - descIndent - 12;
 
-                // Split description text for wrapping
-                const descText = `-> ${desc}`;
+                const descText = `- ${desc}`;
                 const descLines = doc.splitTextToSize(descText, descMaxWidth);
 
-                // Calculate the width of the arrow and space to align wrapped lines
-                const arrowWidth = doc.getTextWidth(`-> `); // Width of "-> "
-                const descTextIndent = descIndent + arrowWidth; // Align wrapped lines with text start
+                const arrowWidth = doc.getTextWidth(`-> `);
+                const descTextIndent = descIndent + arrowWidth;
 
-                // Render description lines
                 doc.setFont('times', 'normal');
-                doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0); // Black text
+                doc.setFontSize(14); // Changed from 12 to 14
+                doc.setTextColor(0, 0, 0);
                 descLines.forEach((line, lineIndex) => {
                     const xPos = lineIndex === 0 ? descIndent : descTextIndent;
                     doc.text(line, xPos, yPos);
-                    yPos += 6; // Line spacing for description text
+                    yPos += 6;
 
-                    // Add page if needed
                     if (yPos > 270) {
                         doc.addPage();
                         yPos = 20;
@@ -460,7 +452,7 @@ export function generatePDF(formData, isPreview = false) {
             }
         });
 
-        yPos += 4; // Extra space after each finding
+        yPos += 4;
     });
 
 
