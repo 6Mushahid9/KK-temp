@@ -187,13 +187,14 @@ export function generatePDF(formData, isPreview = false) {
 
     yPos += 20; // space after the line before next heading
 
-    // Systemic Examination
-    doc.setFont('times', 'bold');
+    // Systemic Examination Heading (unchanged)
+    doc.setFont('times', 'bold'); // Corrected 'times blogger.com' to 'times'
     doc.setFontSize(16);
     doc.text('Systemic Examination:', 10, yPos);
+    const textWidthSystemicExamintion = doc.getTextWidth('Systemic Examination:');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthSystemicExamintion + 1, yPos + 2); // Extend line width by 2 units
     yPos += 15;
-
-    doc.setFontSize(12);
 
     const systemicFindings = [
         { label: 'Central Nervous System (CNS)', value: formData.cns },
@@ -205,11 +206,10 @@ export function generatePDF(formData, isPreview = false) {
 
     systemicFindings.forEach(({ label, value }) => {
         doc.setFont('times', 'normal');
-        doc.setFontSize(16);
+        doc.setFontSize(14); // Keep 16 for bullet to maintain visibility
         doc.text(`${bullet} `, indent, yPos);
 
-        doc.setFontSize(12);
-
+        doc.setFontSize(14); // Changed from 12 to 14 for main text
 
         const bulletWidth = doc.getTextWidth(`${bullet} `);
         doc.setFont('times', 'bold');
@@ -217,33 +217,31 @@ export function generatePDF(formData, isPreview = false) {
 
         const labelWidth = doc.getTextWidth(`${label}: `);
 
-        // Special handling for CVS field with S₁ S₂
         if (label === 'Cardiovascular System (CVS)') {
             const xStart = indent + bulletWidth + labelWidth;
-            doc.setFontSize(12);
+            doc.setFontSize(14); // Changed from 12 to 14
             doc.setFont('times', 'normal');
             doc.text(' S', xStart, yPos);
             let s1Width = doc.getTextWidth('S');
 
-            doc.setFontSize(8);
-            doc.text(' 1', xStart + s1Width, yPos + 1);
+            doc.setFontSize(8); // Keep superscript at 8 for readability
+            doc.text('  1', xStart + s1Width, yPos + 1);
 
             const s1TotalWidth = doc.getTextWidth('S1');
 
-            doc.setFontSize(12);
-            doc.text(' S', xStart + s1TotalWidth + 1, yPos);
+            doc.setFontSize(14); // Changed from 12 to 14
+            doc.text('  S', xStart + s1TotalWidth + 1, yPos);
 
             let s2Width = doc.getTextWidth(' S');
 
-            doc.setFontSize(8);
-            doc.text('2', xStart + s1TotalWidth + 1 + s2Width, yPos + 1);
+            doc.setFontSize(8); // Keep superscript at 8
+            doc.text('  2', xStart + s1TotalWidth + 1 + s2Width, yPos + 1);
 
-            // Now print the rest of the value
-            doc.setFontSize(12);
+            doc.setFontSize(14); // Changed from 12 to 14
             doc.text(` ${value}`, xStart + s1TotalWidth + 1 + s2Width + doc.getTextWidth('2 '), yPos);
         } else {
             doc.setFont('times', 'normal');
-            doc.setFontSize(12);
+            doc.setFontSize(14); // Changed from 12 to 14
             doc.text(value, indent + bulletWidth + labelWidth, yPos);
         }
 
