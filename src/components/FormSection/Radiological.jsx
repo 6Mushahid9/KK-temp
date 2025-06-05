@@ -1,13 +1,82 @@
 export function Radiological({
     formData,
     setFormData,
-    addRadiologicalFinding,
-    removeRadiologicalFinding,
-    handleRadiologicalFindingChange,
-    handleDescriptionChange,
-    addDescription,
-    removeDescription,
+    // addRadiologicalFinding,
+    // removeRadiologicalFinding,
+    // handleRadiologicalFindingChange,
+    // handleDescriptionChange,
+    // addDescription,
+    // removeDescription,
 }) {
+
+    const addRadiologicalFinding = (formData, setFormData) => {
+        setFormData({
+            ...formData,
+            radiologicalFindings: [
+                ...formData.radiologicalFindings,
+                { name: "", date: "", descriptions: [""] },
+            ],
+        });
+    };
+
+    const removeRadiologicalFinding = (formData, setFormData, index) => {
+        const updatedFindings = [...formData.radiologicalFindings];
+        updatedFindings.splice(index, 1);
+        setFormData({
+            ...formData,
+            radiologicalFindings: updatedFindings,
+        });
+    };
+
+    const handleRadiologicalFindingChange = (
+        formData,
+        setFormData,
+        index,
+        field,
+        value
+    ) => {
+        const updatedFindings = [...formData.radiologicalFindings];
+        updatedFindings[index][field] = value;
+        setFormData({
+            ...formData,
+            radiologicalFindings: updatedFindings,
+        });
+    };
+
+    const handleDescriptionChange = (
+        formData,
+        setFormData,
+        index,
+        descIndex,
+        value
+    ) => {
+        const updatedFindings = [...formData.radiologicalFindings];
+        updatedFindings[index].descriptions[descIndex] = value;
+        setFormData({
+            ...formData,
+            radiologicalFindings: updatedFindings,
+        });
+    };
+
+    const addDescription = (formData, setFormData, index) => {
+        const updatedFindings = [...formData.radiologicalFindings];
+        updatedFindings[index].descriptions.push("");
+        setFormData({
+            ...formData,
+            radiologicalFindings: updatedFindings,
+        });
+    };
+
+    const removeDescription = (formData, setFormData, index, descIndex) => {
+        const updatedFindings = [...formData.radiologicalFindings];
+        updatedFindings[index].descriptions.splice(descIndex, 1);
+        setFormData({
+            ...formData,
+            radiologicalFindings: updatedFindings,
+        });
+    };
+
+
     return (
         <div
             className="form-section"
@@ -140,4 +209,4 @@ export function Radiological({
             </button>
         </div>
     );
-  }
+}

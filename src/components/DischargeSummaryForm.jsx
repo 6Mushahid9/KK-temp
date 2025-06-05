@@ -101,10 +101,7 @@ const DischargeSummaryForm = () => {
     reviewDate: {
       followUp:"",
     },
-
-    // Emergency Contact
-    emergencyContact: "",
-    emergencySymptoms: [""],
+    
   });
 
   const handleChange = (e) => {
@@ -124,20 +121,6 @@ const DischargeSummaryForm = () => {
     });
   };
 
-  const handleNestedArrayChange = (
-    parentIndex,
-    childIndex,
-    field,
-    value,
-    parentArrayName
-  ) => {
-    const updatedArray = [...formData[parentArrayName]];
-    updatedArray[parentIndex].tests[childIndex][field] = value;
-    setFormData({
-      ...formData,
-      [parentArrayName]: updatedArray,
-    });
-  };
 
   const addArrayItem = (arrayName, defaultValue) => {
     setFormData({
@@ -155,132 +138,6 @@ const DischargeSummaryForm = () => {
     });
   };
 
-  const addBloodInvestigation = () => {
-    setFormData({
-      ...formData,
-      bloodInvestigations: [
-        ...formData.bloodInvestigations,
-        { date: "", tests: [{ name: "", value: "", unit: "" }] },
-      ],
-    });
-  };
-
-  const addTestToInvestigation = (investigationIndex) => {
-    const updatedInvestigations = [...formData.bloodInvestigations];
-    updatedInvestigations[investigationIndex].tests.push({
-      name: "",
-      value: "",
-      unit: "",
-    });
-    setFormData({
-      ...formData,
-      bloodInvestigations: updatedInvestigations,
-    });
-  };
-
-  const removeTestFromInvestigation = (investigationIndex, testIndex) => {
-    const updatedInvestigations = [...formData.bloodInvestigations];
-    updatedInvestigations[investigationIndex].tests.splice(testIndex, 1);
-    setFormData({
-      ...formData,
-      bloodInvestigations: updatedInvestigations,
-    });
-  };
-
-  const handleBloodInvestigationChange = (investigationIndex, field, value) => {
-    const updatedInvestigations = [...formData.bloodInvestigations];
-    updatedInvestigations[investigationIndex][field] = value;
-    setFormData({
-      ...formData,
-      bloodInvestigations: updatedInvestigations,
-    });
-  };
-
-
-  const handleTestChange = (investigationIndex, testIndex, field, value) => {
-    const updatedInvestigations = [...formData.bloodInvestigations];
-    updatedInvestigations[investigationIndex].tests[testIndex][field] = value;
-    setFormData({
-      ...formData,
-      bloodInvestigations: updatedInvestigations,
-    });
-  };
-
-
-
-  const addRadiologicalFinding = (formData, setFormData) => {
-    setFormData({
-      ...formData,
-      radiologicalFindings: [
-        ...formData.radiologicalFindings,
-        { name: "", date: "", descriptions: [""] },
-      ],
-    });
-  };
-
-  const removeRadiologicalFinding = (formData, setFormData, index) => {
-    const updatedFindings = [...formData.radiologicalFindings];
-    updatedFindings.splice(index, 1);
-    setFormData({
-      ...formData,
-      radiologicalFindings: updatedFindings,
-    });
-  };
-
-  const handleRadiologicalFindingChange = (
-    formData,
-    setFormData,
-    index,
-    field,
-    value
-  ) => {
-    const updatedFindings = [...formData.radiologicalFindings];
-    updatedFindings[index][field] = value;
-    setFormData({
-      ...formData,
-      radiologicalFindings: updatedFindings,
-    });
-  };
-
-  const handleDescriptionChange = (
-    formData,
-    setFormData,
-    index,
-    descIndex,
-    value
-  ) => {
-    const updatedFindings = [...formData.radiologicalFindings];
-    updatedFindings[index].descriptions[descIndex] = value;
-    setFormData({
-      ...formData,
-      radiologicalFindings: updatedFindings,
-    });
-  };
-
-  const addDescription = (formData, setFormData, index) => {
-    const updatedFindings = [...formData.radiologicalFindings];
-    updatedFindings[index].descriptions.push("");
-    setFormData({
-      ...formData,
-      radiologicalFindings: updatedFindings,
-    });
-  };
-
-  const removeDescription = (formData, setFormData, index, descIndex) => {
-    const updatedFindings = [...formData.radiologicalFindings];
-    updatedFindings[index].descriptions.splice(descIndex, 1);
-    setFormData({
-      ...formData,
-      radiologicalFindings: updatedFindings,
-    });
-  };
-
-
-  const handlePreview = () => {
-    const pdfUrl = generatePDF(formData, true); // Get Data URL for preview
-    setPdfDataUrl(pdfUrl);
-  };
-
   return (
     <div
       className="discharge-summary-form"
@@ -295,7 +152,6 @@ const DischargeSummaryForm = () => {
 
       <form>
         {/* Patient Details Section */}
-
         <PatientDetails handleChange={handleChange} formData={formData} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />
 
 
@@ -306,10 +162,10 @@ const DischargeSummaryForm = () => {
         <SystemicExamination handleChange={handleChange} formData={formData} />
 
         {/* Key Blood Investigations Section */}
-        <BloodInvestigation formData={formData} removeArrayItem={removeArrayItem} addArrayItem={addArrayItem} addBloodInvestigation={addBloodInvestigation} addTestToInvestigation={addTestToInvestigation} removeTestFromInvestigation={removeTestFromInvestigation} handleBloodInvestigationChange={handleBloodInvestigationChange} handleTestChange={handleTestChange} />
+        <BloodInvestigation formData={formData} removeArrayItem={removeArrayItem} setFormData={setFormData} />
 
         {/* Radiological & Diagnostic Findings Section */}
-        <Radiological formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} addRadiologicalFinding={addRadiologicalFinding} handleRadiologicalFindingChange={handleRadiologicalFindingChange} removeRadiologicalFinding={removeRadiologicalFinding} handleDescriptionChange={handleDescriptionChange} addDescription={addDescription} removeDescription={removeDescription} setFormData={setFormData} />
+        <Radiological formData={formData} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} setFormData={setFormData} />
 
         {/* hospitalCourse */}
         <HospitalCourse formData={formData} setFormData={setFormData} />

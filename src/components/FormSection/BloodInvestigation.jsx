@@ -1,12 +1,65 @@
 export function BloodInvestigation({
     formData,
     removeArrayItem,
-    addBloodInvestigation,
-    addTestToInvestigation,
-    removeTestFromInvestigation,
-    handleBloodInvestigationChange,
-    handleTestChange,
+    // addBloodInvestigation,
+    // addTestToInvestigation,
+    // removeTestFromInvestigation,
+    // handleBloodInvestigationChange,
+    // handleTestChange,
+    setFormData
 }) {
+
+    const addBloodInvestigation = () => {
+        setFormData({
+            ...formData,
+            bloodInvestigations: [
+                ...formData.bloodInvestigations,
+                { date: "", tests: [{ name: "", value: "", unit: "" }] },
+            ],
+        });
+    };
+
+    const addTestToInvestigation = (investigationIndex) => {
+        const updatedInvestigations = [...formData.bloodInvestigations];
+        updatedInvestigations[investigationIndex].tests.push({
+            name: "",
+            value: "",
+            unit: "",
+        });
+        setFormData({
+            ...formData,
+            bloodInvestigations: updatedInvestigations,
+        });
+    };
+
+    const removeTestFromInvestigation = (investigationIndex, testIndex) => {
+        const updatedInvestigations = [...formData.bloodInvestigations];
+        updatedInvestigations[investigationIndex].tests.splice(testIndex, 1);
+        setFormData({
+            ...formData,
+            bloodInvestigations: updatedInvestigations,
+        });
+    };
+
+    const handleBloodInvestigationChange = (investigationIndex, field, value) => {
+        const updatedInvestigations = [...formData.bloodInvestigations];
+        updatedInvestigations[investigationIndex][field] = value;
+        setFormData({
+            ...formData,
+            bloodInvestigations: updatedInvestigations,
+        });
+    };
+
+
+    const handleTestChange = (investigationIndex, testIndex, field, value) => {
+        const updatedInvestigations = [...formData.bloodInvestigations];
+        updatedInvestigations[investigationIndex].tests[testIndex][field] = value;
+        setFormData({
+            ...formData,
+            bloodInvestigations: updatedInvestigations,
+        });
+    };
+
     return (
         <div
             className="form-section"
@@ -43,23 +96,23 @@ export function BloodInvestigation({
                             </label>
                             <div className="grid grid-cols-2">
 
-                            <input
-                                type="date"
-                                id={`investigation-date-${investigationIndex}`}
-                                value={investigation.date}
-                                onChange={(e) =>
-                                    handleBloodInvestigationChange(
-                                        investigationIndex,
-                                        "date",
-                                        e.target.value
-                                    )
-                                }
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            {investigationIndex == 0 && (
+                                <input
+                                    type="date"
+                                    id={`investigation-date-${investigationIndex}`}
+                                    value={investigation.date}
+                                    onChange={(e) =>
+                                        handleBloodInvestigationChange(
+                                            investigationIndex,
+                                            "date",
+                                            e.target.value
+                                        )
+                                    }
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                {investigationIndex == 0 && (
 
-                            <p className="font-bold col-span-1 text-2xl">(On Admission)</p>
-                            )}
+                                    <p className="font-bold col-span-1 text-2xl">(On Admission)</p>
+                                )}
                             </div>
 
                         </div>
@@ -188,4 +241,4 @@ export function BloodInvestigation({
             </button>
         </div>
     );
-  }
+}
