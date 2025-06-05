@@ -24,7 +24,7 @@ export function generatePDF(formData, isPreview = false) {
     doc.setFontSize(25);
     doc.setFont('times', 'bold');
 
-    yPos = yPos + 34
+    yPos = yPos + 25
 
     // Centered X position
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -46,10 +46,10 @@ export function generatePDF(formData, isPreview = false) {
 
     // Patient Details Table
     // Patient Details Heading
-    doc.setFontSize(16); // Changed from 14 to 16
-    doc.setFont('times', 'bold');
-    doc.text('Patient Details:', 10, yPos);
-    yPos += 7;
+    // doc.setFontSize(16); // Changed from 14 to 16
+    // doc.setFont('times', 'bold');
+    // doc.text('Patient Details:', 10, yPos);
+    // yPos += 7;
 
     autoTable(doc, {
         startY: yPos,
@@ -138,9 +138,12 @@ export function generatePDF(formData, isPreview = false) {
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Clinical Findings (On Admission):', 10, yPos);
+    const textWidthClinicalFindings = doc.getTextWidth('Clinical Findings (On Admission):');
+    doc.setLineWidth(0.5);
+    doc.line(10, yPos + 2, 10 + textWidthClinicalFindings, yPos + 2); // Add underline
     yPos += 15;
 
-    doc.setFontSize(12);
+    doc.setFontSize(14);
 
 
     const bullet = '•';
