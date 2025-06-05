@@ -468,7 +468,7 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Diagnosis Heading (unchanged)
+    // Diagnosis Heading
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Diagnosis:', 10, yPos);
@@ -509,6 +509,8 @@ export function generatePDF(formData, isPreview = false) {
 
     yPos += 6;
 
+
+
     // Draw a horizontal line
     doc.setDrawColor(0); // black
     doc.setLineWidth(0.1);
@@ -517,76 +519,67 @@ export function generatePDF(formData, isPreview = false) {
     // Add extra spacing
     yPos += 15;
 
-    // Hospital Course & Treatment
+
+
+
+    // Hospital Course & Treatment Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Hospital Course & Treatment Administered:', 10, yPos);
+    const textWidthHospitalCourse = doc.getTextWidth('Hospital Course & Treatment Administered:');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthHospitalCourse + 1, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
     formData.hospitalCourse.forEach((course, index) => {
-        // Bullet and Treatment Line
-        const bullet = '\u2022'; // Unicode bullet
-        const indent = 15; // Base indent (you mentioned adjusting by -12mm, so assuming 15mm base)
-        const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
-        const maxWidth = pageWidth - indent - 12; // Leave 12mm right margin
+        const bullet = '\u2022';
+        const indent = 15;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const maxWidth = pageWidth - indent - 12;
 
-        // Check if there are any non-empty subpoints
         const hasValidSubpoints = course.subpoints.some(subpoint => subpoint.trim() !== '');
 
-        // Split treatment text for wrapping
         doc.setFont('times', 'bold');
-        doc.setFontSize(12);
-        doc.setTextColor(0, 0, 0); // Black text
+        doc.setFontSize(14); // Changed from 12 to 14
+        doc.setTextColor(0, 0, 0);
         const treatmentText = `${bullet} ${course.treatment}${hasValidSubpoints ? ':' : ''}`;
         const treatmentLines = doc.splitTextToSize(treatmentText, maxWidth);
 
-        // Calculate the width of the bullet and space to align wrapped lines
-        const bulletWidth = doc.getTextWidth(`${bullet} `); // Width of "• "
-        const textIndent = indent + bulletWidth; // Align wrapped lines with text start
+        const bulletWidth = doc.getTextWidth(`${bullet} `);
+        const textIndent = indent + bulletWidth;
 
-        // Render treatment lines
         treatmentLines.forEach((line, lineIndex) => {
-            // First line starts at indent (includes bullet)
-            // Wrapped lines (lineIndex > 0) start at textIndent
             const xPos = lineIndex === 0 ? indent : textIndent;
             doc.text(line, xPos, yPos);
-            yPos += 6; // Line spacing for treatment text
+            yPos += 6;
 
-            // Add page if needed
             if (yPos > 270) {
                 doc.addPage();
                 yPos = 20;
             }
         });
 
-        // Subpoints lines (only if non-empty)
         course.subpoints.forEach((subpoint) => {
-            if (subpoint.trim() !== '') { // Only process non-empty subpoints
-                const subpointIndent = indent + 5; // Subpoint indent (3mm + 5mm = 8mm)
-                const subpointMaxWidth = pageWidth - subpointIndent - 12; // Adjust max width for subpoint
+            if (subpoint.trim() !== '') {
+                const subpointIndent = indent + 5;
+                const subpointMaxWidth = pageWidth - subpointIndent - 12;
 
-                // Split subpoint text for wrapping
                 const subpointText = `-> ${subpoint}`;
                 const subpointLines = doc.splitTextToSize(subpointText, subpointMaxWidth);
 
-                // Calculate the width of the arrow and space to align wrapped lines
-                const arrowWidth = doc.getTextWidth(`-> `); // Width of "-> "
-                const subpointTextIndent = subpointIndent + arrowWidth; // Align wrapped lines with text start
+                const arrowWidth = doc.getTextWidth(`-> `);
+                const subpointTextIndent = subpointIndent + arrowWidth;
 
-                // Render subpoint lines
                 doc.setFont('times', 'normal');
-                doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0); // Black text
+                doc.setFontSize(14); // Changed from 12 to 14
+                doc.setTextColor(0, 0, 0);
                 subpointLines.forEach((line, lineIndex) => {
-                    // First line starts at subpointIndent (includes arrow)
-                    // Wrapped lines (lineIndex > 0) start at subpointTextIndent
                     const xPos = lineIndex === 0 ? subpointIndent : subpointTextIndent;
                     doc.text(line, xPos, yPos);
-                    yPos += 6; // Line spacing for subpoint text
+                    yPos += 6;
 
-                    // Add page if needed
                     if (yPos > 270) {
                         doc.addPage();
                         yPos = 20;
@@ -595,7 +588,7 @@ export function generatePDF(formData, isPreview = false) {
             }
         });
 
-        yPos += 4; // Extra space after each treatment
+        yPos += 4;
     });
 
 
