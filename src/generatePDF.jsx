@@ -468,21 +468,22 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Diagnosis
+    // Diagnosis Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Diagnosis:', 10, yPos);
+    const textWidthDiagnosis = doc.getTextWidth('Diagnosis:');
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthDiagnosis + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 11;
 
     doc.setFont('times', 'normal');
-    doc.setFontSize(12);
+    doc.setFontSize(14); // Changed from 12 to 14
 
     if (formData.dischargeDiagnosis.length === 0) {
-        // No diagnosis available
         doc.text('N/A', 15, yPos);
         yPos += 7;
     } else if (formData.dischargeDiagnosis.length === 1) {
-        // Single diagnosis - just print as paragraph
         const lines = doc.splitTextToSize(formData.dischargeDiagnosis[0], 180);
         lines.forEach((line) => {
             doc.text(line, 15, yPos);
@@ -493,7 +494,6 @@ export function generatePDF(formData, isPreview = false) {
             }
         });
     } else {
-        // Multiple diagnoses - list with numbers
         formData.dischargeDiagnosis.forEach((diagnosis, index) => {
             const lines = doc.splitTextToSize(`${index + 1}. ${diagnosis}`, 180);
             lines.forEach((line) => {
