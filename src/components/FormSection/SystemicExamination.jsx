@@ -43,7 +43,7 @@ export function SystemicExamination({ handleChange, formData }) {
           >
             Cardiovascular System (CVS):
           </label>
-          <div className="flex justify-evenly rounded-sm h-12 bg-white">
+          <div className="flex justify-evenly rounded-sm h-13.5 bg-white">
             <span className="font-medium mt-2.5">S<sub>1</sub>S<sub>2</sub></span>
             <label className="!flex !items-center whitespace-nowrap gap-2">
               <input
@@ -112,7 +112,7 @@ export function SystemicExamination({ handleChange, formData }) {
           >
             Bowel Sounds:
           </label>
-          <div className="flex justify-evenly rounded-sm h-12 bg-white">
+          <div className="flex justify-evenly rounded-sm h-13.5 bg-white">
             <label className="!flex !items-center whitespace-nowrap gap-2">
               <input
                 type="radio"

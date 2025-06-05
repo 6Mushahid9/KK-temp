@@ -83,7 +83,7 @@ export function HospitalCourse({
             {formData.hospitalCourse.map((hc, index) => (
                 <div
                     key={index}
-                    className="border border-gray-200 rounded-md p-4 mb-5"
+                    className="border border-gray-200 rounded-md p-10 mb-5"
                 >
                     <div className="flex justify-between items-center mb-3">
                         {index > 0 && (

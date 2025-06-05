@@ -64,21 +64,23 @@ export function PatientDetails({
               }}
             >
               <option value="">Select Department</option>
-              <option value="General Medicine">General Medicine</option>
-              <option value="Pediatrics">Pediatrics</option>
-              <option value="Orthopedics">Orthopedics</option>
-              <option value="Cardiology">Cardiology</option>
-              <option value="Neurology">Neurology</option>
-              <option value="Oncology">Oncology</option>
-              <option value="Radiology">Radiology</option>
-              <option value="Emergency">Emergency</option>
-              <option value="ENT">ENT</option>
-              <option value="Dermatology">Dermatology</option>
-              <option value="Gastroenterology">Gastroenterology</option>
-              <option value="Gynecology">Gynecology</option>
-              <option value="Psychiatry">Psychiatry</option>
-              <option value="Urology">Urology</option>
-              <option value="Nephrology">Nephrology</option>
+              <option value="ECHS">ECHS</option>
+              <option value="CGHS">CGHS</option>
+              <option value="NR">NR</option>
+              <option value="NER">NER</option>
+              <option value="ESIC">ESIC</option>
+              <option value="RDSO">RDSO</option>
+              <option value="INSURRANCE">INSURRANCE</option>
+              <option value="CMRF">CMRF</option>
+              <option value="CAPF">CAPF</option>
+              <option value="AYUSHMAN BHARAT">AYUSHMAN BHARAT</option>
+              <option value="DEEN DAYAL UPADHYAY">DEEN DAYAL UPADHYAY</option>
+              <option value="UPPCL">UPPCL</option>
+              <option value="UP-POLICE">UP-POLICE</option>
+              <option value="BSNL">BSNL</option>
+              <option value="FCI">FCI</option>
+              <option value="RAIL-COACH">RAIL-COACH</option>
+              <option value="RBI">RBI</option>
             </select>
           </div>
         </div>
@@ -367,9 +369,7 @@ export function PatientDetails({
 
         {/* row 8 */}
         <div className="mt-3 border-2 border-gray-300 rounded-md p-4">
-          <h2 className="text-left font-semibold">
-            Presenting Complaints
-          </h2>
+          <h2 className="text-left font-semibold">Presenting Complaints</h2>
 
           {formData.presentingComplaints.map((item, index) => (
             <div key={index} className="mt-3 flex gap-2.5">
@@ -410,7 +410,6 @@ export function PatientDetails({
             </button>
           </div>
         </div>
-
 
         {/* row 9 */}
         <div className="mt-3 border-2 border-gray-300 rounded-md p-4">
@@ -457,7 +456,6 @@ export function PatientDetails({
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

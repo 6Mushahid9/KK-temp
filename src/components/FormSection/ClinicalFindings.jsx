@@ -53,7 +53,7 @@ export function ClinicalFindings({ handleChange, formData }) {
                 onChange={handleChange}
                 className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <span className="absolute inset-y-0 right-2 flex items-center text-gray-500 text-sm pointer-events-none italic">
+              <span className="absolute inset-y-0 right-2 flex items-center font-semibold text-sm pointer-events-none italic mr-5">
                 %
               </span>
             </div>

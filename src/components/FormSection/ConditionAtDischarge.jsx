@@ -35,7 +35,7 @@ export function ConditionAtDischarge({
                         <button
                             type="button"
                             onClick={() => removeArrayItem("conditionAtDischarge", index)}
-                            className="bg-red-500 text-white px-4 py-2.5 cursor-pointer rounded-sm"
+                            className="bg-red-500 text-white px-3 cursor-pointer rounded-md h-10 hover:bg-red-600"
                         >
                             Remove
                         </button>

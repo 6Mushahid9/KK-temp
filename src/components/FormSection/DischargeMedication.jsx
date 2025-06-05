@@ -87,16 +87,8 @@ export function DischargeMedication({
                         <button
                             type="button"
                             onClick={() => removeArrayItem("dischargeMedication", index)}
-                            style={{
-                                background: "#f44336",
-                                color: "white",
-                                border: "none",
-                                padding: "5px 10px",
-                                borderRadius: "4px",
-                                cursor: "pointer",
-                                // alignSelf: "end",
-                                marginTop: "3px",
-                            }}
+                            
+                            className="bg-[#f44336] text-white px-1.5 py-2.5 rounded-md cursor-pointer hover:bg-red-700"
                         >
                             Remove
                         </button>

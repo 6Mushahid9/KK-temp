@@ -38,7 +38,7 @@ export function SpecialInstructions({
                         <button
                             type="button"
                             onClick={() => removeArrayItem("specialInstructions", index)}
-                            className="bg-red-500 text-white cursor-pointer rounded-sm h-12 mt-3 px-3"
+                            className="bg-red-500 hover:bg-red-600 text-white cursor-pointer rounded-sm h-10 mt-3 px-3"
                         >
                             Remove
                         </button>
