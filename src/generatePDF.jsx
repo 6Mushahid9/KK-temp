@@ -45,7 +45,8 @@ export function generatePDF(formData, isPreview = false) {
 
 
     // Patient Details Table
-    doc.setFontSize(14);
+    // Patient Details Heading
+    doc.setFontSize(16); // Changed from 14 to 16
     doc.setFont('times', 'bold');
     doc.text('Patient Details:', 10, yPos);
     yPos += 7;
@@ -100,19 +101,20 @@ export function generatePDF(formData, isPreview = false) {
         },
         theme: 'grid',
         styles: {
-            font: 'times',      // 👈 Set font to Times
-            fontSize: 10,
+            font: 'times',
+            fontSize: 14, // Changed from 10 to 14 for body text
             textColor: 0
         },
         headStyles: {
-            font: 'times',      // 👈 Set font to Times for header
+            font: 'times',
             fillColor: [0, 0, 0],
             textColor: 255,
-            fontStyle: 'bold'
+            fontStyle: 'bold',
+            fontSize: 16 // Set to 16 for header
         },
         columnStyles: {
-            0: { cellWidth: 60, font: 'times', fontStyle: 'bold', textColor: 0 },
-            1: { cellWidth: 'auto', font: 'times', fontStyle: 'normal' },
+            0: { cellWidth: 60, font: 'times', fontStyle: 'bold', textColor: 0, fontSize: 14 }, // Ensure column 0 is bold and 14
+            1: { cellWidth: 'auto', font: 'times', fontStyle: 'normal', fontSize: 14 }, // Ensure column 1 is normal and 14
         },
     });
 
