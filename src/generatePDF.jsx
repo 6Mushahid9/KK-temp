@@ -306,7 +306,7 @@ export function generatePDF(formData, isPreview = false) {
             doc.setFont('times', 'bold');
             doc.setFontSize(14); // Changed from 12 to 14
             doc.text(`- ${test.name}: `, xStart, yStart);
-            const nameWidth = doc.getTextWidth(`-> ${test.name}: `);
+            const nameWidth = doc.getTextWidth(`- ${test.name}: `);
 
             let xCurrent = xStart + nameWidth;
 
@@ -433,7 +433,7 @@ export function generatePDF(formData, isPreview = false) {
                 const descText = `- ${desc}`;
                 const descLines = doc.splitTextToSize(descText, descMaxWidth);
 
-                const arrowWidth = doc.getTextWidth(`-> `);
+                const arrowWidth = doc.getTextWidth(`- `);
                 const descTextIndent = descIndent + arrowWidth;
 
                 doc.setFont('times', 'normal');
