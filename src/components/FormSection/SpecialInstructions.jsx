@@ -5,7 +5,7 @@ export function SpecialInstructions({
     removeArrayItem,
 }) {
     return (
-        <div className="form-section mt-3 border-2 border-gray-300 rounded-md p-4">
+        <div className="form-section mt-3 border-1 border-gray-300 rounded-md p-4">
             <h2 className="h2"
                 style={{
                     borderBottom: "1px solid #ddd",

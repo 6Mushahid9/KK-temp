@@ -79,7 +79,7 @@ export function Radiological({
 
     return (
         <div
-            className="form-section"
+            className="form-section w-full"
             style={{
                 marginBottom: "30px",
                 border: "1px solid #ddd",

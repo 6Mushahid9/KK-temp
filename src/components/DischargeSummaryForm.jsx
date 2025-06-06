@@ -183,29 +183,31 @@ const DischargeSummaryForm = () => {
   return (
     <>
       <h1
-        className="text-5xl text-white font-bold"
+        className="text-5xl text-black font-bold my-5"
         style={{ textAlign: "center", marginBottom: "25px" }}
       >
         Discharge Summary Form
       </h1>
 
       <form>
-        <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange2} aria-label="basic tabs example">
-              <Tab label="Item One" {...a11yProps(0)} />
-              <Tab label="Item Two" {...a11yProps(1)} />
-              <Tab label="Item Three" {...a11yProps(2)} />
-              <Tab label="Item Four" {...a11yProps(3)} />
-              <Tab label="Item Five" {...a11yProps(4)} />
-              <Tab label="Item Six" {...a11yProps(5)} />
-              <Tab label="Item Seven" {...a11yProps(6)} />
-              <Tab label="Item Eight" {...a11yProps(7)} />
-              <Tab label="Item Nine" {...a11yProps(8)} />
-              <Tab label="Item Ten" {...a11yProps(9)} />
+        <Box className="flex">
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }} className="">
+            <Tabs value={value} onChange={handleChange2} aria-label="basic tabs example" orientation="vertical" className="">
+              <Tab label="Patient Details" {...a11yProps(0)} />
+              <Tab label="Clinical Findings" {...a11yProps(1)} />
+              <Tab label="Systemic Examination" {...a11yProps(2)} />
+              <Tab label="Radiological & Diagnostic Findings" {...a11yProps(3)} />
+              <Tab label="Course & Treatment Administered" {...a11yProps(4)} />
+              <Tab label="Challenges During Treatment" {...a11yProps(5)} />
+              <Tab label="Condition at Discharge" {...a11yProps(6)} />
+              <Tab label="Discharge Medication" {...a11yProps(7)} />
+              <Tab label="Special Instruction(s)" {...a11yProps(8)} />
+              <Tab label="Review Date" {...a11yProps(9)} />
+              <Tab label="Output" {...a11yProps(10)} />
             </Tabs>
           </Box>
-          <CustomTabPanel value={value} index={0}>
+
+          <CustomTabPanel value={value} index={0} >
             <PatientDetails handleChange={handleChange2} formData={formData} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
@@ -227,15 +229,15 @@ const DischargeSummaryForm = () => {
             <ConditionAtDischarge formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={7}>
-            <DischargeMedication formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} setFormData={setFormData} />
+            <DischargeMedication formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} setFormData={setFormData}/>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={8}>
             <SpecialInstructions formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={9}>
             <ReviewDate formData={formData} handleChange={handleChange} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} setFormData={setFormData} />
-
-
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={10}>
             {/* Generate PDF and Preview Buttons */}
             <div
               style={{

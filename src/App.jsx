@@ -3,7 +3,7 @@ import DischargeSummaryForm from './components/DischargeSummaryForm';
 
 function App() {
   return (
-    <div className="App bg-red-400">
+    <div className="App">
       <DischargeSummaryForm />
     </div>
   );

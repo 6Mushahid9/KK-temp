@@ -13,6 +13,7 @@ export function PatientDetails({
         border: "1px solid #ddd",
         padding: "20px",
         borderRadius: "5px",
+        width: "100%",
       }}
     >
       <h2
