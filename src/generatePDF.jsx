@@ -277,117 +277,117 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Key Blood Investigations Heading 
-    doc.setFont('times', 'bold');
-    doc.setFontSize(16);
-    doc.text('Key Blood Investigations (Pathology):', 10, yPos);
-    const textWidthKeyBlood = doc.getTextWidth('Key Blood Investigations (Pathology):');
-    doc.setLineWidth(0.5); // Increase line thickness for bold underline
-    doc.line(10, yPos + 2, 10 + textWidthKeyBlood + 0.5, yPos + 2); // Extend line width by 1 unit
-    yPos += 15;
+    // // Key Blood Investigations Heading 
+    // doc.setFont('times', 'bold');
+    // doc.setFontSize(16);
+    // doc.text('Key Blood Investigations (Pathology):', 10, yPos);
+    // const textWidthKeyBlood = doc.getTextWidth('Key Blood Investigations (Pathology):');
+    // doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    // doc.line(10, yPos + 2, 10 + textWidthKeyBlood + 0.5, yPos + 2); // Extend line width by 1 unit
+    // yPos += 15;
 
-    doc.setFontSize(14); // Changed from 12 to 14
+    // doc.setFontSize(14); // Changed from 12 to 14
 
-    formData.bloodInvestigations.forEach((investigation, index) => {
-        doc.setFont('times', 'bold');
-        doc.setFontSize(14); // Changed from 12 to 14
-        if (index === 0) {
-            doc.text(`${bullet} ${investigation.date} (On Admission):`, indent, yPos);
-        } else {
-            doc.text(`${bullet} ${investigation.date}:`, indent, yPos);
-        }
+    // formData.bloodInvestigations.forEach((investigation, index) => {
+    //     doc.setFont('times', 'bold');
+    //     doc.setFontSize(14); // Changed from 12 to 14
+    //     if (index === 0) {
+    //         doc.text(`${bullet} ${investigation.date} (On Admission):`, indent, yPos);
+    //     } else {
+    //         doc.text(`${bullet} ${investigation.date}:`, indent, yPos);
+    //     }
 
-        yPos += 8;
+    //     yPos += 8;
 
-        investigation.tests.forEach((test) => {
-            const xStart = indent + 5;
-            const yStart = yPos;
+    //     investigation.tests.forEach((test) => {
+    //         const xStart = indent + 5;
+    //         const yStart = yPos;
 
-            doc.setFont('times', 'bold');
-            doc.setFontSize(14); // Changed from 12 to 14
-            doc.text(`- ${test.name}: `, xStart, yStart);
-            const nameWidth = doc.getTextWidth(`- ${test.name}: `);
+    //         doc.setFont('times', 'bold');
+    //         doc.setFontSize(14); // Changed from 12 to 14
+    //         doc.text(`- ${test.name}: `, xStart, yStart);
+    //         const nameWidth = doc.getTextWidth(`- ${test.name}: `);
 
-            let xCurrent = xStart + nameWidth;
+    //         let xCurrent = xStart + nameWidth;
 
-            doc.setFont('times', 'normal');
-            doc.setFontSize(14); // Changed from 12 to 14
-            xCurrent = renderTextWithSuperscript(doc, test.value, xCurrent, yStart);
+    //         doc.setFont('times', 'normal');
+    //         doc.setFontSize(14); // Changed from 12 to 14
+    //         xCurrent = renderTextWithSuperscript(doc, test.value, xCurrent, yStart);
 
-            doc.text(' ', xCurrent, yStart);
-            xCurrent += 1;
+    //         doc.text(' ', xCurrent, yStart);
+    //         xCurrent += 1;
 
-            xCurrent = renderTextWithSuperscript(doc, test.unit, xCurrent, yStart);
+    //         xCurrent = renderTextWithSuperscript(doc, test.unit, xCurrent, yStart);
 
-            yPos += lineHeight + 3;
+    //         yPos += lineHeight + 3;
 
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 20;
-            }
-        });
+    //         if (yPos > 270) {
+    //             doc.addPage();
+    //             yPos = 20;
+    //         }
+    //     });
 
-        yPos += 4;
-    });
+    //     yPos += 4;
+    // });
 
-    function renderTextWithSuperscript(doc, text, x, y) {
-        let i = 0;
-        let xPos = x;
-        doc.setFontSize(14); // Changed from 12 to 14 for normal text
+    // function renderTextWithSuperscript(doc, text, x, y) {
+    //     let i = 0;
+    //     let xPos = x;
+    //     doc.setFontSize(14); // Changed from 12 to 14 for normal text
 
-        while (i < text.length) {
-            if (text[i] === '^') {
-                i++;
-                let superText = '';
-                while (i < text.length && text[i] !== ' ') {
-                    superText += text[i];
-                    i++;
-                }
-                doc.setFontSize(8); // Keep superscript at 8
-                doc.text(superText, xPos, y - 1.5);
-                xPos += doc.getTextWidth(superText);
-                doc.setFontSize(14); // Changed from 10 to 14
-            } else {
-                let normalText = '';
-                while (i < text.length && text[i] !== '^') {
-                    normalText += text[i];
-                    i++;
-                }
-                doc.text(normalText, xPos, y);
-                xPos += doc.getTextWidth(normalText);
-            }
-        }
+    //     while (i < text.length) {
+    //         if (text[i] === '^') {
+    //             i++;
+    //             let superText = '';
+    //             while (i < text.length && text[i] !== ' ') {
+    //                 superText += text[i];
+    //                 i++;
+    //             }
+    //             doc.setFontSize(8); // Keep superscript at 8
+    //             doc.text(superText, xPos, y - 1.5);
+    //             xPos += doc.getTextWidth(superText);
+    //             doc.setFontSize(14); // Changed from 10 to 14
+    //         } else {
+    //             let normalText = '';
+    //             while (i < text.length && text[i] !== '^') {
+    //                 normalText += text[i];
+    //                 i++;
+    //             }
+    //             doc.text(normalText, xPos, y);
+    //             xPos += doc.getTextWidth(normalText);
+    //         }
+    //     }
 
-        return xPos;
-    }
-
-
-    yPos += 6;
-    // Draw a horizontal line
-    doc.setDrawColor(0); // black
-    doc.setLineWidth(0.1);
-    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
-
-    // Add extra spacing
-    yPos += 15;
+    //     return xPos;
+    // }
 
 
+    // yPos += 6;
+    // // Draw a horizontal line
+    // doc.setDrawColor(0); // black
+    // doc.setLineWidth(0.1);
+    // doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
 
-
-    doc.addPage();
-    yPos = 20; // Reset for new page content
+    // // Add extra spacing
+    // yPos += 15;
 
 
 
 
-    yPos += 6;
-    // Draw a horizontal line
-    doc.setDrawColor(0); // black
-    doc.setLineWidth(0.1);
-    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+    // doc.addPage();
+    // yPos = 20; // Reset for new page content
 
-    // Add extra spacing
-    yPos += 15;
+
+
+
+    // yPos += 6;
+    // // Draw a horizontal line
+    // doc.setDrawColor(0); // black
+    // doc.setLineWidth(0.1);
+    // doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // // Add extra spacing
+    // yPos += 15;
 
 
 
