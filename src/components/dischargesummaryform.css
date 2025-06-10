@@ -1,5 +1,5 @@
 .form-section {
-  background-color: #a7a7bb;
+  background-color: #c4c3c3;
   padding: 24px;
 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -51,7 +51,7 @@ label {
 }
 
 .h2 {
-  background-color: #1e3a8a;
+  background-color: #a9ca4d;
   /* Richer navy blue for sophistication */
   color: #ffffff;
   /* Clean white text */

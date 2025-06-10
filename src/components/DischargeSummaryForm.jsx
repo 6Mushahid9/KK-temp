@@ -182,12 +182,15 @@ const DischargeSummaryForm = () => {
 
   return (
     <>
+    <div className="flex gap-6 items-center justify-center ">
+      <span><img src="/logo.png" alt="logo" height={50} width={50}/></span>
       <h1
         className="text-5xl text-black font-bold my-5"
         style={{ textAlign: "center", marginBottom: "25px" }}
       >
         Discharge Summary Form
       </h1>
+    </div>
       <div className="w-full bg-black h-0.5 mb-5"></div>
 
       <form>
