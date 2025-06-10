@@ -7,7 +7,6 @@ export function SystemicExamination({ handleChange, formData }) {
         border: "1px solid #ddd",
         padding: "20px",
         borderRadius: "5px",
-        width: "100%",
 
       }}
     >

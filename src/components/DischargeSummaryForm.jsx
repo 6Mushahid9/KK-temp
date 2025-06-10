@@ -188,24 +188,46 @@ const DischargeSummaryForm = () => {
       >
         Discharge Summary Form
       </h1>
+      <div className="w-full bg-black h-0.5 mb-5"></div>
 
       <form>
         <Box className="flex">
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }} className="">
-            <Tabs value={value} onChange={handleChange2} aria-label="basic tabs example" orientation="vertical" className="">
-              <Tab label="Patient Details" {...a11yProps(0)} />
-              <Tab label="Clinical Findings" {...a11yProps(1)} />
-              <Tab label="Systemic Examination" {...a11yProps(2)} />
-              <Tab label="Radiological & Diagnostic Findings" {...a11yProps(3)} />
-              <Tab label="Course & Treatment Administered" {...a11yProps(4)} />
-              <Tab label="Challenges During Treatment" {...a11yProps(5)} />
-              <Tab label="Condition at Discharge" {...a11yProps(6)} />
-              <Tab label="Discharge Medication" {...a11yProps(7)} />
-              <Tab label="Special Instruction(s)" {...a11yProps(8)} />
-              <Tab label="Review Date" {...a11yProps(9)} />
-              <Tab label="Output" {...a11yProps(10)} />
-            </Tabs>
-          </Box>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+  <Tabs
+    value={value}
+    onChange={handleChange2}
+    aria-label="basic tabs example"
+    orientation="vertical"
+    sx={{ alignItems: 'flex-start' }} // Important for aligning all Tabs content
+  >
+    {[
+      "Patient Details",
+      "Clinical Findings",
+      "Systemic Examination",
+      "Radiological & Diagnostic Findings",
+      "Course & Treatment Administered",
+      "Challenges During Treatment",
+      "Condition at Discharge",
+      "Discharge Medication",
+      "Special Instruction(s)",
+      "Review Date",
+      "Output",
+    ].map((label, index) => (
+      <Tab
+        key={index}
+        label={label}
+        {...a11yProps(index)}
+        sx={{
+          alignItems: 'flex-start',       // Align text container
+          justifyContent: 'flex-start',   // Align content inside tab
+          textAlign: 'left',              // Align multi-line text
+        }}
+      />
+    ))}
+  </Tabs>
+</Box>
+
+
 
           <CustomTabPanel value={value} index={0} >
             <PatientDetails handleChange={handleChange2} formData={formData} handleArrayChange={handleArrayChange} addArrayItem={addArrayItem} removeArrayItem={removeArrayItem} />
@@ -244,6 +266,7 @@ const DischargeSummaryForm = () => {
                 textAlign: "center",
                 marginTop: "30px",
                 marginBottom: "50px",
+                width: "80vw"
               }}
             >
               <button
@@ -279,6 +302,7 @@ const DischargeSummaryForm = () => {
                   borderRadius: "4px",
                   cursor: "pointer",
                   boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+
                 }}
               >
                 Preview PDF
