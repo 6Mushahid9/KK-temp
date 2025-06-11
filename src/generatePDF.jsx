@@ -158,7 +158,7 @@ export function generatePDF(formData, isPreview = false) {
         { label: 'Blood Pressure', value: `${formData.bloodPressure} mmHg` },
         { label: 'Pulse Rate', value: `${formData.pulseRate} beats/min` },
         { label: 'Respiratory Rate', value: `${formData.respiratoryRate} breaths/min` },
-        { label: 'Temperature', value: `${formData.temperature}°F` },
+        { label: 'Temperature', value: `${formData.temperature}` },
         { label: 'SpO2', value: `${formData.spO2} ${formData.spO2Method}` }
     ];
 

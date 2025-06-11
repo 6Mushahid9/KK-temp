@@ -84,7 +84,7 @@ const DischargeSummaryForm = () => {
     bloodPressure: "",
     pulseRate: "",
     respiratoryRate: "",
-    temperature: "",
+    temperature: "°F",
     spO2: "",
     spO2Method: "",
 

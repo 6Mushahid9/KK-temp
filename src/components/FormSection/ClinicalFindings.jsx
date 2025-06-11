@@ -252,7 +252,7 @@ export function ClinicalFindings({ handleChange, formData }) {
                 paddingRight: "40px", // Space for the unit
               }}
             />
-            <span
+            {/* <span
               style={{
                 position: "absolute",
                 right: "10px",
@@ -263,7 +263,7 @@ export function ClinicalFindings({ handleChange, formData }) {
               }}
             >
               °F
-            </span>
+            </span> */}
           </div>
         </div>
       </div>
