@@ -309,9 +309,7 @@ const DischargeSummaryForm = () => {
                 type="button"
                 onClick={() => generatePDF(formData)}
                 style={{
-                  background: "#4CAF50",
                   color: "white",
-                  border: "none",
                   padding: "12px 30px",
                   fontSize: "16px",
                   borderRadius: "4px",
@@ -319,6 +317,7 @@ const DischargeSummaryForm = () => {
                   boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
                   marginRight: "10px",
                 }}
+                className="bg-[#4c9e92] hover:bg-[#5fc1b2] transition-colors duration-300"
               >
                 Generate Discharge Summary PDF
               </button>

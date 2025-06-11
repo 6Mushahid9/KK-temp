@@ -53,9 +53,6 @@ export function ClinicalFindings({ handleChange, formData }) {
                 onChange={handleChange}
                 className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <span className="absolute inset-y-0 right-2 flex items-center font-semibold text-sm pointer-events-none italic mr-5">
-                %
-              </span>
             </div>
 
             {/* Dropdown */}
@@ -79,7 +76,7 @@ export function ClinicalFindings({ handleChange, formData }) {
           >
             Pallor:
           </label>
-          <div className="flex justify-evenly rounded-sm h-12 mt-2 bg-white">
+          <div className="flex justify-evenly h-12 mt-2 bg-white border-1 rounded-md p-2 border-gray-300">
             <label className="!flex !items-center whitespace-nowrap gap-2">
               <input
                 type="radio"
@@ -112,7 +109,7 @@ export function ClinicalFindings({ handleChange, formData }) {
           >
             Icterus:
           </label>
-          <div className="flex justify-evenly rounded-sm h-12 mt-2 bg-white">
+          <div className="flex justify-evenly h-12 mt-2 border rounded-md p-2 border-gray-300">
             <label className="!flex !items-center whitespace-nowrap gap-2">
               <input
                 type="radio"

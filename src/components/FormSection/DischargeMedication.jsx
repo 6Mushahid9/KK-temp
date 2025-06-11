@@ -107,7 +107,7 @@ export function DischargeMedication({
                         dosage: "",
                     })
                 }
-                className="bg-blue-600 text-white px-3 py-2 rounded-sm cursor-pointer"
+                className="text-white px-3 py-2 rounded-sm cursor-pointer bg-[#4c9e92] hover:bg-[#5fc1b2] transition-colors duration-300"
             >
                 Add +
             </button>

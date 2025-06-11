@@ -50,7 +50,7 @@ export function SpecialInstructions({
                 <button
                     type="button"
                     onClick={() => addArrayItem("specialInstructions", "")}
-                    className="bg-blue-600 text-white px-3 py-2 rounded-sm cursor-pointer mt-2.5"
+                    className="text-white px-3 py-2 rounded-sm cursor-pointer mt-2.5 bg-[#4c9e92] hover:bg-[#5fc1b2] transition-colors duration-300"
                 >
                     Add +
                 </button>

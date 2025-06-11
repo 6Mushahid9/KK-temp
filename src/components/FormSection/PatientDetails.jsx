@@ -285,10 +285,10 @@ export function PatientDetails({
         </div>
 
         {/* row 6 */}
-        <div className="grid grid-cols-12 gap-4 mt-3">
+        <div className="grid grid-cols-12 gap-4 mt-3 ">
           <div className="form-group col-span-8">
             <label>Treatment / Procedure:</label>
-            <div className="flex justify-evenly rounded-sm h-12 mt-2 bg-white">
+            <div className="flex justify-evenly h-12 mt-2 bg-white border-1 rounded-md py-3 border-gray-300">
               <label className="!flex !items-center whitespace-nowrap gap-2">
                 <input
                   type="radio"

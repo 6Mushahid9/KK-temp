@@ -193,7 +193,7 @@ export function Radiological({
                     <button
                         type="button"
                         onClick={() => addDescription(formData, setFormData, index)}
-                        className="bg-green-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-green-600"
+                        className="text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 bg-[#4c9e92] hover:bg-[#5fc1b2] transition-colors duration-300"
                     >
                         Add Description
                     </button>
