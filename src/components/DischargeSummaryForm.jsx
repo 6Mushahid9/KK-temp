@@ -210,7 +210,7 @@ const DischargeSummaryForm = () => {
               }}
               textColor="inherit"
               indicatorColor="secondary" // this is overridden by sx
-              >
+            >
               {[
                 "Patient Details",
                 "Clinical Findings",
