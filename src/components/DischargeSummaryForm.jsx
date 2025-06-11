@@ -210,20 +210,6 @@ const DischargeSummaryForm = () => {
               }}
               textColor="inherit"
               indicatorColor="secondary" // this is overridden by sx
-              sx={{
-                alignItems: "flex-start",
-                '& .MuiTabs-indicator': {
-                  backgroundColor: '#5fc1b2',
-                },
-                '& .MuiTab-root': {
-                  color: '#000', // Default tab text color
-                },
-                '& .Mui-selected': {
-                  color: '#5fc1b2', // Selected tab color
-                },
-              }}
-              textColor="inherit"
-              indicatorColor="secondary" // this is overridden by sx
             >
               {[
                 "Patient Details",
