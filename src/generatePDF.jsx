@@ -277,139 +277,119 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    // Key Blood Investigations Heading
+    // Key Blood Investigations Heading 
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
     doc.text('Key Blood Investigations (Pathology):', 10, yPos);
     const textWidthKeyBlood = doc.getTextWidth('Key Blood Investigations (Pathology):');
-    doc.setLineWidth(0.5);
-    doc.line(10, yPos + 2, 10 + textWidthKeyBlood + 0.5, yPos + 2);
+    doc.setLineWidth(0.5); // Increase line thickness for bold underline
+    doc.line(10, yPos + 2, 10 + textWidthKeyBlood + 0.5, yPos + 2); // Extend line width by 1 unit
     yPos += 15;
 
-    // Test names
-    const tests = [
-        'Haemoglobin',
-        'Total Leukocyte Count',
-        'Platelet Count',
-        'Total RBC Count',
-        'Haematocrit',
-        'Blood Urea',
-        'Serum Creatinine',
-        'Serum Sodium',
-        'Serum Potassium',
-        'Serum Calcium',
-        'Blood Sugar Random',
-        'Prothrombin Time',
-        'International Normalized Ratio',
-        'PT/NR',
-        'Serum Bilirubin',
-        'Serum Glutamate Pyruvate Transaminase (GPT)',
-        'Serum Glutamate Oxaloacetate Transaminase (GOT)',
-        'Serum Alkaline Phosphates',
-        'Glycosylated Haemoglobin (HbAlc)',
-        'Mean Plasma Glucose',
-        'C-Reactive Protein',
-        'Procalcitonin',
-    ];
+    doc.setFontSize(14); // Changed from 12 to 14
 
-    // Validate and prepare dates
-    const dates = formData.bloodInvestigations
-        .filter((inv) => inv.date) // Exclude empty dates
-        .map((inv, index) => (index === 0 ? `${inv.date} (On Admission)` : inv.date));
+    formData.bloodInvestigations.forEach((investigation, index) => {
+        doc.setFont('times', 'bold');
+        doc.setFontSize(14); // Changed from 12 to 14
+        if (index === 0) {
+            doc.text(`${bullet} ${investigation.date} (On Admission):`, indent, yPos);
+        } else {
+            doc.text(`${bullet} ${investigation.date}:`, indent, yPos);
+        }
 
-    // Log for debugging
-    console.log('formData.bloodInvestigations:', JSON.stringify(formData.bloodInvestigations, null, 2));
-    console.log('dates:', dates);
+        yPos += 8;
 
-    // Check test name mismatches
-    formData.bloodInvestigations.forEach((inv) => {
-        inv.tests.forEach((t) => {
-            if (t.name && !tests.includes(t.name)) {
-                console.warn(`Test name "${t.name}" not found in tests array`);
+        investigation.tests.forEach((test) => {
+            const xStart = indent + 5;
+            const yStart = yPos;
+
+            doc.setFont('times', 'bold');
+            doc.setFontSize(14); // Changed from 12 to 14
+            doc.text(`- ${test.name}: `, xStart, yStart);
+            const nameWidth = doc.getTextWidth(`- ${test.name}: `);
+
+            let xCurrent = xStart + nameWidth;
+
+            doc.setFont('times', 'normal');
+            doc.setFontSize(14); // Changed from 12 to 14
+            xCurrent = renderTextWithSuperscript(doc, test.value, xCurrent, yStart);
+
+            doc.text(' ', xCurrent, yStart);
+            xCurrent += 1;
+
+            xCurrent = renderTextWithSuperscript(doc, test.unit, xCurrent, yStart);
+
+            yPos += lineHeight + 3;
+
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
             }
         });
+
+        yPos += 4;
     });
 
-    // Prepare table data
-    const tableData = tests.map((testName) => {
-        const row = { 'Test Name': testName };
-        formData.bloodInvestigations
-            .filter((inv) => inv.date)
-            .forEach((inv, index) => {
-                const test = inv.tests.find((t) => t.name === testName);
-                row[dates[index]] = test ? `${test.value} ${test.unit}`.trim() : '-';
-            });
-        return row;
-    });
+    function renderTextWithSuperscript(doc, text, x, y) {
+        let i = 0;
+        let xPos = x;
+        doc.setFontSize(14); // Changed from 12 to 14 for normal text
 
-    // Log tableData for debugging
-    console.log('tableData:', JSON.stringify(tableData, null, 2));
-
-    // Blood Investigations Table
-    if (dates.length > 0) {
-        autoTable(doc, {
-            startY: yPos,
-            head: [['Test Name', ...dates]],
-            body: tableData.map((row) => [row['Test Name'], ...dates.map((date) => row[date] || '-')]),
-            theme: 'grid',
-            styles: {
-                font: 'times',
-                fontSize: 14,
-                textColor: 0,
-            },
-            headStyles: {
-                font: 'times',
-                fillColor: [0, 0, 0],
-                textColor: 255,
-                fontStyle: 'bold',
-                fontSize: 16,
-            },
-            columnStyles: {
-                0: { cellWidth: 60, font: 'times', fontStyle: 'bold', textColor: 0, fontSize: 14 },
-                ...dates.reduce((acc, _, index) => ({
-                    ...acc,
-                    [index + 1]: { cellWidth: 30, font: 'times', fontStyle: 'normal', fontSize: 14 },
-                }), {}),
-            },
-            didParseCell: function (data) {
-                data.cell.styles.lineColor = [0, 0, 0];
-                data.cell.styles.cellPadding = 2;
-                if (data.section === 'body' && data.column.index > 0 && data.cell.text[0]?.includes('^')) {
-                    const text = data.cell.text[0];
-                    const parts = text.match(/^(.*?)\^(\d+)(.*)$/); // e.g., "7.5 10^3/µL" -> ["7.5 ", "3", "/µL"]
-                    if (parts) {
-                        const [, value, superscript, rest] = parts;
-                        data.cell.text = [`${value}${rest}`.trim()]; // e.g., "7.5 /µL"
-                        doc.setFontSize(8);
-                        doc.text(superscript, data.cell.x + doc.getTextWidth(value) + 1, data.cell.y + 2);
-                        doc.setFontSize(14);
-                    }
+        while (i < text.length) {
+            if (text[i] === '^') {
+                i++;
+                let superText = '';
+                while (i < text.length && text[i] !== ' ') {
+                    superText += text[i];
+                    i++;
                 }
-            },
-        });
-        yPos = doc.lastAutoTable.finalY + 15;
-    } else {
-        // Handle case with no valid dates
-        doc.setFont('times', 'normal');
-        doc.setFontSize(14);
-        doc.text('No blood investigation data available.', 10, yPos);
-        yPos += 15;
+                doc.setFontSize(8); // Keep superscript at 8
+                doc.text(superText, xPos, y - 1.5);
+                xPos += doc.getTextWidth(superText);
+                doc.setFontSize(14); // Changed from 10 to 14
+            } else {
+                let normalText = '';
+                while (i < text.length && text[i] !== '^') {
+                    normalText += text[i];
+                    i++;
+                }
+                doc.text(normalText, xPos, y);
+                xPos += doc.getTextWidth(normalText);
+            }
+        }
+
+        return xPos;
     }
 
-    // Add horizontal line and spacing
-    doc.setDrawColor(0);
+
+    yPos += 6;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
     doc.setLineWidth(0.1);
-    doc.line(10, yPos, 200, yPos);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
     yPos += 15;
 
-    // Update yPos after blood investigations table
-    yPos = doc.lastAutoTable.finalY + 15;
 
-    // Add horizontal line and spacing
-    doc.setDrawColor(0);
+
+
+    doc.addPage();
+    yPos = 20; // Reset for new page content
+
+
+
+
+    yPos += 6;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
     doc.setLineWidth(0.1);
-    doc.line(10, yPos, 200, yPos);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
     yPos += 15;
+
+
 
 
 

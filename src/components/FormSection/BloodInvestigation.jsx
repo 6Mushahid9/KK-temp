@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const testCategories = {
   Haematology: [
@@ -117,6 +117,25 @@ export function BloodInvestigation() {
     setInvestigations(newInvestigations);
   };
 
+  // Function to delete a category
+  const deleteCategory = (categoryIndex) => {
+    const newInvestigations = investigations.filter((_, index) => index !== categoryIndex);
+    setInvestigations(newInvestigations);
+  };
+
+  // Function to delete a test
+  const deleteTest = (categoryIndex, testIndex) => {
+    const newInvestigations = [...investigations];
+    newInvestigations[categoryIndex].tests = newInvestigations[categoryIndex].tests.filter(
+      (_, index) => index !== testIndex
+    );
+    // If no tests remain in the category, remove the category
+    if (newInvestigations[categoryIndex].tests.length === 0) {
+      newInvestigations.splice(categoryIndex, 1);
+    }
+    setInvestigations(newInvestigations);
+  };
+
   return (
     <div className="space-y-4 form-section">
       <h2
@@ -157,11 +176,19 @@ export function BloodInvestigation() {
 
       {/* Display Category Cards */}
       {investigations.map((inv, i) => (
-        <div key={i} className="border rounded-md p-4 shadow-md">
+        <div key={i} className="border rounded-md p-4 shadow-md relative">
           <h3 className="text-lg font-semibold mb-2">{inv.category}</h3>
+          {/* Remove Category Button */}
+          <button
+            onClick={() => deleteCategory(i)}
+            className="absolute top-2 right-2 bg-red-500 text-white text-sm px-2 py-1 rounded hover:bg-red-700"
+            title="Remove Category"
+          >
+            Remove Category
+          </button>
 
           {inv.tests.map((test, j) => (
-            <div key={j} className="grid grid-cols-12 gap-3 mb-2">
+            <div key={j} className="grid grid-cols-12 gap-3 mb-2 relative">
               <div className="col-span-4">
                 <label className="block text-sm font-medium">Test</label>
                 <input
@@ -209,6 +236,14 @@ export function BloodInvestigation() {
                   className="w-full px-3 py-2 border rounded bg-gray-100"
                 />
               </div>
+              {/* Remove Test Button */}
+              <button
+                onClick={() => deleteTest(i, j)}
+                className="mt-2 right-0 top-1/2 transform -translate-y-1/2 bg-red-500 text-white text-sm px-2 py-1 rounded hover:bg-red-700"
+                title="Remove Test"
+              >
+                Remove Test
+              </button>
             </div>
           ))}
 
