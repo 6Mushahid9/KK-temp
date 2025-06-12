@@ -1,239 +1,245 @@
-export function BloodInvestigation({
-    formData,
-    removeArrayItem,
-    setFormData
-}) {
+import React, { useState } from "react";
 
-    const addBloodInvestigation = () => {
-        setFormData({
-            ...formData,
-            bloodInvestigations: [
-                ...formData.bloodInvestigations,
-                { date: "", tests: [{ name: "", value: "", unit: "" }] },
-            ],
-        });
-    };
+const testCategories = {
+  Haematology: [
+    {
+      name: "Haemoglobin (Hb)",
+      unit: "gm%",
+      referenceRange: "12.0 – 15.5 gm%",
+    },
+    {
+      name: "Total Leukocyte Count (TLC)",
+      unit: "/mm³",
+      referenceRange: "4,000 – 11,000 /mm³",
+    },
+    {
+      name: "Platelet Count",
+      unit: "/mm³",
+      referenceRange: "1.5 – 4.5 lakh /mm³",
+    },
+    {
+      name: "Total RBC Count",
+      unit: "× 10⁶/µL",
+      referenceRange: "3.8 – 5.0 × 10⁶/µL",
+    },
+    { name: "Hematocrit (HCT)", unit: "%", referenceRange: "36 – 46 %" },
+  ],
+  "Renal Function Tests (RFT)": [
+    { name: "Blood Urea", unit: "mg/dL", referenceRange: "10 – 40 mg/dL" },
+    {
+      name: "Serum Creatinine",
+      unit: "mg/dL",
+      referenceRange: "0.6 – 1.2 mg/dL",
+    },
+  ],
+  "Electrolytes & Minerals": [
+    {
+      name: "Serum Sodium (Na⁺)",
+      unit: "mmol/L",
+      referenceRange: "135 – 145 mmol/L",
+    },
+    {
+      name: "Serum Potassium (K⁺)",
+      unit: "mmol/L",
+      referenceRange: "3.5 – 5.1 mmol/L",
+    },
+    {
+      name: "Serum Calcium (Ca⁺)",
+      unit: "mg/dL",
+      referenceRange: "8.5 – 10.5 mg/dL",
+    },
+  ],
+  "Coagulation Profile": [
+    {
+      name: "Prothrombin Time (PT)",
+      unit: "sec",
+      referenceRange: "11 – 13.5 sec",
+    },
+    { name: "INR", unit: "", referenceRange: "0.8 – 1.2" },
+  ],
+  "Liver Function Tests (LFT)": [
+    { name: "Serum Protein", unit: "g/dL", referenceRange: "6.0 – 8.3 g/dL" },
+    { name: "Serum Albumin", unit: "g/dL", referenceRange: "3.5 – 5.0 g/dL" },
+    {
+      name: "Serum Bilirubin (Total)",
+      unit: "mg/dL",
+      referenceRange: "0.2 – 1.2 mg/dL",
+    },
+    { name: "SGPT (ALT)", unit: "U/L", referenceRange: "5 – 40 U/L" },
+    { name: "SGOT (AST)", unit: "U/L", referenceRange: "5 – 40 U/L" },
+    {
+      name: "Serum Alkaline Phosphatase",
+      unit: "U/L",
+      referenceRange: "40 – 129 U/L",
+    },
+  ],
+  "Infectious Disease Markers": [
+    { name: "Widal Test", unit: "", referenceRange: "" },
+    { name: "Typhoid IgM (Card Test)", unit: "", referenceRange: "" },
+    { name: "Typhoid IgG (Card Test)", unit: "", referenceRange: "" },
+  ],
+  "Other Investigations": [
+    { name: "Procalcitonin (PCT)", unit: "ng/mL", referenceRange: "" },
+    { name: "Urine Examination", unit: "", referenceRange: "" },
+  ],
+};
 
-    const addTestToInvestigation = (investigationIndex) => {
-        const updatedInvestigations = [...formData.bloodInvestigations];
-        updatedInvestigations[investigationIndex].tests.push({
-            name: "",
-            value: "",
-            unit: "",
-        });
-        setFormData({
-            ...formData,
-            bloodInvestigations: updatedInvestigations,
-        });
-    };
+const allUnits = [
+  "gm%",
+  "/mm³",
+  "× 10⁶/µL",
+  "%",
+  "mg/dL",
+  "mmol/L",
+  "sec",
+  "",
+  "g/dL",
+  "U/L",
+  "ng/mL",
+];
 
-    const removeTestFromInvestigation = (investigationIndex, testIndex) => {
-        const updatedInvestigations = [...formData.bloodInvestigations];
-        updatedInvestigations[investigationIndex].tests.splice(testIndex, 1);
-        setFormData({
-            ...formData,
-            bloodInvestigations: updatedInvestigations,
-        });
-    };
+export function BloodInvestigation() {
+  const [investigations, setInvestigations] = useState([]);
 
-    const handleBloodInvestigationChange = (investigationIndex, field, value) => {
-        const updatedInvestigations = [...formData.bloodInvestigations];
-        updatedInvestigations[investigationIndex][field] = value;
-        setFormData({
-            ...formData,
-            bloodInvestigations: updatedInvestigations,
-        });
-    };
+  const addCategory = (category) => {
+    setInvestigations([...investigations, { category, tests: [] }]);
+  };
 
+  const addTest = (categoryIndex, test) => {
+    const newInvestigations = [...investigations];
+    newInvestigations[categoryIndex].tests.push(test);
+    setInvestigations(newInvestigations);
+  };
 
-    const handleTestChange = (investigationIndex, testIndex, field, value) => {
-        const updatedInvestigations = [...formData.bloodInvestigations];
-        updatedInvestigations[investigationIndex].tests[testIndex][field] = value;
-        setFormData({
-            ...formData,
-            bloodInvestigations: updatedInvestigations,
-        });
-    };
+  const updateTestValue = (categoryIndex, testIndex, field, value) => {
+    const newInvestigations = [...investigations];
+    newInvestigations[categoryIndex].tests[testIndex][field] = value;
+    setInvestigations(newInvestigations);
+  };
 
-    return (
-        <div
-            className="form-section"
-            style={{
-                marginBottom: "30px",
-                border: "1px solid #ddd",
-                padding: "20px",
-                borderRadius: "5px",
-            }}
+  return (
+    <div className="space-y-4 form-section">
+      <h2
+        className="h2"
+        style={{
+          borderBottom: "1px solid #ddd",
+          paddingBottom: "10px",
+          marginBottom: "20px",
+        }}
+      >
+        Patient Laboratory Report
+      </h2>
+
+      {/* Add Category Dropdown */}
+      <div>
+        <label className="font-medium">Add Category:</label>
+        <select
+          onChange={(e) => {
+            const selected = e.target.value;
+            if (
+              selected &&
+              !investigations.find((inv) => inv.category === selected)
+            ) {
+              addCategory(selected);
+            }
+            e.target.value = "";
+          }}
+          className="ml-2 p-2 border border-gray-300 rounded"
         >
-            <h2
-                className="h2"
-                style={{
-                    borderBottom: "1px solid #ddd",
-                    paddingBottom: "10px",
-                    marginBottom: "20px",
-                }}
-            >
-                Key Blood Investigations (Pathology)
-            </h2>
+          <option value="">Select</option>
+          {Object.keys(testCategories).map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            {formData.bloodInvestigations.map((investigation, investigationIndex) => (
-                <div
-                    key={investigationIndex}
-                    className="border border-gray-200 rounded-md p-4 mb-5 pr-8"
+      {/* Display Category Cards */}
+      {investigations.map((inv, i) => (
+        <div key={i} className="border rounded-md p-4 shadow-md">
+          <h3 className="text-lg font-semibold mb-2">{inv.category}</h3>
+
+          {inv.tests.map((test, j) => (
+            <div key={j} className="grid grid-cols-12 gap-3 mb-2">
+              <div className="col-span-4">
+                <label className="block text-sm font-medium">Test</label>
+                <input
+                  type="text"
+                  value={test.name}
+                  readOnly
+                  className="w-full px-3 py-2 border rounded bg-gray-100"
+                />
+              </div>
+              <div className="col-span-3">
+                <label className="block text-sm font-medium">Value</label>
+                <input
+                  type="text"
+                  value={test.value || ""}
+                  onChange={(e) =>
+                    updateTestValue(i, j, "value", e.target.value)
+                  }
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium">Unit</label>
+                <select
+                  value={test.unit}
+                  onChange={(e) =>
+                    updateTestValue(i, j, "unit", e.target.value)
+                  }
+                  className="w-full px-3 py-2 border rounded"
                 >
-                    <div className="flex justify-between items-center mb-3">
-                        <div className="w-3/5">
-                            <label
-                                htmlFor={`investigation-date-${investigationIndex}`}
-                                className="block mb-1 font-medium text-gray-700 col-span-1"
-                            >
-                                Date:
-                            </label>
-                            <div className="grid grid-cols-2">
+                  {allUnits.map((unit, k) => (
+                    <option key={k} value={unit}>
+                      {unit || "(none)"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-span-3">
+                <label className="block text-sm font-medium">
+                  Reference Range
+                </label>
+                <input
+                  type="text"
+                  value={test.referenceRange}
+                  readOnly
+                  className="w-full px-3 py-2 border rounded bg-gray-100"
+                />
+              </div>
+            </div>
+          ))}
 
-                                <input
-                                    type="date"
-                                    id={`investigation-date-${investigationIndex}`}
-                                    value={investigation.date}
-                                    onChange={(e) =>
-                                        handleBloodInvestigationChange(
-                                            investigationIndex,
-                                            "date",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                                {investigationIndex == 0 && (
-
-                                    <p className="font-bold col-span-1 text-2xl">(On Admission)</p>
-                                )}
-                            </div>
-
-                        </div>
-
-                        {investigationIndex > 0 && (
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    removeArrayItem("bloodInvestigations", investigationIndex)
-                                }
-                                className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
-                            >
-                                Remove Date
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="grid grid-cols-12 gap-3.5">
-                        {investigation.tests.map((test, testIndex) => (
-                            <div
-                                key={testIndex}
-                                className="col-span-12 grid grid-cols-12 gap-3.5 mb-3"
-                            >
-                                <div className="form-group col-span-5">
-                                    <label
-                                        htmlFor={`test-name-${investigationIndex}-${testIndex}`}
-                                        className="block mb-1 font-medium text-gray-700"
-                                    >
-                                        Test Name:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id={`test-name-${investigationIndex}-${testIndex}`}
-                                        value={test.name}
-                                        onChange={(e) =>
-                                            handleTestChange(
-                                                investigationIndex,
-                                                testIndex,
-                                                "name",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                </div>
-
-                                <div className="form-group col-span-3">
-                                    <label
-                                        htmlFor={`test-value-${investigationIndex}-${testIndex}`}
-                                        className="block mb-1 font-medium text-gray-700"
-                                    >
-                                        Value:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id={`test-value-${investigationIndex}-${testIndex}`}
-                                        value={test.value}
-                                        onChange={(e) =>
-                                            handleTestChange(
-                                                investigationIndex,
-                                                testIndex,
-                                                "value",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                </div>
-
-                                <div className="form-group col-span-3">
-                                    <label
-                                        htmlFor={`test-unit-${investigationIndex}-${testIndex}`}
-                                        className="block mb-1 font-medium text-gray-700"
-                                    >
-                                        Unit:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id={`test-unit-${investigationIndex}-${testIndex}`}
-                                        value={test.unit}
-                                        onChange={(e) =>
-                                            handleTestChange(
-                                                investigationIndex,
-                                                testIndex,
-                                                "unit",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                </div>
-
-                                {testIndex > 0 && (
-                                    <div className="form-group col-span-1 flex items-end">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                removeTestFromInvestigation(investigationIndex, testIndex)
-                                            }
-                                            className="bg-red-500 text-white border-none px-3 py-1.5 rounded-md cursor-pointer hover:bg-red-600"
-                                        >
-                                            Remove
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={() => addTestToInvestigation(investigationIndex)}
-                        className="bg-green-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-green-600"
-                    >
-                        Add Test
-                    </button>
-                </div>
-            ))}
-
-            <button
-                type="button"
-                onClick={addBloodInvestigation}
-                className="bg-blue-500 text-white border-none px-4 py-2 rounded-md cursor-pointer mt-3 hover:bg-blue-600"
+          {/* Sub Test Dropdown */}
+          <div className="mt-2">
+            <label className="text-sm font-medium">Add Test:</label>
+            <select
+              onChange={(e) => {
+                const selectedTest = testCategories[inv.category].find(
+                  (t) => t.name === e.target.value
+                );
+                if (
+                  selectedTest &&
+                  !inv.tests.find((t) => t.name === selectedTest.name)
+                ) {
+                  addTest(i, { ...selectedTest, value: "" });
+                }
+                e.target.value = "";
+              }}
+              className="ml-2 p-2 border rounded"
             >
-                Add Investigation Date
-            </button>
+              <option value="">Select Test</option>
+              {testCategories[inv.category].map((t) => (
+                <option key={t.name} value={t.name}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-    );
+      ))}
+    </div>
+  );
 }

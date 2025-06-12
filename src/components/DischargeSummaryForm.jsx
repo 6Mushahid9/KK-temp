@@ -239,7 +239,7 @@ const DischargeSummaryForm = () => {
             </Tabs>
           </Box>
 
-          <CustomTabPanel value={value} index={0}>
+          <CustomTabPanel value={value} index={11}>
             <PatientDetails
               handleChange={handleChange}
               formData={formData}
@@ -372,7 +372,7 @@ const DischargeSummaryForm = () => {
             </div>
           </CustomTabPanel>
 
-          <CustomTabPanel value={value} index={11}>
+          <CustomTabPanel value={value} index={0}>
             <BloodInvestigation
               formData={formData}
               removeArrayItem={removeArrayItem}
