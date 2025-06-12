@@ -5,7 +5,7 @@ import { generatePDF } from "../generatePDF";
 import { PatientDetails } from "./FormSection/PatientDetails";
 import { ClinicalFindings } from "./FormSection/ClinicalFindings";
 import { SystemicExamination } from "./FormSection/SystemicExamination";
-// import { BloodInvestigation } from "./FormSection/BloodInvestigation";
+import { BloodInvestigation } from "./FormSection/BloodInvestigation";
 import { Radiological } from "./FormSection/Radiological";
 import { HospitalCourse } from "./FormSection/HospitalCourse";
 import { Challenges } from "./FormSection/Challenges";
@@ -95,10 +95,10 @@ const DischargeSummaryForm = () => {
     perAbdomen: "",
     bowelSounds: "",
 
-    // // Key Blood Investigations
-    // bloodInvestigations: [
-    //   { date: "", tests: [{ name: "", value: "", unit: "" }] },
-    // ],
+    // Key Blood Investigations
+    bloodInvestigations: [
+      { date: "", tests: [{ name: "", value: "", unit: "" }] },
+    ],
 
     // Radiological & Diagnostic Findings
     radiologicalFindings: [
@@ -223,6 +223,7 @@ const DischargeSummaryForm = () => {
                 "Special Instruction(s)",
                 "Review Date",
                 "Output",
+                "Blood Investigation",
               ].map((label, index) => (
                 <Tab
                   key={index}
@@ -370,6 +371,15 @@ const DischargeSummaryForm = () => {
               )}
             </div>
           </CustomTabPanel>
+
+          <CustomTabPanel value={value} index={11}>
+            <BloodInvestigation
+              formData={formData}
+              removeArrayItem={removeArrayItem}
+              setFormData={setFormData}
+            />
+          </CustomTabPanel>
+
         </Box>
       </form>
       <div

@@ -1,11 +1,6 @@
 export function BloodInvestigation({
     formData,
     removeArrayItem,
-    // addBloodInvestigation,
-    // addTestToInvestigation,
-    // removeTestFromInvestigation,
-    // handleBloodInvestigationChange,
-    // handleTestChange,
     setFormData
 }) {
 
