@@ -64,8 +64,8 @@ export function generatePDF(formData, isPreview = false) {
             ['Address', formData.address],
             ['Consultant/s In Charge', formData.consultantInCharge],
             ['Bed No.', formData.bedNo],
-            ['Date & Time of Admission', `${formData.dateAdmission}, ${convertTo12Hour(formData.timeAdmission)}`],
-            ['Date & Time of Discharge', `${formData.dateDischarge}, ${convertTo12Hour(formData.timeDischarge)}`],
+            ['Date & Time of Admission', `${formData.dateAdmission}; ${convertTo12Hour(formData.timeAdmission)}`],
+            ['Date & Time of Discharge', `${formData.dateDischarge}; ${convertTo12Hour(formData.timeDischarge)}`],
             ['Discharge Diagnosis',
                 formData.dischargeDiagnosis.length === 1
                     ? formData.dischargeDiagnosis[0]
