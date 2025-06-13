@@ -98,8 +98,8 @@ const allUnits = [
   "ng/mL",
 ];
 
-export function BloodInvestigation() {
-  const [investigations, setInvestigations] = useState([]);
+export function BloodInvestigation({investigations, setInvestigations}) {
+  // const [investigations, setInvestigations] = useState([]);
 
   const addCategory = (category) => {
     setInvestigations([...investigations, { category, tests: [] }]);

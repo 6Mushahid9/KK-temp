@@ -173,6 +173,8 @@ const DischargeSummaryForm = () => {
     });
   };
 
+  const [investigations, setInvestigations] = useState([]);
+
   return (
     <>
       <div className="flex gap-6 items-center justify-center ">
@@ -239,7 +241,7 @@ const DischargeSummaryForm = () => {
             </Tabs>
           </Box>
 
-          <CustomTabPanel value={value} index={11}>
+          <CustomTabPanel value={value} index={0}>
             <PatientDetails
               handleChange={handleChange}
               formData={formData}
@@ -321,7 +323,7 @@ const DischargeSummaryForm = () => {
             >
               <button
                 type="button"
-                onClick={() => generatePDF(formData)}
+                onClick={() => generatePDF(formData, investigations)}
                 style={{
                   padding: "12px 30px",
                   fontSize: "16px",
@@ -338,7 +340,7 @@ const DischargeSummaryForm = () => {
               <button
                 type="button"
                 onClick={() => {
-                  const pdfUrl = generatePDF(formData, true);
+                  const pdfUrl = generatePDF(formData, true, investigations);
                   setPdfDataUrl(pdfUrl);
                 }}
                 style={{
@@ -372,9 +374,10 @@ const DischargeSummaryForm = () => {
             </div>
           </CustomTabPanel>
 
-          <CustomTabPanel value={value} index={0}>
+          <CustomTabPanel value={value} index={11}>
             <BloodInvestigation
-              formData={formData}
+              investigations={investigations}
+              setInvestigations={setInvestigations}
               removeArrayItem={removeArrayItem}
               setFormData={setFormData}
             />
