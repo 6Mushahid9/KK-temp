@@ -3,7 +3,7 @@ import autoTable from 'jspdf-autotable';
 
 import { LogoBase64 } from './LogoBase64';
 
-export function generatePDF(formData, isPreview = false) {
+export function generatePDF(formData, isPreview = false, investigations) {
     const doc = new jsPDF();
     let yPos = 50;
 
@@ -278,138 +278,146 @@ export function generatePDF(formData, isPreview = false) {
 
 
     // Key Blood Investigations Heading
-    doc.setFont('times', 'bold');
-    doc.setFontSize(16);
-    doc.text('Key Blood Investigations (Pathology):', 10, yPos);
+    doc.setFont('times', 'bold'); // Explicitly set Helvetica
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0); // Black
+    const margin = 12;
+    const tableWidth = 180; // Sum of colWidths (70 + 30 + 30 + 50)
+    const pageHeight = 297; // Standard A4 height in mm
+    doc.text('Key Blood Investigations (Pathology):', margin, yPos);
     const textWidthKeyBlood = doc.getTextWidth('Key Blood Investigations (Pathology):');
     doc.setLineWidth(0.5);
-    doc.line(10, yPos + 2, 10 + textWidthKeyBlood + 0.5, yPos + 2);
+    doc.line(margin, yPos + 2, margin + textWidthKeyBlood, yPos + 2); // Underline
     yPos += 15;
 
-    // Test names
-    const tests = [
-        'Haemoglobin',
-        'Total Leukocyte Count',
-        'Platelet Count',
-        'Total RBC Count',
-        'Haematocrit',
-        'Blood Urea',
-        'Serum Creatinine',
-        'Serum Sodium',
-        'Serum Potassium',
-        'Serum Calcium',
-        'Blood Sugar Random',
-        'Prothrombin Time',
-        'International Normalized Ratio',
-        'PT/NR',
-        'Serum Bilirubin',
-        'Serum Glutamate Pyruvate Transaminase (GPT)',
-        'Serum Glutamate Oxaloacetate Transaminase (GOT)',
-        'Serum Alkaline Phosphates',
-        'Glycosylated Haemoglobin (HbAlc)',
-        'Mean Plasma Glucose',
-        'C-Reactive Protein',
-        'Procalcitonin',
-    ];
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); // Black
 
-    // Validate and prepare dates
-    const dates = formData.bloodInvestigations
-        .filter((inv) => inv.date) // Exclude empty dates
-        .map((inv, index) => (index === 0 ? `${inv.date} (On Admission)` : inv.date));
+    investigations.forEach((investigation, index) => {
+        // Category Heading
+        doc.setFont('times', 'bold'); // Ensure consistent font
+        doc.setFontSize(12);
+        // Plain text for category to avoid special character issues
+        doc.text(investigation.category + ':', indent, yPos);
+        yPos += 8;
 
-    // Log for debugging
-    console.log('formData.bloodInvestigations:', JSON.stringify(formData.bloodInvestigations, null, 2));
-    console.log('dates:', dates);
+        // Table Headers
+        const headers = ['Test Name', 'Value', 'Unit', 'Reference Range'];
+        const colWidths = [70, 30, 30, 50]; // Total = 180, matches tableWidth
+        let xPos = indent;
 
-    // Check test name mismatches
-    formData.bloodInvestigations.forEach((inv) => {
-        inv.tests.forEach((t) => {
-            if (t.name && !tests.includes(t.name)) {
-                console.warn(`Test name "${t.name}" not found in tests array`);
+        // Draw header text
+        doc.setFont('times', 'bold');
+        headers.forEach((header, i) => {
+            doc.text(header, xPos + 2, yPos);
+            xPos += colWidths[i];
+        });
+        yPos += 8;
+
+        // Tests under each category
+        investigation.tests.forEach((test, testIndex) => {
+            xPos = indent;
+
+            // Test Name
+            doc.setFont('times', 'normal');
+            doc.text(test.name, xPos + 2, yPos);
+            xPos += colWidths[0];
+
+            // Test Value
+            xPos = renderTextWithSuperscript(doc, test.value || '', xPos + 2, yPos);
+            xPos = indent + colWidths[0] + colWidths[1]; // Reset xPos for next column
+
+            // Test Unit
+            xPos = renderTextWithSuperscript(doc, test.unit || '', xPos + 2, yPos);
+            xPos = indent + colWidths[0] + colWidths[1] + colWidths[2];
+
+            // Reference Range
+            if (test.referenceRange) {
+                xPos = renderTextWithSuperscript(doc, test.referenceRange, xPos + 2, yPos);
+            }
+
+            yPos += 8;
+
+            // Removed: Row border (doc.rect) to eliminate table borders
+
+            // Page break check
+            if (yPos > pageHeight - 20) {
+                doc.addPage();
+                yPos = 30; // Reset to top of new page
             }
         });
+
+        // Removed: Vertical lines for columns (doc.line) to eliminate table borders
+
+        yPos += 10; // Spacing after category
+
+        // Removed: Horizontal line between categories to eliminate all borders
+        if (index < investigations.length - 1) {
+            yPos += 10; // Maintain spacing without drawing a line
+        }
     });
 
-    // Prepare table data
-    const tableData = tests.map((testName) => {
-        const row = { 'Test Name': testName };
-        formData.bloodInvestigations
-            .filter((inv) => inv.date)
-            .forEach((inv, index) => {
-                const test = inv.tests.find((t) => t.name === testName);
-                row[dates[index]] = test ? `${test.value} ${test.unit}`.trim() : '-';
-            });
-        return row;
-    });
+    // Function to handle superscript text (unchanged)
+    function renderTextWithSuperscript(doc, text, x, y) {
+        let i = 0;
+        let xPos = x;
+        doc.setFontSize(12); // Normal text size
 
-    // Log tableData for debugging
-    console.log('tableData:', JSON.stringify(tableData, null, 2));
-
-    // Blood Investigations Table
-    if (dates.length > 0) {
-        autoTable(doc, {
-            startY: yPos,
-            head: [['Test Name', ...dates]],
-            body: tableData.map((row) => [row['Test Name'], ...dates.map((date) => row[date] || '-')]),
-            theme: 'grid',
-            styles: {
-                font: 'times',
-                fontSize: 14,
-                textColor: 0,
-            },
-            headStyles: {
-                font: 'times',
-                fillColor: [0, 0, 0],
-                textColor: 255,
-                fontStyle: 'bold',
-                fontSize: 16,
-            },
-            columnStyles: {
-                0: { cellWidth: 60, font: 'times', fontStyle: 'bold', textColor: 0, fontSize: 14 },
-                ...dates.reduce((acc, _, index) => ({
-                    ...acc,
-                    [index + 1]: { cellWidth: 30, font: 'times', fontStyle: 'normal', fontSize: 14 },
-                }), {}),
-            },
-            didParseCell: function (data) {
-                data.cell.styles.lineColor = [0, 0, 0];
-                data.cell.styles.cellPadding = 2;
-                if (data.section === 'body' && data.column.index > 0 && data.cell.text[0]?.includes('^')) {
-                    const text = data.cell.text[0];
-                    const parts = text.match(/^(.*?)\^(\d+)(.*)$/); // e.g., "7.5 10^3/µL" -> ["7.5 ", "3", "/µL"]
-                    if (parts) {
-                        const [, value, superscript, rest] = parts;
-                        data.cell.text = [`${value}${rest}`.trim()]; // e.g., "7.5 /µL"
-                        doc.setFontSize(8);
-                        doc.text(superscript, data.cell.x + doc.getTextWidth(value) + 1, data.cell.y + 2);
-                        doc.setFontSize(14);
-                    }
+        while (i < text.length) {
+            if (text[i] === '^') {
+                i++;
+                let superText = '';
+                while (i < text.length && text[i] !== ' ') {
+                    superText += text[i];
+                    i++;
                 }
-            },
-        });
-        yPos = doc.lastAutoTable.finalY + 15;
-    } else {
-        // Handle case with no valid dates
-        doc.setFont('times', 'normal');
-        doc.setFontSize(14);
-        doc.text('No blood investigation data available.', 10, yPos);
-        yPos += 15;
+                doc.setFontSize(8); // Superscript size
+                doc.text(superText, xPos, y - 1.5);
+                xPos += doc.getTextWidth(superText);
+                doc.setFontSize(12); // Reset to normal
+            } else {
+                let normalText = '';
+                while (i < text.length && text[i] !== '^') {
+                    normalText += text[i];
+                    i++;
+                }
+                doc.text(normalText, xPos, y);
+                xPos += doc.getTextWidth(normalText);
+            }
+        }
+
+        return xPos;
     }
 
-    // Add horizontal line and spacing
-    doc.setDrawColor(0);
-    doc.setLineWidth(0.1);
-    doc.line(10, yPos, 200, yPos);
+
+    yPos += 6;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
+    doc.setLineWidth(0);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
     yPos += 15;
 
-    // Update yPos after blood investigations table
-    yPos = doc.lastAutoTable.finalY + 15;
 
-    // Add horizontal line and spacing
-    doc.setDrawColor(0);
+
+
+    doc.addPage();
+    yPos = 20; // Reset for new page content
+
+
+
+
+    yPos += 6;
+    // Draw a horizontal line
+    doc.setDrawColor(0); // black
     doc.setLineWidth(0.1);
-    doc.line(10, yPos, 200, yPos);
+    doc.line(10, yPos, 200, yPos); // x1, y1, x2, y2
+
+    // Add extra spacing
     yPos += 15;
+
+
 
 
 
@@ -643,7 +651,7 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    
+
     // Challenges During Treatment Heading
     doc.setFont('times', 'bold'); // Set font to Times, bold for the heading
     doc.setFontSize(16); // Set font size to 16 for the heading
@@ -1016,7 +1024,7 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-// discclaimer
+    // discclaimer
     // Check if there's enough space for the symptoms section (approximate height: ~60 points)
     if (yPos > 200) { // Adjust threshold to ensure section fits at bottom
         doc.addPage();
@@ -1074,7 +1082,7 @@ export function generatePDF(formData, isPreview = false) {
 
 
 
-    
+
     const totalPages = doc.getNumberOfPages();
 
     for (let i = 1; i <= totalPages; i++) {
