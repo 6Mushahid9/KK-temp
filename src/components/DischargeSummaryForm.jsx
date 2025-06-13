@@ -217,6 +217,7 @@ const DischargeSummaryForm = () => {
                 "Patient Details",
                 "Clinical Findings",
                 "Systemic Examination",
+                "Blood Investigation",
                 "Radiological & Diagnostic Findings",
                 "Course & Treatment Administered",
                 "Challenges During Treatment",
@@ -225,7 +226,6 @@ const DischargeSummaryForm = () => {
                 "Special Instruction(s)",
                 "Review Date",
                 "Output",
-                "Blood Investigation",
               ].map((label, index) => (
                 <Tab
                   key={index}
@@ -260,6 +260,14 @@ const DischargeSummaryForm = () => {
             />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
+            <BloodInvestigation
+              investigations={investigations}
+              setInvestigations={setInvestigations}
+              removeArrayItem={removeArrayItem}
+              setFormData={setFormData}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={4}>
             <Radiological
               formData={formData}
               addArrayItem={addArrayItem}
@@ -267,13 +275,13 @@ const DischargeSummaryForm = () => {
               setFormData={setFormData}
             />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={4}>
+          <CustomTabPanel value={value} index={5}>
             <HospitalCourse formData={formData} setFormData={setFormData} />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={5}>
+          <CustomTabPanel value={value} index={6}>
             <Challenges formData={formData} setFormData={setFormData} />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={6}>
+          <CustomTabPanel value={value} index={7}>
             <ConditionAtDischarge
               formData={formData}
               handleChange={handleChange}
@@ -282,7 +290,7 @@ const DischargeSummaryForm = () => {
               removeArrayItem={removeArrayItem}
             />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={7}>
+          <CustomTabPanel value={value} index={8}>
             <DischargeMedication
               formData={formData}
               handleChange={handleChange}
@@ -292,7 +300,7 @@ const DischargeSummaryForm = () => {
               setFormData={setFormData}
             />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={8}>
+          <CustomTabPanel value={value} index={9}>
             <SpecialInstructions
               formData={formData}
               handleChange={handleChange}
@@ -301,7 +309,7 @@ const DischargeSummaryForm = () => {
               removeArrayItem={removeArrayItem}
             />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={9}>
+          <CustomTabPanel value={value} index={10}>
             <ReviewDate
               formData={formData}
               handleChange={handleChange}
@@ -311,7 +319,7 @@ const DischargeSummaryForm = () => {
               setFormData={setFormData}
             />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={10}>
+          <CustomTabPanel value={value} index={11}>
             {/* Generate PDF and Preview Buttons */}
             <div
               style={{
@@ -374,14 +382,7 @@ const DischargeSummaryForm = () => {
             </div>
           </CustomTabPanel>
 
-          <CustomTabPanel value={value} index={11}>
-            <BloodInvestigation
-              investigations={investigations}
-              setInvestigations={setInvestigations}
-              removeArrayItem={removeArrayItem}
-              setFormData={setFormData}
-            />
-          </CustomTabPanel>
+          
 
         </Box>
       </form>
