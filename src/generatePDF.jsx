@@ -349,7 +349,7 @@ export function generatePDF(formData, isPreview = false, investigations) {
 
         // Removed: Vertical lines for columns (doc.line) to eliminate table borders
 
-        yPos += 10; // Spacing after category
+        // yPos += 2; // Spacing after category
 
         // Removed: Horizontal line between categories to eliminate all borders
         if (index < investigations.length - 1) {
