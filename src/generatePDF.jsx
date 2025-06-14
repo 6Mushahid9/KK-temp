@@ -276,7 +276,7 @@ export function generatePDF(formData, isPreview = false, investigations) {
 
 
 
-
+if (investigations && investigations.length>0){
     // Key Blood Investigations Heading
     doc.setFont('times', 'bold'); // Explicitly set Helvetica
     doc.setFontSize(14);
@@ -416,7 +416,7 @@ export function generatePDF(formData, isPreview = false, investigations) {
 
     // Add extra spacing
     yPos += 15;
-
+}
 
 
 
@@ -551,7 +551,6 @@ export function generatePDF(formData, isPreview = false, investigations) {
 
 
 
-
     // Hospital Course & Treatment Heading (unchanged)
     doc.setFont('times', 'bold');
     doc.setFontSize(16);
@@ -651,7 +650,7 @@ export function generatePDF(formData, isPreview = false, investigations) {
 
 
 
-
+    if (formData.treatmentChallenges && formData.treatmentChallenges[0].challenges.trim()!==""){
     // Challenges During Treatment Heading
     doc.setFont('times', 'bold'); // Set font to Times, bold for the heading
     doc.setFontSize(16); // Set font size to 16 for the heading
@@ -730,6 +729,7 @@ export function generatePDF(formData, isPreview = false, investigations) {
 
     // Add extra spacing
     yPos += 15;
+}
 
 
 
